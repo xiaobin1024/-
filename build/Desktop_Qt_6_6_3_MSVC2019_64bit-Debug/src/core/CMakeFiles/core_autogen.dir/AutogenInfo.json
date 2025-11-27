@@ -1,0 +1,177 @@
+{
+	"AUTOGEN_COMMAND_LINE_LENGTH_MAX" : 32000,
+	"BUILD_DIR" : "C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/core/core_autogen",
+	"CMAKE_BINARY_DIR" : "C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug",
+	"CMAKE_CURRENT_BINARY_DIR" : "C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/core",
+	"CMAKE_CURRENT_SOURCE_DIR" : "C:/Users/86152/Desktop/network_dictionary/src/core",
+	"CMAKE_EXECUTABLE" : "D:/qt/Tools/CMake_64/bin/cmake.exe",
+	"CMAKE_LIST_FILES" : 
+	[
+		"C:/Users/86152/Desktop/network_dictionary/src/core/CMakeLists.txt",
+		"C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/.qtc/package-manager/auto-setup.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/Qt6ConfigVersion.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/Qt6ConfigVersionImpl.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/Qt6Config.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/Qt6ConfigExtras.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicCMakeVersionHelpers.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/Qt6Targets.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/Qt6VersionlessTargets.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtFeature.cmake",
+		"D:/qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckCXXCompilerFlag.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtFeatureCommon.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicAppleHelpers.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicCMakeHelpers.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicCMakeVersionHelpers.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicDependencyHelpers.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicExternalProjectHelpers.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicFinalizerHelpers.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicFindPackageHelpers.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicPluginHelpers.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicTargetHelpers.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicTestHelpers.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicToolHelpers.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicWalkLibsHelpers.cmake",
+		"D:/qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeFindDependencyMacro.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/Qt6Dependencies.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/Qt6ConfigVersion.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/Qt6ConfigVersionImpl.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/Qt6Config.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/Qt6ConfigExtras.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicCMakeVersionHelpers.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/Qt6Targets.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/Qt6VersionlessTargets.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtFeature.cmake",
+		"D:/qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckCXXCompilerFlag.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtFeatureCommon.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicAppleHelpers.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicCMakeHelpers.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicCMakeVersionHelpers.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicDependencyHelpers.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicExternalProjectHelpers.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicFinalizerHelpers.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicFindPackageHelpers.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicPluginHelpers.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicTargetHelpers.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicTestHelpers.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicToolHelpers.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicWalkLibsHelpers.cmake",
+		"D:/qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeFindDependencyMacro.cmake",
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/Qt6Dependencies.cmake"
+	],
+	"CMAKE_SOURCE_DIR" : "C:/Users/86152/Desktop/network_dictionary",
+	"CROSS_CONFIG" : false,
+	"DEP_FILE" : "C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/core/core_autogen/deps",
+	"DEP_FILE_RULE_NAME" : "core_autogen/timestamp",
+	"HEADERS" : 
+	[
+		[
+			"C:/Users/86152/Desktop/network_dictionary/src/core/app_config.h",
+			"MU",
+			"EWIEGA46WW/moc_app_config.cpp",
+			null
+		],
+		[
+			"C:/Users/86152/Desktop/network_dictionary/src/core/base_manager.h",
+			"MU",
+			"EWIEGA46WW/moc_base_manager.cpp",
+			null
+		],
+		[
+			"C:/Users/86152/Desktop/network_dictionary/src/core/core.h",
+			"MU",
+			"EWIEGA46WW/moc_core.cpp",
+			null
+		],
+		[
+			"C:/Users/86152/Desktop/network_dictionary/src/core/message.h",
+			"MU",
+			"EWIEGA46WW/moc_message.cpp",
+			null
+		],
+		[
+			"C:/Users/86152/Desktop/network_dictionary/src/core/utils.h",
+			"MU",
+			"EWIEGA46WW/moc_utils.cpp",
+			null
+		]
+	],
+	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
+	"INCLUDE_DIR" : "C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/core/core_autogen/include",
+	"MOC_COMPILATION_FILE" : "C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/core/core_autogen/mocs_compilation.cpp",
+	"MOC_DEFINITIONS" : 
+	[
+		"QT_CORE_LIB",
+		"UNICODE",
+		"WIN32",
+		"WIN64",
+		"_ENABLE_EXTENDED_ALIGNED_STORAGE",
+		"_UNICODE",
+		"_WIN64"
+	],
+	"MOC_DEPEND_FILTERS" : 
+	[
+		[
+			"Q_PLUGIN_METADATA",
+			"[\n][ \t]*Q_PLUGIN_METADATA[ \t]*\\([^\\)]*FILE[ \t]*\"([^\"]+)\""
+		]
+	],
+	"MOC_INCLUDES" : 
+	[
+		"C:/Users/86152/Desktop/network_dictionary/include",
+		"C:/Users/86152/Desktop/network_dictionary/src/core",
+		"D:/qt/6.6.3/msvc2019_64/include/QtCore",
+		"D:/qt/6.6.3/msvc2019_64/include",
+		"D:/qt/6.6.3/msvc2019_64/mkspecs/win32-msvc"
+	],
+	"MOC_MACRO_NAMES" : 
+	[
+		"Q_OBJECT",
+		"Q_GADGET",
+		"Q_NAMESPACE",
+		"Q_NAMESPACE_EXPORT",
+		"Q_GADGET_EXPORT"
+	],
+	"MOC_OPTIONS" : [],
+	"MOC_PATH_PREFIX" : false,
+	"MOC_PREDEFS_CMD" : [],
+	"MOC_PREDEFS_FILE" : "",
+	"MOC_RELAXED_MODE" : false,
+	"MOC_SKIP" : [],
+	"MULTI_CONFIG" : false,
+	"PARALLEL" : 8,
+	"PARSE_CACHE_FILE" : "C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/core/CMakeFiles/core_autogen.dir/ParseCache.txt",
+	"QT_MOC_EXECUTABLE" : "D:/qt/6.6.3/msvc2019_64/./bin/moc.exe",
+	"QT_UIC_EXECUTABLE" : "D:/qt/6.6.3/msvc2019_64/./bin/uic.exe",
+	"QT_VERSION_MAJOR" : 6,
+	"QT_VERSION_MINOR" : 6,
+	"SETTINGS_FILE" : "C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/core/CMakeFiles/core_autogen.dir/AutogenUsed.txt",
+	"SOURCES" : 
+	[
+		[
+			"C:/Users/86152/Desktop/network_dictionary/src/core/base_manager.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/86152/Desktop/network_dictionary/src/core/core.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/86152/Desktop/network_dictionary/src/core/message.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/86152/Desktop/network_dictionary/src/core/utils.cpp",
+			"MU",
+			null
+		]
+	],
+	"UIC_OPTIONS" : [],
+	"UIC_SEARCH_PATHS" : [],
+	"UIC_SKIP" : [],
+	"UIC_UI_FILES" : [],
+	"USE_BETTER_GRAPH" : false,
+	"VERBOSITY" : 0
+}

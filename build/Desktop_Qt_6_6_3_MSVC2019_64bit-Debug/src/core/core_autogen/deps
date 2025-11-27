@@ -1,0 +1,36 @@
+core_autogen/timestamp: \
+	C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/.qtc/package-manager/auto-setup.cmake \
+	C:/Users/86152/Desktop/network_dictionary/src/core/CMakeLists.txt \
+	C:/Users/86152/Desktop/network_dictionary/src/core/app_config.h \
+	C:/Users/86152/Desktop/network_dictionary/src/core/base_manager.cpp \
+	C:/Users/86152/Desktop/network_dictionary/src/core/base_manager.h \
+	C:/Users/86152/Desktop/network_dictionary/src/core/core.cpp \
+	C:/Users/86152/Desktop/network_dictionary/src/core/core.h \
+	C:/Users/86152/Desktop/network_dictionary/src/core/message.cpp \
+	C:/Users/86152/Desktop/network_dictionary/src/core/message.h \
+	C:/Users/86152/Desktop/network_dictionary/src/core/utils.cpp \
+	C:/Users/86152/Desktop/network_dictionary/src/core/utils.h \
+	D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/Qt6Config.cmake \
+	D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/Qt6ConfigExtras.cmake \
+	D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/Qt6ConfigVersion.cmake \
+	D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/Qt6ConfigVersionImpl.cmake \
+	D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/Qt6Dependencies.cmake \
+	D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/Qt6Targets.cmake \
+	D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/Qt6VersionlessTargets.cmake \
+	D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtFeature.cmake \
+	D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtFeatureCommon.cmake \
+	D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicAppleHelpers.cmake \
+	D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicCMakeHelpers.cmake \
+	D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicCMakeVersionHelpers.cmake \
+	D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicDependencyHelpers.cmake \
+	D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicExternalProjectHelpers.cmake \
+	D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicFinalizerHelpers.cmake \
+	D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicFindPackageHelpers.cmake \
+	D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicPluginHelpers.cmake \
+	D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicTargetHelpers.cmake \
+	D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicTestHelpers.cmake \
+	D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicToolHelpers.cmake \
+	D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicWalkLibsHelpers.cmake \
+	D:/qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeFindDependencyMacro.cmake \
+	D:/qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckCXXCompilerFlag.cmake \
+	D:/qt/Tools/CMake_64/bin/cmake.exe
