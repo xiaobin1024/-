@@ -44,9 +44,9 @@ include_directories(
 
 # 创建测试可执行文件
 add_executable(tests
-    main.cpp
     tst_messagetest.cpp
     unit/core/core_test.h
+    tst_coretest.cpp
     # 后续添加其他测试文件
 )
 

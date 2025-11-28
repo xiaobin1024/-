@@ -36,3 +36,6 @@ target_include_directories(core PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR})
 
 
+if(MSVC)
+add_compile_options("/source-charset:utf-8")
+endif()
