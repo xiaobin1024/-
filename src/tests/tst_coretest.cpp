@@ -1,6 +1,11 @@
 ﻿#include <gtest/gtest.h>
 #include "core/core.h"
 #include"core/message.h"
+#include<QDebug>
+#include<QDataStream>
+#include<QBuffer>
+#include<QString>
+#include<QtEndian>
 using namespace CoreModule;
 
 // 基础函数测试
@@ -34,5 +39,74 @@ TEST(CoreTests,CoreMessageTest)
     EXPECT_EQ(static_cast<int>(MsgType::QUERYCOLLECT),8);
     //验证MsgType类型是否为int
     EXPECT_EQ(sizeof(MsgType),sizeof(int));
+}
+
+TEST(CoreMsgTypeDebugTest, CoreSimpleOutputTest)
+{
+    //直接测试operator<<函数
+    QString output;
+    QDebug debug(&output);
+    debug << MsgType::REGISTER;
+
+    // 输出应该包含REGISTER和1
+    EXPECT_TRUE(output.contains("REGISTER"));
+    EXPECT_TRUE(output.contains("1"));
+
+    debug << MsgType::LOGIN;
+    // 输出应该包含LOGIN和2
+    EXPECT_TRUE(output.contains("LOGIN"));
+    EXPECT_TRUE(output.contains("2"));
+
+    debug << MsgType::Quit;
+    // 输出应该包含Quit和3
+    EXPECT_TRUE(output.contains("Quit"));
+    EXPECT_TRUE(output.contains("3"));
+
+    debug << MsgType::SEARCH;
+    // 输出应该包含SEARCH和4
+    EXPECT_TRUE(output.contains("SEARCH"));
+    EXPECT_TRUE(output.contains("4"));
+
+    debug << MsgType::HISTORY;
+    // 输出应该包含HISTORY和5
+    EXPECT_TRUE(output.contains("HISTORY"));
+    EXPECT_TRUE(output.contains("5"));
+
+    debug << MsgType::HEARTBEAT;
+    // 输出应该包含HEARTBEAT和6
+    EXPECT_TRUE(output.contains("HEARTBEAT"));
+    EXPECT_TRUE(output.contains("6"));
+
+    debug << MsgType::COLLECT;
+    // 输出应该包含COLLECT和7
+    EXPECT_TRUE(output.contains("COLLECT"));
+    EXPECT_TRUE(output.contains("7"));
+
+    debug << MsgType::QUERYCOLLECT;
+    // 输出应该包含QUERYCOLLECT和8
+    EXPECT_TRUE(output.contains("QUERYCOLLECT"));
+    EXPECT_TRUE(output.contains("8"));
+}
+
+TEST(CoreMsgTypeDebugTest,CoreByteOrderConversion)
+{
+    //测试1，创建Msg并测试字节序转换
+    Msg msg;
+    msg.type=MsgType::REGISTER;
+    strncpy(msg.name,"testuser",sizeof(msg.name));
+    strncpy(msg.text,"Hello Word",sizeof(msg.text));
+    //保存原始值
+    MsgType originalType=msg.type;
+    //转换为网络字节序
+    msg.toNetWorkByteOrder();
+    //验证类型没有丢失，只是字节序改变
+    EXPECT_TRUE(static_cast<int>(msg.type)!=0);
+    //转为主机字节序
+    msg.toHostByteOrder();
+    //验证类型恢复为原始值
+    EXPECT_EQ(msg.type,originalType);
+    //验证其他字段没有被修改
+    EXPECT_STREQ(msg.name,"testuser");
+    EXPECT_STREQ(msg.text,"Hello Word");
 
 }

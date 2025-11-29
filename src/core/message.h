@@ -16,7 +16,42 @@ enum class MsgType:int{
     COLLECT=7,
     QUERYCOLLECT=8
 };
-
+//QDebug输出支持
+inline QDebug operator<<(QDebug debug,MsgType type)
+{
+    const char* typeStr=nullptr;
+    switch (type) {
+    case MsgType::REGISTER: typeStr="REGISTER"; break;
+    case MsgType::LOGIN: typeStr="LOGIN"; break;
+    case MsgType::Quit: typeStr="Quit"; break;
+    case MsgType::SEARCH: typeStr="SEARCH"; break;
+    case MsgType::HISTORY: typeStr="HISTORY"; break;
+    case MsgType::HEARTBEAT: typeStr="HEARTBEAT"; break;
+    case MsgType::COLLECT: typeStr="COLLECT"; break;
+    case MsgType::QUERYCOLLECT: typeStr="QUERYCOLLECT"; break;
+    default: typeStr="UNKNOWN"; break;
+    }
+    debug<<typeStr<<"("<<static_cast<int>(type)<<")";
+    return debug;
+}
+#pragma pack(push,1)
+struct Msg
+{
+    MsgType type;
+    char name[20];
+    char text[128];
+    //主机字节序->网络字节序
+    void toNetWorkByteOrder()
+    {
+        type = static_cast<MsgType>(qToBigEndian(static_cast<quint32>(type)));
+    }
+    //网络字节序->主机字节序
+    void toHostByteOrder()
+    {
+        type = static_cast<MsgType>(qFromBigEndian(static_cast<quint32>(type)));
+    }
+};
+#pragma pack(pop)
 }
 
 
