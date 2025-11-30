@@ -49,7 +49,10 @@ include_directories(
 # 创建测试可执行文件
 add_executable(tests
     tst_messagetest.cpp
-    tst_coretest.cpp
+    tst_core_messagetest.cpp
+    tst_core_app_config.cpp
+    tst_core_utils.cpp
+
     # 后续添加其他测试文件
 )
 
