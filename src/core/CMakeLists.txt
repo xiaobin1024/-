@@ -26,12 +26,8 @@ message(STATUS "Qt version: ${QT_VERSION}")
 
 # 创建静态库
 add_library(core STATIC
-  core.cpp
-  core.h
   message.h
-  message.cpp
   base_manager.h
-  base_manager.cpp
   app_config.h
   utils.h
   utils.cpp

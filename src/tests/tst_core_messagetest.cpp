@@ -1,29 +1,11 @@
 ﻿#include <gtest/gtest.h>
-#include "core/core.h"
 #include"core/message.h"
 #include<QDebug>
 #include<QDataStream>
 #include<QBuffer>
 #include<QString>
 #include<QtEndian>
-using namespace CoreModule;
-
-// 基础函数测试
-TEST(CoreTests, CalculateSumTest) {
-    EXPECT_EQ(calculateSum(2, 3), 5);
-}
-
-// CoreHandler测试
-TEST(CoreTests, CoreHandlerBasicTest) {
-    CoreHandler handler;
-
-    // 测试默认状态
-    EXPECT_FALSE(handler.isReady());
-
-    // 测试设置状态
-    handler.setReady(true);
-    EXPECT_TRUE(handler.isReady());
-}
+using namespace CoreMessage;
 
 
 TEST(CoreTests,CoreMessageTest)
@@ -41,7 +23,7 @@ TEST(CoreTests,CoreMessageTest)
     EXPECT_EQ(sizeof(MsgType),sizeof(int));
 }
 
-TEST(CoreMsgTypeDebugTest, CoreSimpleOutputTest)
+TEST(CoreTests, CoreMessageOutputTest)
 {
     //直接测试operator<<函数
     QString output;
@@ -88,7 +70,7 @@ TEST(CoreMsgTypeDebugTest, CoreSimpleOutputTest)
     EXPECT_TRUE(output.contains("8"));
 }
 
-TEST(CoreMsgTypeDebugTest,CoreByteOrderConversion)
+TEST(CoreTests,CoreMessageCoreByteOrderTest)
 {
     //测试1，创建Msg并测试字节序转换
     Msg msg;
@@ -109,4 +91,27 @@ TEST(CoreMsgTypeDebugTest,CoreByteOrderConversion)
     EXPECT_STREQ(msg.name,"testuser");
     EXPECT_STREQ(msg.text,"Hello Word");
 
+}
+
+TEST(CoreTests,CoreMessageMsgQDebugOutputTest)
+{
+    Msg msg;
+    msg.type=MsgType::REGISTER;
+    strncpy(msg.name,"testuser",sizeof(msg.name));
+    strncpy(msg.text,"Hello Word",sizeof(msg.text));
+    //测试debug输出
+    QString output;
+    QDebug debug(&output);
+    debug<<msg;
+    //验证输出包含所有字段值
+    EXPECT_TRUE(output.contains("Msg{"));
+     EXPECT_TRUE(output.contains("type="));
+     EXPECT_TRUE(output.contains("REGISTER"));
+     EXPECT_TRUE(output.contains("name="));
+     EXPECT_TRUE(output.contains("testuser"));
+     EXPECT_TRUE(output.contains("text="));
+     EXPECT_TRUE(output.contains("Hello Word"));
+     EXPECT_TRUE(output.contains("}"));
+     //打印实际输出以便于调试
+     std::cout<<"Msg输出："<<output.toStdString()<<std::endl;
 }

@@ -3,7 +3,7 @@
 #include<QtEndian>
 #include<QtDebug>
 
-namespace CoreModule {
+namespace CoreMessage {
 
 //消息枚举类型
 enum class MsgType:int{
@@ -52,6 +52,17 @@ struct Msg
     }
 };
 #pragma pack(pop)
+
+//Msg结构体的QDebug输出
+inline QDebug operator <<(QDebug debug,const Msg& msg)
+{
+    debug.nospace()<<"Msg{"
+                    <<"type="<<msg.type
+                    <<", name="<<msg.name
+                    <<", text="<<msg.text
+                    <<"}";
+    return debug.space();
+}
 }
 
 

@@ -77,12 +77,6 @@
 			null
 		],
 		[
-			"C:/Users/86152/Desktop/network_dictionary/src/core/core.h",
-			"MU",
-			"EWIEGA46WW/moc_core.cpp",
-			null
-		],
-		[
 			"C:/Users/86152/Desktop/network_dictionary/src/core/message.h",
 			"MU",
 			"EWIEGA46WW/moc_message.cpp",
@@ -147,21 +141,6 @@
 	"SETTINGS_FILE" : "C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/core/CMakeFiles/core_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
-		[
-			"C:/Users/86152/Desktop/network_dictionary/src/core/base_manager.cpp",
-			"MU",
-			null
-		],
-		[
-			"C:/Users/86152/Desktop/network_dictionary/src/core/core.cpp",
-			"MU",
-			null
-		],
-		[
-			"C:/Users/86152/Desktop/network_dictionary/src/core/message.cpp",
-			"MU",
-			null
-		],
 		[
 			"C:/Users/86152/Desktop/network_dictionary/src/core/utils.cpp",
 			"MU",
