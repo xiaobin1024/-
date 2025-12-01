@@ -6,5 +6,8 @@ if("${CONFIG}" STREQUAL "" OR "${CONFIG}" STREQUAL "Debug")
   "src\\core\\CMakeFiles\\core_autogen.dir\\AutogenUsed.txt"
   "src\\core\\CMakeFiles\\core_autogen.dir\\ParseCache.txt"
   "src\\core\\core_autogen"
+  "src\\network\\CMakeFiles\\network_autogen.dir\\AutogenUsed.txt"
+  "src\\network\\CMakeFiles\\network_autogen.dir\\ParseCache.txt"
+  "src\\network\\network_autogen"
   )
 endif()
