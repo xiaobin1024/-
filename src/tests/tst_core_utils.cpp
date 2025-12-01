@@ -132,7 +132,108 @@ TEST(CoreTest,CoreUtilsFormatLastLoginTimeTest)
 
     //打印结果查看
     std::cout<<"35天前"<<result.toStdString()<<std::endl;
-
 }
+//测试用户名格式
+TEST(CoreTest,CoreUtilsIsValidUsernameTest)
+{
+    //测试三个字符
+    QString usrname="abc";
+    bool result=ValidationUtils::isValidUsername(usrname);
+    EXPECT_TRUE(result);
 
+    //测试空字符
+    usrname="";
+    result=ValidationUtils::isValidUsername(usrname);
+    EXPECT_FALSE(result);
 
+    //测试数字开头
+    usrname="1ab";
+    result=ValidationUtils::isValidUsername(usrname);
+    EXPECT_FALSE(result);
+
+    //测试符号开头
+    usrname="_ab";
+    result=ValidationUtils::isValidUsername(usrname);
+    EXPECT_FALSE(result);
+
+    //测试符号开头后面数字
+    usrname="ab123";
+    result=ValidationUtils::isValidUsername(usrname);
+    EXPECT_TRUE(result);
+
+    //测试中间有符号
+    usrname="ab_123";
+    result=ValidationUtils::isValidUsername(usrname);
+    EXPECT_TRUE(result);
+
+    //测试超过20字符
+    usrname="ab12345678901234567890";
+    result=ValidationUtils::isValidUsername(usrname);
+    EXPECT_FALSE(result);
+
+    //测试少于3个字符
+    usrname="ab";
+    result=ValidationUtils::isValidUsername(usrname);
+    EXPECT_FALSE(result);
+}
+//测试密码格式
+TEST(CoreTest,CoreUtilsIsValidPasswordTest)
+{
+    //测试长度6，包含数字和字符的字符串
+    QString password="123abc";
+    bool result=ValidationUtils::isValidPassword(password);
+    EXPECT_TRUE(result);
+
+    //测试只有数字的字符串
+    password="123456";
+    result=ValidationUtils::isValidPassword(password);
+    EXPECT_FALSE(result);
+
+    //测试没有数字的字符串
+    password="abcdef";
+    result=ValidationUtils::isValidPassword(password);
+    EXPECT_FALSE(result);
+
+    //测试小于长度6的字符串
+    password="ab12";
+    result=ValidationUtils::isValidPassword(password);
+    EXPECT_FALSE(result);
+
+    //测试包含特殊字符的字符串
+    password="abc__123@";
+    result=ValidationUtils::isValidPassword(password);
+    EXPECT_TRUE(result);
+
+    //测试长度超过20的字符串
+    password="01234567890123456789abc";
+    result=ValidationUtils::isValidPassword(password);
+    EXPECT_FALSE(result);
+
+    //测试空字符串
+    password="";
+    result=ValidationUtils::isValidPassword(password);
+    EXPECT_FALSE(result);
+}
+//测试单词格式
+TEST(CoreTest,CoreUtilsIsValidWordTest)
+{
+    //测试不含数字和特殊字符的字符串
+    QString word="hello";
+    bool result=ValidationUtils::isValidWord(word);
+    EXPECT_TRUE(result);
+
+    //测试空字符串
+    word="";
+    result=ValidationUtils::isValidWord(word);
+    EXPECT_FALSE(result);
+
+    //测试含有数字的字符串
+    word="hello123";
+    result=ValidationUtils::isValidWord(word);
+    EXPECT_FALSE(result);
+
+    //测试含有特殊符号的字符串
+    word="hello__";
+    result=ValidationUtils::isValidWord(word);
+    EXPECT_FALSE(result);
+}
