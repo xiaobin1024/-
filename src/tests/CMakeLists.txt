@@ -52,6 +52,7 @@ add_executable(tests
     tst_core_messagetest.cpp
     tst_core_app_config.cpp
     tst_core_utils.cpp
+    tst_network.cpp
 
     # 后续添加其他测试文件
 )
@@ -59,11 +60,12 @@ add_executable(tests
 
 # 7. 直接链接具体的库文件（绕过find_package的组件依赖问题）
 target_link_libraries(tests PRIVATE
+    network
+    core  #直接链接core
+    Qt${QT_VERSION_MAJOR}::Core  #添加Qt Core模块链接
     "${GTEST_LIBRARY}"
     "${GTEST_MAIN_LIBRARY}" # 手动链接main库
     "${GTEST_LIB_DIR}/gmock.lib" #如果用到gmock
-    core  # 修改：直接链接core目标，而不是库文件路径
-    Qt${QT_VERSION_MAJOR}::Core  # 修改：添加Qt Core模块链接
 )
 
 # 启用测试
