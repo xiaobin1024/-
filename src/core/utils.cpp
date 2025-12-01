@@ -75,6 +75,48 @@ QString TimeUtils::formatLastLoginTime(const QDateTime &loginTime)
         return QString("于%1登录").arg(loginTime.toString("yyyy年MM月dd日"));
     }
 }
+bool ValidationUtils::isValidUsername(const QString& username)
+{
+    if(username.isEmpty() || username.length()<3 || username.length()>20)
+    {
+        return false;
+    }
+    //用户名规则：字母开头，允许字母，数字，下划线，长度3到20
+    QRegularExpression regex("^[a-zA-Z][a-zA-Z0-9_]{2,19}$");
+    return regex.match(username).hasMatch();
+}
+bool ValidationUtils::isValidPassword(const QString& password)
+{
+    if(password.isEmpty() || password.length()<6 || password.length()>20)
+    {
+        return false;
+    }
+    //密码规则：至少6位，包含字母和字符，允许特殊字符
+    bool hasLetter=false;
+    bool hasDigit=false;
+    for(const QChar &ch:password)
+    {
+        if(ch.isLetter())
+        {
+            hasLetter=true;
+        }else if(ch.isDigit())
+        {
+            hasDigit=true;
+        }
+        //如果已经满足条件，提前退出
+        if(hasLetter&&hasDigit) break;
+    }
+    return hasLetter&&hasDigit;
+}
+bool ValidationUtils::isValidWord(const QString& word)
+{
+    if(word.isEmpty())
+    {
+        return false;
+    }
 
-
+    //单词规则：只包含字母，不允许数字和特殊符号
+    QRegularExpression regex("^[a-zA-Z]+$");
+    return regex.match(word).hasMatch();
+}
 
