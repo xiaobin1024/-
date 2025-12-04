@@ -7,7 +7,7 @@
         Q_OBJECT
     public:
         explicit BaseManager(QObject *parent=nullptr):QObject(parent){}
-        virtual ~BaseManager(){}
+        virtual ~BaseManager()=default;
 
         //连接管理
         virtual bool isConnected() const=0;
