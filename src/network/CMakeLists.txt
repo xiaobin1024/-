@@ -25,8 +25,10 @@ include_directories(
 #创建静态库
 add_library(network STATIC
 
-  network.cpp
-  network.h
+  #network.cpp
+  #network.h
+  network_manager.cpp
+  network_manager.h
 )
 #连接Qt库并设置包含目录，使用PUBLIC确保依赖传递
 target_link_libraries(network PUBLIC
