@@ -39,7 +39,7 @@ struct Msg
 {
     MsgType type;
     char name[20];
-    char text[128];
+    char text[1280];
     //主机字节序->网络字节序
     void toNetWorkByteOrder()
     {
