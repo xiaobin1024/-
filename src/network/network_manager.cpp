@@ -6,6 +6,7 @@ NetworkManager::NetworkManager(QObject* parent):BaseManager(parent),m_socket(new
     connect(m_socket,&QTcpSocket::connected,this,&NetworkManager::onSocketConnected);
     connect(m_socket,&QTcpSocket::disconnected,this,&NetworkManager::onSocketDisconnected);
     connect(m_socket,&QTcpSocket::errorOccurred,this,&NetworkManager::onSocketError);
+    connect(m_socket,&QTcpSocket::readyRead,this,&NetworkManager::onSocketReadyRead);
 
 }
 bool NetworkManager::isConnected() const
@@ -49,6 +50,8 @@ void NetworkManager::disconnectFromServer()
 void NetworkManager::onSocketConnected()
 {
     qDebug()<<"Connected to server successfully";
+    // 连接建立时立即处理积压队列
+    processMessageQueue();
     emit connectionEstablished();
 }
 
@@ -112,4 +115,129 @@ bool NetworkManager::sendRawMessage(const CoreMessage::Msg &message)
     qDebug() << "Message sent successfully, type:" << message.type
              << ", size:" << byteWritten << "bytes";
     return true;
+}
+void NetworkManager::onSocketReadyRead()
+{
+    qDebug() << "onSocketReadyRead in, bytes available:" << m_socket->bytesAvailable();
+    if(!isConnected())
+    {
+        qDebug()<<"Cannot send raw message: not connected to server";
+        return ;
+    }
+    //持续读取直到没有完整消息
+    while(m_socket->bytesAvailable()>=static_cast<qint64>(sizeof(CoreMessage::Msg)))
+    {
+        //直接读取完整消息结构体
+        CoreMessage::Msg receivedMsg;
+        qint64 bytesRead=m_socket->read(reinterpret_cast<char*>(&receivedMsg),sizeof(CoreMessage::Msg));
+        if(bytesRead!=sizeof(CoreMessage::Msg))
+        {
+            qDebug()<<"Incomplete message received: "<<bytesRead<<"of"<<sizeof(CoreMessage::Msg)<<"bytes";
+            break;
+        }
+        //转换字节序
+        receivedMsg.toHostByteOrder();
+         qDebug()<<"handleIncomingMessage in ";
+        //处理接收到的数据
+        handleIncomingMessage(receivedMsg);
+    }
+     qDebug()<<"onSocketReadyRead out";
+}
+void NetworkManager::handleIncomingMessage(const CoreMessage::Msg &message)
+{
+    qDebug()<<"Received message: "<<message;
+    //根据消息类型处理
+    switch(message.type)
+    {
+    case CoreMessage::MsgType::HEARTBEAT:
+        qDebug()<<"Heartbeat received from: "<<message.name;
+        break;
+    case CoreMessage::MsgType::LOGIN:
+        qDebug()<<"Login request from: "<<message.name;
+        break;
+    case CoreMessage::MsgType::REGISTER:
+        qDebug()<<"Register request from: "<<message.name;
+        break;
+    case CoreMessage::MsgType::SEARCH:
+        qDebug()<<"Search request: "<<message.text;
+        break;
+    case CoreMessage::MsgType::HISTORY:
+        qDebug() << "History query from:" << message.name;
+        break;
+
+    case CoreMessage::MsgType::COLLECT:
+        qDebug() << "Collect request:" << message.text;
+        break;
+
+    case CoreMessage::MsgType::QUERYCOLLECT:
+        qDebug() << "Query collect from:" << message.name;
+        break;
+
+    case CoreMessage::MsgType::Quit:
+        qDebug() << "Quit request from:" << message.name;
+        break;
+
+    default:
+        qDebug() << "Unknown message type received:" << static_cast<int>(message.type);
+        break;
+    }
+    emit messageReceived(message);
+}
+
+void NetworkManager::sendMessageAsync(const CoreMessage::Msg &message)
+{
+    QMutexLocker locker(&m_queueMutex);
+
+    if(!isConnected())
+    {
+        // 连接断开时加入队列
+        m_messageQueue.enqueue(message);
+        qDebug() << "Message queued, pending count:" << m_messageQueue.size();
+    }
+    else
+    {
+        if(!m_messageQueue.isEmpty()){
+            // 队列未清空，新消息入队
+            m_messageQueue.enqueue(message);
+            qDebug() << "Queue not empty, new message queued, pending count:" << m_messageQueue.size();
+            // 连接正常时先尝试处理队列
+            processMessageQueue();
+        }else{
+            if(!sendRawMessage(message)) {
+                // 发送失败加入队列
+                m_messageQueue.enqueue(message);
+                qDebug() << "Message send failed, queued, pending count:" << m_messageQueue.size();
+            }
+        }
+    }
+}
+
+void NetworkManager::processMessageQueue()
+{
+    QMutexLocker locker(&m_queueMutex);
+    int processedCount = 0;
+    int failedCount = 0;
+
+    while(!m_messageQueue.isEmpty()) {
+        CoreMessage::Msg message = m_messageQueue.dequeue(); // 直接出队尝试发送
+
+        if(sendRawMessage(message)) {
+            processedCount++;
+        } else {
+            // 发送失败重新入队
+            m_messageQueue.prepend(message); // 放回队列前端
+            failedCount++;
+            break;
+        }
+    }
+
+    if(processedCount > 0 || failedCount > 0) {
+        qDebug() << "Message queue processed:" << processedCount << "sent,"
+                 << failedCount << "failed, remaining:" << m_messageQueue.size();
+    }
+}
+ int NetworkManager::getPendingMessageCount()
+{
+    QMutexLocker locker(&m_queueMutex);
+    return m_messageQueue.size();
 }
