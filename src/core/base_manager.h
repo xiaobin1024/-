@@ -11,7 +11,7 @@
 
         //连接管理
         virtual bool isConnected() const=0;
-        virtual void connectToServer(const QString &ip,int port)=0;
+        virtual void connectToServer()=0;
         virtual void disconnectFromServer()=0;
 
         //消息发送接口
@@ -21,8 +21,8 @@
         void messageReceived(const CoreMessage::Msg& message);
         void errorOccurred(const QString& error);
     protected:
-        QString m_serverIp;
-        int m_serverPort{0};
+        // QString m_serverIp;
+        // int m_serverPort{0};
         bool m_isConnected{false};
     };
 
