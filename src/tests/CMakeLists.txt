@@ -53,7 +53,8 @@ add_executable(tests
     #tst_core_app_configtest.cpp
     #tst_core_utilstest.cpp
     #tst_network.cpp
-    tst_network_network_managetest.cpp
+    #tst_network_network_managetest.cpp
+    tst_network_network_manager_nextconnecttest.cpp
 
     # 后续添加其他测试文件
 )

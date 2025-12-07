@@ -1,20 +1,23 @@
 #ifndef NETWORK_MANAGER_H
 #define NETWORK_MANAGER_H
 #include"core/base_manager.h"
+#include"core/app_config.h"
+#include"core/utils.h"
 #include<QTcpSocket>
 #include<QTimer>
 #include<QQueue>
 #include <QMutex>
+#include<QVector>
 
 class NetworkManager: public BaseManager
 {
     Q_OBJECT
 public:
 
-    explicit NetworkManager(QObject* parent=nullptr);
+    explicit NetworkManager(QObject* parent=nullptr,const AppConfig& config=AppConfig());
     //实现BaseManager接口
     bool isConnected() const override;
-    void connectToServer(const QString &ip,int port) override;
+    void connectToServer() override;
     void disconnectFromServer() override;
     bool sendMessage(const CoreMessage::Msg &message) override;
 
@@ -31,22 +34,55 @@ signals:
     void networkError(QString &error);
     void connectionEstablished();
     void connectionLost();
-    void messageReceived(const  CoreMessage::Msg &message); //向上层传递收到数据信号
+    void messageReceived(const  CoreMessage::Msg &message);                             //向上层传递收到数据信号
+    void heartbeatSent();                                                               //向上层传递收到心跳包
+    void reconnectAttempt(int m_currentReconnectAttempts,int m_maxReconnectAttempts);   //尝试重连的信号
 private slots:
     void onSocketConnected();
     void onSocketDisconnected();
     void onSocketError();
+
     void onSocketReadyRead();    //接收消息接口
     void processMessageQueue(); //处理消息队列
+
+    void onHeartbeatTimeout();  //心跳超时
+    void startHeartbeat();      //开始心跳
+    void stopHeartbeat();       //结束心跳
+
+    void startReconnect();      //开始重连
+    void stopReconnect();       //停止重连
+    void onReconnectTimeout();  //重连超时
 
 private:
     //消息队列相关变量
     QQueue<CoreMessage::Msg> m_messageQueue;    //消息队列
-    QMutex m_queueMutex;    //互斥锁保护消息队列
+    mutable QRecursiveMutex m_queueMutex;    //递归锁保护消息队列
+     QMutex m_writeMutex;                   // 添加写锁
 
-    QTcpSocket *m_socket;
-    QTimer *m_heartbeatTimer;
-    QTimer *m_reconnectTimer;
+    //Socket和相关的连接
+    QTcpSocket *m_socket;       //TCP socket对象
+    QString m_lastServerIp;     //上次连接的服务器IP
+    int m_lastServerPort{0};    //上次连接的服务器端口
+    QString m_serverIP;         //当前连接的服务器IP
+    int m_serverPort;           //当前连接的服务器端口
+
+    //定时器相关
+    QTimer *m_heartbeatTimer;   //心跳定时器
+    QTimer *m_reconnectTimer;   //重连定时器
+
+    //配置参数
+    int m_heartbeatInterval;        //心跳间隔
+    int m_reconnectInterval;        //重连间隔
+    int m_maxReconnectAttempts;     //最大重连次数
+    int m_currentReconnectAttempts; //当前重连次数尝试
+
+    //状态标志
+    bool m_autoReconnect{true};     //是否启用自动重连
+    bool m_isReconnecting{false};   //是否正在重连
+public:
+
+    //测试用的变量
+     QVector<CoreMessage::MsgType> receivedMessageTypes;     // 记录收到的消息类型
 
 };
 
