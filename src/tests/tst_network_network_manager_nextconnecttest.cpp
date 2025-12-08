@@ -36,14 +36,6 @@ TEST(NetworkManagerTest,NetworkManagerNextConnectTest)
     //等待建立连接
     QTest::qWait(500);
 
-    //断开连接
-   // manager->disconnectFromServer();
-    //等待断开时间
-    QTest::qWait(5000);
-
-
-    //发送一些消息
-    qDebug() << "重连后发送数据";
 
     int initialMessages = 5;
     for (int i = 1; i <= initialMessages; ++i) {
@@ -65,8 +57,7 @@ TEST(NetworkManagerTest,NetworkManagerNextConnectTest)
     }
 
     // 等待消息发送完成
-    QTest::qWait(20000);
-    //manager->stopReConnectTest();
+    QTest::qWait(2000);
     //断开连接
     manager->disconnectFromServer();
     //等待断开时间

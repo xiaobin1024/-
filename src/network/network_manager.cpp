@@ -4,8 +4,6 @@ NetworkManager::NetworkManager(QObject* parent,const AppConfig& config):
     m_socket(new QTcpSocket(this)),
     m_serverIP(config.serverIp),
     m_serverPort(config.serverPort),
-    m_heartbeatTimer(new QTimer(this)),
-    m_heartbeatInterval(config.heartbeatInterval),
     m_reconnectTimer(new QTimer(this)),
     m_reconnectInterval(config.reconnectInterval),
     m_maxReconnectAttempts(config.maxReconnectAttempts),
@@ -17,41 +15,36 @@ NetworkManager::NetworkManager(QObject* parent,const AppConfig& config):
     qDebug()<<"NetworkManager constructor";
 
     //设置定时器
-    m_heartbeatTimer->setSingleShot(false);
     m_reconnectTimer->setSingleShot(true);
-    //连接信号槽
-    connect(m_socket,&QTcpSocket::connected,this,&NetworkManager::onSocketConnected);
-    connect(m_socket,&QTcpSocket::disconnected,this,&NetworkManager::onSocketDisconnected);
-    connect(m_socket,&QTcpSocket::errorOccurred,this,&NetworkManager::onSocketError);
-    connect(m_socket,&QTcpSocket::readyRead,this,&NetworkManager::onSocketReadyRead);
-    connect(m_heartbeatTimer,&QTimer::timeout,this,&NetworkManager::onHeartbeatTimeout);
     connect(m_reconnectTimer,&QTimer::timeout,this,&NetworkManager::onReconnectTimeout);
 
+    // 初始化子管理器
+    m_connectionManager = new ConnectionManager(this);
+    // 设置连接
+    setupConnections();
+
 }
+ void NetworkManager::setupConnections()
+{
+     // 连接信号槽
+     connect(m_connectionManager, &ConnectionManager::connectionEstablished,
+             this, &NetworkManager::onConnectionEstablished);
+     connect(m_connectionManager, &ConnectionManager::connectionLost,
+             this, &NetworkManager::onConnectionLost);
+     connect(m_connectionManager, &ConnectionManager::networkError,
+             this,[this](QString error){onNetworkError(error);});
+     connect(m_connectionManager,&ConnectionManager::dataReady,
+             this,&NetworkManager::onSocketReadyRead);
+}
+
 bool NetworkManager::isConnected() const
 {
-    return m_socket && m_socket->state()==QTcpSocket::ConnectedState;
+     return m_connectionManager->isConnected();
 }
 
 void NetworkManager::connectToServer()
 {
-    if(isConnected())
-    {
-        qDebug()<<"Already connected to server";
-        return;
-    }
-
-    if(m_serverIP.isEmpty() || m_serverPort<=0)
-    {
-        qDebug()<<"Invalid IP address or port";
-        QString error="Invalid IP address or port";
-        emit networkError(error);
-        return;
-    }
-    m_lastServerIp = m_serverIP;
-    m_lastServerPort=m_serverPort;
-    qDebug()<<"Connecting to server："<<m_serverIP<<":"<<m_serverPort;
-    m_socket->connectToHost(m_serverIP,m_serverPort);
+    m_connectionManager->connectToServer(m_serverIP, m_serverPort);
 }
 
 void NetworkManager::disconnectFromServer()
@@ -61,15 +54,10 @@ void NetworkManager::disconnectFromServer()
     bool wasAutoReconnect=m_autoReconnect;
     m_autoReconnect=false;
     //停止所有定时器
-    stopHeartbeat();
     stopReconnect();
 
-    if (m_socket && m_socket->state() != QAbstractSocket::UnconnectedState) {
-        m_socket->disconnectFromHost();
-        if (m_socket->state() != QAbstractSocket::UnconnectedState) {
-            m_socket->waitForDisconnected(3000);
-        }
-    }
+    m_connectionManager->disconnectFromServer();
+
     //恢复自动重连设置
     m_autoReconnect=wasAutoReconnect;
     //清空消息队列
@@ -79,69 +67,40 @@ void NetworkManager::disconnectFromServer()
     }
     qDebug()<< "Disconnected from server";
 }
-
-void NetworkManager::onSocketConnected()
+void NetworkManager::onConnectionEstablished()
 {
-    qDebug()<<"Connected to server successfully";
-
+    qDebug() << "Connected to server successfully";
     stopReconnect();
-    m_currentReconnectAttempts = 0;
-    m_isReconnecting = false;
 
     // 连接建立时立即处理积压队列
+    if(!m_messageQueue.isEmpty())
     processMessageQueue();
-    //启动心跳
-    startHeartbeat();
+
     emit connectionEstablished();
 }
-
-void NetworkManager::onSocketDisconnected()
+void NetworkManager::onConnectionLost()
 {
-    qDebug()<<"Disconnected from server";
-    //关闭心跳
-    stopHeartbeat();
+    qDebug() << "Disconnected from server";
     emit connectionLost();
 
     // 自动重连
-    if (m_autoReconnect) {
+    if(m_autoReconnect)
+    {
         startReconnect();
     }
 }
-
-void NetworkManager::onSocketError()
+void NetworkManager::onNetworkError(QString &error)
 {
-    QString errorString=m_socket->errorString();
-    qDebug()<<"Socket error："<<errorString;
-    //关闭心跳
-    stopHeartbeat();
-    emit networkError(errorString);
+    qDebug() << "Network error occurred:" << error;
+    emit networkError(error);
 
-    QAbstractSocket::SocketError socketError=m_socket->error();
-    //根据错误类型分类处理
-    //如果是连接被拒绝，远程关闭，网络错误等，尝试重连
-    if(m_autoReconnect && !m_isReconnecting)
+    // 根据错误类型判断是否需要重连
+    bool shouldReconnect = m_connectionManager->shouldReconnectOnError();
+    if(shouldReconnect && m_autoReconnect && !m_isReconnecting)
     {
-        switch (socketError) {
-        case QAbstractSocket::ConnectionRefusedError:
-        case QAbstractSocket::RemoteHostClosedError:
-        case QAbstractSocket::SocketTimeoutError:
-        case QAbstractSocket::NetworkError:
-            qDebug()<<"Socket error triggers reconnect";
-            startReconnect();
-            break;
-        case QAbstractSocket::HostNotFoundError:
-            //主机未找到可能是IP错误，不重连
-            break;
-        default:
-            //其他问题不重连
-            break;
-        }
+        startReconnect();
     }
-
-
-
 }
-
 bool NetworkManager::sendMessage(const CoreMessage::Msg &message)
 {
     if(!isConnected())
@@ -160,69 +119,17 @@ bool NetworkManager::sendMessage(const CoreMessage::Msg &message)
 }
 bool NetworkManager::sendRawMessage(const CoreMessage::Msg &message)
 {
-    if(!isConnected())
-    {
-        qDebug()<<"Cannot send raw message: not connected to server";
-        return false;
-    }
-    //创建消息，并转换为网络字节序
-    CoreMessage::Msg netMsg = message;
-    netMsg.toNetWorkByteOrder();
-    qint64 byteWritten;
-    //发送消息结构体
-    //确保同一时刻发送一条消息，添加锁
-    {
-         QMutexLocker locker(&m_writeMutex);
-        byteWritten=m_socket->write(reinterpret_cast<const char*>(&netMsg),sizeof(CoreMessage::Msg));
-    }
-
-    if(byteWritten==-1)
-    {
-        qDebug()<<"Failed to write data  to socket: "<<m_socket->errorString();
-        return false;
-    }
-    if(byteWritten!=sizeof(CoreMessage::Msg))
-    {
-        qDebug() << "Incomplete message sent:" << byteWritten << "of" << sizeof(CoreMessage::Msg) << "bytes";
-        return false;
-    }
-    //等待数据写入完成
-    if(!m_socket->waitForBytesWritten(3000))
-    {
-        qDebug() << "Timeout waiting for bytes to be written";
-        return false;
-    }
-    qDebug() << "Message sent successfully, type:" << message.type
-             << ", size:" << byteWritten << "bytes";
-    return true;
+    return m_connectionManager->sendMessage(message);
 }
 void NetworkManager::onSocketReadyRead()
 {
-    //qDebug() << "onSocketReadyRead in, bytes available:" << m_socket->bytesAvailable();
-    if(!isConnected())
+    qDebug()<<"进入NetworkManager::onSocketReadyRead()";
+    QVector<CoreMessage::Msg> messages=m_connectionManager->readMessages();
+    for(const auto& message: messages)
     {
-        qDebug()<<"Cannot send raw message: not connected to server";
-        return ;
+        qDebug()<<"进入handleIncomingMessage";
+        handleIncomingMessage(message);
     }
-    //持续读取直到没有完整消息
-    while(m_socket->bytesAvailable()>=static_cast<qint64>(sizeof(CoreMessage::Msg)))
-    {
-        //直接读取完整消息结构体
-        CoreMessage::Msg receivedMsg;
-        qint64 bytesRead=m_socket->read(reinterpret_cast<char*>(&receivedMsg),sizeof(CoreMessage::Msg));
-        if(bytesRead!=sizeof(CoreMessage::Msg))
-        {
-            qDebug()<<"Incomplete message received: "<<bytesRead<<"of"<<sizeof(CoreMessage::Msg)<<"bytes";
-            break;
-        }
-        //转换字节序
-        receivedMsg.toHostByteOrder();
-        // qDebug()<<"handleIncomingMessage in ";
-         receivedMessageTypes.append(receivedMsg.type);
-        //处理接收到的数据
-        handleIncomingMessage(receivedMsg);
-    }
-     //qDebug()<<"onSocketReadyRead out";
 }
 void NetworkManager::handleIncomingMessage(const CoreMessage::Msg &message)
 {
@@ -320,46 +227,6 @@ void NetworkManager::processMessageQueue()
     return m_messageQueue.size();
 }
 
-void NetworkManager::startHeartbeat()
-{
-    if(m_heartbeatInterval>0)
-    {
-        m_heartbeatTimer->start(m_heartbeatInterval);
-        qDebug()<<"Heartbeat started,interval: "<<m_heartbeatInterval<<"ms";
-    }
-}
-
-void NetworkManager::stopHeartbeat()
-{
-    if(m_heartbeatTimer->isActive())
-    {
-        m_heartbeatTimer->stop();
-        qDebug()<<"Heartbeat stopped";
-    }
-}
-
-void NetworkManager::onHeartbeatTimeout()
-{
-    if(!isConnected())
-    {
-        qDebug()<<"Cannot send heartbeat: not connected";
-        stopHeartbeat();
-        return;
-    }
-    //创建心跳包
-    CoreMessage::Msg heartbeatMsg;
-    heartbeatMsg.type=CoreMessage::MsgType::HEARTBEAT;
-    CoreUtils::StringUtils::safeStringCopy(heartbeatMsg.name,QString("client"),sizeof(heartbeatMsg.name));
-    CoreUtils::StringUtils::safeStringCopy(heartbeatMsg.text,QString("ping"),sizeof(heartbeatMsg.text));
-    //发送心跳
-    if(sendRawMessage(heartbeatMsg))
-    {
-        emit heartbeatSent();
-        qDebug()<<"Heartbeat sent at"<<CoreUtils::TimeUtils::currentTimestamp();
-    }else{
-        qDebug()<<"Failed to send heartbeat";
-    }
-}
 
 void NetworkManager::startReconnect()
 {
@@ -391,14 +258,17 @@ void NetworkManager::onReconnectTimeout()
         qDebug()<<"Max reconnect attempts reached: "<<m_maxReconnectAttempts;
         stopReconnect();
         QString error="Maximun reconnection attempts reached";
-        emit networkError(error);
+        emit onNetworkError(error);
         return;
     }
+
     m_currentReconnectAttempts++;
+
     //发出重连尝试信号
     emit reconnectAttempt(m_currentReconnectAttempts,m_maxReconnectAttempts);
     qDebug() << "Reconnect attempt" << m_currentReconnectAttempts
              << "/" << m_maxReconnectAttempts;
+
     //尝试重连
     if(!m_lastServerIp.isEmpty() && m_lastServerPort>0)
     {
