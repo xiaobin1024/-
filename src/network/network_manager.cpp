@@ -1,25 +1,22 @@
 #include"network_manager.h"
 NetworkManager::NetworkManager(QObject* parent,const AppConfig& config):
-    BaseManager(parent),
-    m_socket(new QTcpSocket(this)),
-    m_serverIP(config.serverIp),
-    m_serverPort(config.serverPort),
-    m_reconnectTimer(new QTimer(this)),
+    QObject(parent),
     m_reconnectInterval(config.reconnectInterval),
     m_maxReconnectAttempts(config.maxReconnectAttempts),
-    m_currentReconnectAttempts(0),
-    m_autoReconnect(true),
-    m_isReconnecting(false)
+    m_serverIP(config.serverIp),
+    m_serverPort(config.serverPort),
+    m_autoReconnect(true)
 
 {
     qDebug()<<"NetworkManager constructor";
 
-    //设置定时器
-    m_reconnectTimer->setSingleShot(true);
-    connect(m_reconnectTimer,&QTimer::timeout,this,&NetworkManager::onReconnectTimeout);
-
     // 初始化子管理器
     m_connectionManager = new ConnectionManager(this);
+    m_messageQueueManager=new MessageQueueManager(this);
+    m_reconnectionManager=new ReconnectionManager(this);
+    //初始化重连参数
+    m_reconnectionManager->setReconnectInterval(m_reconnectInterval);
+    m_reconnectionManager->setMaxReconnectAttempts(m_maxReconnectAttempts);
     // 设置连接
     setupConnections();
 
@@ -35,6 +32,8 @@ NetworkManager::NetworkManager(QObject* parent,const AppConfig& config):
              this,[this](QString error){onNetworkError(error);});
      connect(m_connectionManager,&ConnectionManager::dataReady,
              this,&NetworkManager::onSocketReadyRead);
+    connect(m_reconnectionManager,&ReconnectionManager::reconnectAttempt,
+             this,[this](int currentAttempt,int maxAttempts){onReconnectAttempt(currentAttempt,maxAttempts);});
 }
 
 bool NetworkManager::isConnected() const
@@ -49,32 +48,22 @@ void NetworkManager::connectToServer()
 
 void NetworkManager::disconnectFromServer()
 {
-    qDebug()<<"Disconnnecting from server";
-    //设置标志，防止重连
-    bool wasAutoReconnect=m_autoReconnect;
-    m_autoReconnect=false;
-    //停止所有定时器
-    stopReconnect();
-
+     m_reconnectionManager->stopReconnect();
     m_connectionManager->disconnectFromServer();
-
-    //恢复自动重连设置
-    m_autoReconnect=wasAutoReconnect;
     //清空消息队列
-    {
-        QMutexLocker locker(&m_queueMutex);
-        m_messageQueue.clear();
-    }
+     m_messageQueueManager->clear();
     qDebug()<< "Disconnected from server";
 }
 void NetworkManager::onConnectionEstablished()
 {
     qDebug() << "Connected to server successfully";
-    stopReconnect();
+    m_reconnectionManager->stopReconnect();
 
     // 连接建立时立即处理积压队列
-    if(!m_messageQueue.isEmpty())
-    processMessageQueue();
+    if(!m_messageQueueManager->isEmpty())
+    {
+        processMessageQueue();
+    }
 
     emit connectionEstablished();
 }
@@ -86,7 +75,7 @@ void NetworkManager::onConnectionLost()
     // 自动重连
     if(m_autoReconnect)
     {
-        startReconnect();
+        m_reconnectionManager->startReconnect();
     }
 }
 void NetworkManager::onNetworkError(QString &error)
@@ -96,26 +85,10 @@ void NetworkManager::onNetworkError(QString &error)
 
     // 根据错误类型判断是否需要重连
     bool shouldReconnect = m_connectionManager->shouldReconnectOnError();
-    if(shouldReconnect && m_autoReconnect && !m_isReconnecting)
+    if(shouldReconnect && m_autoReconnect && !m_reconnectionManager->isReconnecting())
     {
-        startReconnect();
+        m_reconnectionManager->startReconnect();
     }
-}
-bool NetworkManager::sendMessage(const CoreMessage::Msg &message)
-{
-    if(!isConnected())
-    {
-        qDebug()<<"Cannot send message: not connected to server";
-        return false;
-    }
-    //验证消息
-    if(strlen(message.name)>=sizeof(message.name) ||
-        strlen(message.text)>=sizeof(message.text))
-    {
-        qDebug()<<"Cannot send message: name or text too long";
-        return false;
-    }
-    return sendRawMessage(message);
 }
 bool NetworkManager::sendRawMessage(const CoreMessage::Msg &message)
 {
@@ -174,116 +147,49 @@ void NetworkManager::handleIncomingMessage(const CoreMessage::Msg &message)
 
 void NetworkManager::sendMessageAsync(const CoreMessage::Msg &message)
 {
-    QMutexLocker locker(&m_queueMutex);
-
-    if(!isConnected())
+    //验证消息
+    if(strlen(message.name)>=sizeof(message.name) ||
+        strlen(message.text)>=sizeof(message.text))
     {
-        // 连接断开时加入队列
-        m_messageQueue.enqueue(message);
-        qDebug() << "Message queued, pending count:" << m_messageQueue.size();
+        qDebug()<<"Cannot send message: name or text too long";
+        return;
+    }
+    m_messageQueueManager->enqueueMessage(message);
+
+    if(isConnected())
+    {
+        processMessageQueue();
     }
     else
     {
-        if(!m_messageQueue.isEmpty()){
-            // 队列未清空，新消息入队
-            m_messageQueue.enqueue(message);
-            qDebug() << "Queue not empty, new message queued, pending count:" << m_messageQueue.size();
-            // 连接正常时先尝试处理队列
-            processMessageQueue();
-        }else{
-            if(!sendRawMessage(message)) {
-                // 发送失败加入队列
-                m_messageQueue.enqueue(message);
-                qDebug() << "Message send failed, queued, pending count:" << m_messageQueue.size();
-            }
-        }
+        qDebug()<<"Message queued, pending count: "<<m_messageQueueManager->size();
     }
 }
-
 void NetworkManager::processMessageQueue()
 {
-    QMutexLocker locker(&m_queueMutex);
-    int processedCount = 0;
-    int failedCount = 0;
-    while(!m_messageQueue.isEmpty()) {
-        CoreMessage::Msg message = m_messageQueue.dequeue(); // 直接出队尝试发送
-        if(sendRawMessage(message)) {
-            processedCount++;
-        } else {
-            // 发送失败，放到队列前端
-            m_messageQueue.prepend(message);
-            failedCount++;
-            break;
-        }
-    }
-    if(processedCount > 0 || failedCount > 0) {
-        qDebug() << "Message queue processed:" << processedCount << "sent,"
-                 << failedCount << "failed, remaining:" << m_messageQueue.size();
-    }
-}
- int NetworkManager::getPendingMessageCount()
-{
-    QMutexLocker locker(&m_queueMutex);
-    return m_messageQueue.size();
-}
-
-
-void NetworkManager::startReconnect()
-{
-    qDebug()<<"进入startReconnect()";
-    if(m_isReconnecting || !m_autoReconnect) return;
-
-
-    m_isReconnecting=true;
-    m_currentReconnectAttempts=0;
-    //第一次尝试重连
-    m_reconnectTimer->start(0);
-    qDebug()<<"Reconnect process started";
-}
-
-void NetworkManager::stopReconnect()
-{
-    if(m_reconnectTimer->isActive() || m_isReconnecting)
+    if(!isConnected())
     {
-        m_reconnectTimer->stop();
-        m_isReconnecting=false;
-        m_currentReconnectAttempts=0;
-        qDebug()<<"Reconnect process stoppde";
-    }
-}
-
-void NetworkManager::onReconnectTimeout()
-{
-    if(m_currentReconnectAttempts>=m_maxReconnectAttempts){
-        qDebug()<<"Max reconnect attempts reached: "<<m_maxReconnectAttempts;
-        stopReconnect();
-        QString error="Maximun reconnection attempts reached";
-        emit onNetworkError(error);
+        qDebug() << "Cannot process message queue: not connected to server";
         return;
     }
+    m_messageQueueManager->processQueue([this](const CoreMessage::Msg& message) {
+        return sendRawMessage(message);
+    });
+}
+int NetworkManager::getPendingMessageCount()
+{
+    return m_messageQueueManager->size();
+}
 
-    m_currentReconnectAttempts++;
-
-    //发出重连尝试信号
-    emit reconnectAttempt(m_currentReconnectAttempts,m_maxReconnectAttempts);
-    qDebug() << "Reconnect attempt" << m_currentReconnectAttempts
-             << "/" << m_maxReconnectAttempts;
-
-    //尝试重连
-    if(!m_lastServerIp.isEmpty() && m_lastServerPort>0)
+void NetworkManager::onReconnectAttempt(int currentAttempt,int maxAttempts)
+{
+    qDebug()<<"NetworkManager Reconnect attempt"<<currentAttempt<<"/"<<maxAttempts;
+    if(!m_connectionManager->getLastServerIp().isEmpty() &&
+        m_connectionManager->getLastServerPort()>0)
     {
-        qDebug() << "Attempting to reconnect to" << m_lastServerIp << ":" << m_lastServerPort;
-        m_socket->connectToHost(m_lastServerIp, m_lastServerPort);
-    }else
-    {
-        qDebug() << "No previous connection info available for reconnection";
-        stopReconnect();
+        m_connectionManager->connectToServer(m_connectionManager->getLastServerIp(),
+                                             m_connectionManager->getLastServerPort());
     }
-    //设置下一次重连
-    if(m_currentReconnectAttempts<m_maxReconnectAttempts)
-    {
-        int interval = qMax(100, m_reconnectInterval); // 确保最小间隔为100ms
-        m_reconnectTimer->start(interval);
-        qDebug() << "Next reconnect in" << interval << "ms";
-    }
+
+    emit reconnectAttempt(currentAttempt, maxAttempts);
 }

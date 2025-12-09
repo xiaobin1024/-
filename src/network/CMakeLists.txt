@@ -30,6 +30,8 @@ add_library(network STATIC
   network_manager.cpp
   network_manager.h
   connection_manager.h connection_manager.cpp
+  message_queue_manager.h message_queue_manager.cpp
+  reconnection_manager.h reconnection_manager.cpp
 )
 #连接Qt库并设置包含目录，使用PUBLIC确保依赖传递
 target_link_libraries(network PUBLIC

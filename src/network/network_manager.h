@@ -1,6 +1,5 @@
 #ifndef NETWORK_MANAGER_H
 #define NETWORK_MANAGER_H
-#include"core/base_manager.h"
 #include"core/app_config.h"
 #include"core/utils.h"
 #include<QTcpSocket>
@@ -9,18 +8,18 @@
 #include <QMutex>
 #include<QVector>
 #include"connection_manager.h"
+#include"message_queue_manager.h"
+#include"reconnection_manager.h"
 
-class NetworkManager: public BaseManager
+class NetworkManager: public QObject
 {
     Q_OBJECT
 public:
 
     explicit NetworkManager(QObject* parent=nullptr,const AppConfig& config=AppConfig());
-    //实现BaseManager接口
-    bool isConnected() const override;
-    void connectToServer() override;
-    void disconnectFromServer() override;
-    bool sendMessage(const CoreMessage::Msg &message) override;
+    bool isConnected() const;
+    void connectToServer() ;
+    void disconnectFromServer() ;
 
     //发送消息接口
     bool sendRawMessage(const CoreMessage::Msg &message);
@@ -39,29 +38,21 @@ signals:
     void connectionEstablished();
     void connectionLost();
     void networkError(QString error);
+
 private slots:
 
 
     void processMessageQueue(); //处理消息队列
 
-    void startReconnect();      //开始重连
-    void stopReconnect();       //停止重连
-    void onReconnectTimeout();  //重连超时
 
     void onNetworkError(QString &error);
     void onConnectionEstablished();
     void onConnectionLost();
     void onSocketReadyRead();    //接收消息接口
+     void onReconnectAttempt(int currentAttempt,int maxAttempts);  //尝试重连
 private:
-    //消息队列相关变量
-    QQueue<CoreMessage::Msg> m_messageQueue;    //消息队列
-    mutable QRecursiveMutex m_queueMutex;    //递归锁保护消息队列
-     QMutex m_writeMutex;                   // 添加写锁
 
-    //Socket和相关的连接
-    QTcpSocket *m_socket;       //TCP socket对象
-    QString m_lastServerIp;     //上次连接的服务器IP
-    int m_lastServerPort{0};    //上次连接的服务器端口
+
     QString m_serverIP;         //当前连接的服务器IP
     int m_serverPort;           //当前连接的服务器端口
 
@@ -79,6 +70,8 @@ private:
 private:
     // 子管理器
     ConnectionManager* m_connectionManager;
+    MessageQueueManager* m_messageQueueManager;
+    ReconnectionManager* m_reconnectionManager;
 private:
     //连接管理
     void setupConnections();

@@ -31,13 +31,26 @@ TEST(NetworkManagerTest,NetworkManagerNextConnectTest)
     ASSERT_NE(QCoreApplication::instance(), nullptr);
     //测试连接服务器断开服务器
     NetworkManager* manager = new NetworkManager();
+
+    //建立连接前大量数据在队列中
+    for(int i=0;i<500;i++)
+    {
+        CoreMessage::Msg msg;
+        msg.type=CoreMessage::MsgType::SEARCH;
+        CoreUtils::StringUtils::safeStringCopy(msg.name,QString("user500%1").arg(i).toUtf8().constData(),sizeof(msg.name));
+        CoreUtils::StringUtils::safeStringCopy(msg.text,QString("Message500%1").arg(i).toUtf8().constData(),sizeof(msg.text));
+
+        manager->sendMessageAsync(msg);
+        QThread::msleep(5);     //稍微延迟
+    }
+
     //连接服务器
     manager->connectToServer();
     //等待建立连接
     QTest::qWait(500);
 
 
-    int initialMessages = 5;
+    int initialMessages = 500;
     for (int i = 1; i <= initialMessages; ++i) {
         CoreMessage::Msg msg;
         msg.type = CoreMessage::MsgType::SEARCH;
@@ -57,7 +70,7 @@ TEST(NetworkManagerTest,NetworkManagerNextConnectTest)
     }
 
     // 等待消息发送完成
-    QTest::qWait(2000);
+    QTest::qWait(20000);
     //断开连接
     manager->disconnectFromServer();
     //等待断开时间
