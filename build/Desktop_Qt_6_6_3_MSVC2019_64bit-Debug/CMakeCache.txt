@@ -311,9 +311,6 @@ Qt6Gui_DIR:PATH=D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6Gui
 //The directory containing a CMake configuration file for Qt6Network.
 Qt6Network_DIR:PATH=D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6Network
 
-//The directory containing a CMake configuration file for Qt6Test.
-Qt6Test_DIR:PATH=D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6Test
-
 //The directory containing a CMake configuration file for Qt6WidgetsTools.
 Qt6WidgetsTools_DIR:PATH=D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6WidgetsTools
 
@@ -367,6 +364,15 @@ network_dictionary_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
 network_dictionary_SOURCE_DIR:STATIC=C:/Users/86152/Desktop/network_dictionary
+
+//Value Computed by CMake
+ui_BINARY_DIR:STATIC=C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/ui
+
+//Value Computed by CMake
+ui_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+ui_SOURCE_DIR:STATIC=C:/Users/86152/Desktop/network_dictionary/src/ui
 
 
 ########################
@@ -483,7 +489,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_MT
 CMAKE_MT-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=4
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=5
 //Platform information initialized
 CMAKE_PLATFORM_INFO_INITIALIZED:INTERNAL=1
 //noop for ranlib
@@ -589,8 +595,6 @@ QT_FEATURE_avx512vbmi2:INTERNAL=ON
 QT_FEATURE_avx512vl:INTERNAL=ON
 //Qt feature: backtrace (from target Qt6::Core)
 QT_FEATURE_backtrace:INTERNAL=OFF
-//Qt feature: batch_test_support (from target Qt6::Test)
-QT_FEATURE_batch_test_support:INTERNAL=OFF
 //Qt feature: brotli (from target Qt6::Network)
 QT_FEATURE_brotli:INTERNAL=OFF
 //Qt feature: buttongroup (from target Qt6::Widgets)
@@ -861,8 +865,6 @@ QT_FEATURE_ipv6ifname:INTERNAL=OFF
 QT_FEATURE_islamiccivilcalendar:INTERNAL=ON
 //Qt feature: itemmodel (from target Qt6::Core)
 QT_FEATURE_itemmodel:INTERNAL=ON
-//Qt feature: itemmodeltester (from target Qt6::Test)
-QT_FEATURE_itemmodeltester:INTERNAL=ON
 //Qt feature: itemviews (from target Qt6::Widgets)
 QT_FEATURE_itemviews:INTERNAL=ON
 //Qt feature: jalalicalendar (from target Qt6::Core)
@@ -1205,8 +1207,6 @@ QT_FEATURE_tabwidget:INTERNAL=ON
 QT_FEATURE_temporaryfile:INTERNAL=ON
 //Qt feature: testlib (from target Qt6::Core)
 QT_FEATURE_testlib:INTERNAL=ON
-//Qt feature: testlib_selfcover (from target Qt6::Test)
-QT_FEATURE_testlib_selfcover:INTERNAL=OFF
 //Qt feature: textbrowser (from target Qt6::Widgets)
 QT_FEATURE_textbrowser:INTERNAL=ON
 //Qt feature: textdate (from target Qt6::Core)
@@ -1267,8 +1267,6 @@ QT_FEATURE_use_lld_linker:INTERNAL=OFF
 QT_FEATURE_use_mold_linker:INTERNAL=OFF
 //Qt feature: vaes (from target Qt6::Core)
 QT_FEATURE_vaes:INTERNAL=ON
-//Qt feature: valgrind (from target Qt6::Test)
-QT_FEATURE_valgrind:INTERNAL=OFF
 //Qt feature: validator (from target Qt6::Gui)
 QT_FEATURE_validator:INTERNAL=ON
 //Qt feature: vkgen (from target Qt6::Gui)

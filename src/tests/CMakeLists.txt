@@ -54,7 +54,8 @@ add_executable(tests
     #tst_core_utilstest.cpp
     #tst_network.cpp
     #tst_network_network_managetest.cpp
-    tst_network_network_manager_nextconnecttest.cpp
+    #tst_network_network_manager_nextconnecttest.cpp
+    tst_ui_base_test.cpp
 
     # 后续添加其他测试文件
 )
@@ -63,7 +64,8 @@ add_executable(tests
 # 7. 直接链接具体的库文件（绕过find_package的组件依赖问题）
 target_link_libraries(tests PRIVATE
     network
-    core  #直接链接core
+    core
+    ui
     Qt${QT_VERSION_MAJOR}::Core  #添加Qt Core模块链接
     "${GTEST_LIBRARY}"
     "${GTEST_MAIN_LIBRARY}" # 手动链接main库

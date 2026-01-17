@@ -70,7 +70,7 @@ TEST(NetworkManagerTest,NetworkManagerNextConnectTest)
     }
 
     // 等待消息发送完成
-    QTest::qWait(20000);
+    QTest::qWait(2000);
     //断开连接
     manager->disconnectFromServer();
     //等待断开时间

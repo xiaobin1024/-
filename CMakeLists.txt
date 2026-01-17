@@ -27,10 +27,12 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 
 add_subdirectory(src/core)
 add_subdirectory(src/network)
+add_subdirectory(src/ui)
 # 启用测试
 option(BUILD_TESTING "Build tests" ON)
 if(BUILD_TESTING)
     enable_testing()
     add_subdirectory(src/tests)
 endif()
+
 
