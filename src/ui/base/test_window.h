@@ -6,7 +6,7 @@
 #include<QLineEdit>
 #include<QLabel>
 
-class TestWindow: public Basewidget
+class TestWindow: public BaseWidget
 {
     Q_OBJECT
 public:
