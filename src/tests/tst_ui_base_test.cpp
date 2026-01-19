@@ -238,7 +238,7 @@ TEST(TestWindow, InteractiveTest)
 
     // 清空消息
     window.clearMessage();
-    QTest::qWait(5000);
+    QTest::qWait(3000);
 
     qDebug() << "=== 测试场景 2: 主题切换测试 ===";
 

@@ -24,8 +24,8 @@ void TestWindow::setupUI()
 
     auto buttonLayout = createButtonLayout();
     m_showButton = createPrimaryButton("显示消息");
-    auto showErrorButton = createSecondaryButton("显示错误");
-    m_clearButton = createSecondaryButton("清除消息");
+    auto showErrorButton = createPrimaryButton("显示错误");
+    m_clearButton = createPrimaryButton("清除消息");
 
     buttonLayout->addWidget(m_showButton);
     buttonLayout->addWidget(showErrorButton);
