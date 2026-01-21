@@ -27,10 +27,11 @@ message(STATUS "Qt version: ${QT_VERSION}")
 # 创建静态库
 add_library(core STATIC
   message.h
-  base_manager.h
+
   app_config.h
   utils.h
   utils.cpp
+  word_data.h
 )
 
 # 链接Qt库并设置包含目录 - 修改：使用PUBLIC确保依赖传递

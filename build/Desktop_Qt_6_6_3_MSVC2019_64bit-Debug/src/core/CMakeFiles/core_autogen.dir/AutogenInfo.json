@@ -71,12 +71,6 @@
 			null
 		],
 		[
-			"C:/Users/86152/Desktop/network_dictionary/src/core/base_manager.h",
-			"MU",
-			"EWIEGA46WW/moc_base_manager.cpp",
-			null
-		],
-		[
 			"C:/Users/86152/Desktop/network_dictionary/src/core/message.h",
 			"MU",
 			"EWIEGA46WW/moc_message.cpp",
@@ -86,6 +80,12 @@
 			"C:/Users/86152/Desktop/network_dictionary/src/core/utils.h",
 			"MU",
 			"EWIEGA46WW/moc_utils.cpp",
+			null
+		],
+		[
+			"C:/Users/86152/Desktop/network_dictionary/src/core/word_data.h",
+			"MU",
+			"EWIEGA46WW/moc_word_data.cpp",
 			null
 		]
 	],

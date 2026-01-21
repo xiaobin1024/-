@@ -2,7 +2,7 @@
 #define CONNECTION_MANAGER_H
 #include"core/app_config.h"
 #include"core/utils.h"
-#include"core/base_manager.h"
+#include"core/message.h"
 #include<QTcpSocket>
 #include<QMutex>
 #include<QVector>

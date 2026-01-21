@@ -23,9 +23,13 @@ add_library(ui STATIC
   ui.h
   base/base_widget.h
   base/base_widget.cpp
-  base/base_dialog.h
-  base/base_dialog.cpp
-  base/test_window.h base/test_window.cpp
+  #base/test_window.h
+  #base/test_window.cpp
+  base/word_card.h base/word_card.cpp
+  base/test_word_card.h
+  base/test_word_card.cpp
+
+
 )
 
 # 链接依赖库

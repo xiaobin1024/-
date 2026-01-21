@@ -31,8 +31,8 @@ add_subdirectory(src/ui)
 # 启用测试
 option(BUILD_TESTING "Build tests" ON)
 if(BUILD_TESTING)
-    enable_testing()
-    add_subdirectory(src/tests)
+   enable_testing()
+   add_subdirectory(src/tests)
 endif()
 
 

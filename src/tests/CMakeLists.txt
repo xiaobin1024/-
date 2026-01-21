@@ -6,8 +6,8 @@ set(CMAKE_TOOLCHAIN_FILE "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
     CACHE STRING "Vcpkg toolchain file" FORCE)
 
 # 查找Qt包 - 修改：添加Core模块
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Test)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Test)
 
 project(MessageTest LANGUAGES CXX)
 
@@ -55,7 +55,8 @@ add_executable(tests
     #tst_network.cpp
     #tst_network_network_managetest.cpp
     #tst_network_network_manager_nextconnecttest.cpp
-    tst_ui_base_test.cpp
+    #tst_ui_base_test.cpp
+    tst_ui_word_card_test.cpp
 
     # 后续添加其他测试文件
 )
@@ -67,6 +68,7 @@ target_link_libraries(tests PRIVATE
     core
     ui
     Qt${QT_VERSION_MAJOR}::Core  #添加Qt Core模块链接
+    Qt${QT_VERSION_MAJOR}::Test
     "${GTEST_LIBRARY}"
     "${GTEST_MAIN_LIBRARY}" # 手动链接main库
     "${GTEST_LIB_DIR}/gmock.lib" #如果用到gmock
