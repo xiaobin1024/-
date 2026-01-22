@@ -19,17 +19,10 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Widgets)
 
 # 修改为静态库
 add_library(ui STATIC
-  ui.cpp
-  ui.h
   base/base_widget.h
   base/base_widget.cpp
-  #base/test_window.h
-  #base/test_window.cpp
-  base/word_card.h base/word_card.cpp
-  base/test_word_card.h
-  base/test_word_card.cpp
-
-
+  word/word_card.cpp
+  word/word_card.h
 )
 
 # 链接依赖库

@@ -5,7 +5,7 @@
 #include<QtTest/QTest>
 #include<QtTest/QSignalSpy>
 #include<QThread>
-#include"ui/base/test_word_card.h"
+#include"ui/word/word_card.h"
 using namespace testing;
 
 /**
