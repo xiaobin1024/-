@@ -21,8 +21,11 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Widgets)
 add_library(ui STATIC
   base/base_widget.h
   base/base_widget.cpp
-  word/word_card.cpp
   word/word_card.h
+  word/word_card.cpp
+  rec/icons.qrc
+  word/interactive_wordcard.h
+  word/interactive_wordcard.cpp
 )
 
 # 链接依赖库

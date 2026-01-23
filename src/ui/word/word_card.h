@@ -15,7 +15,7 @@
  * 复杂的功能（如收藏、发音、添加到生词本等）应由继承此类的子组件实现。
  */
 
-#include "/base/base_widget.h"
+#include"base/base_widget.h"
 #include "word_data.h"
 #include <QWidget>
 
@@ -109,6 +109,9 @@ protected:
      * @param event 绘制事件
      */
     void paintEvent(QPaintEvent* event) override;
+
+    // 更新卡片样式
+    virtual void updateCardStyle();
 private:
     // 初始化UI
     void initUI();
@@ -116,8 +119,7 @@ private:
     // 更新内容显示
     void updateContent();
 
-    // 更新卡片样式
-    void updateCardStyle();
+
 
     // 更新词性标签样式
     void updatePartOfSpeechStyle();

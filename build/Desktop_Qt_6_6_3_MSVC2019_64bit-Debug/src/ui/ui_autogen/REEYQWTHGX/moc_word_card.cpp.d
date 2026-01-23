@@ -1,5 +1,7 @@
 C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/ui/ui_autogen/REEYQWTHGX/moc_word_card.cpp: C:/Users/86152/Desktop/network_dictionary/src/ui/word/word_card.h \
   C:/Users/86152/Desktop/network_dictionary/src/core/word_data.h \
+  C:/Users/86152/Desktop/network_dictionary/src/ui/base/base_widget.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtCore/QMap \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/QString \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/q20functional.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/q20memory.h \
@@ -43,6 +45,7 @@ C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qglobalstatic.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qhash.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qhashfunctions.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtCore/qiodevice.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qiodevicebase.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qiterable.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qiterator.h \
@@ -109,6 +112,7 @@ C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qtversionchecks.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qtypeinfo.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qtypes.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtCore/qurl.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qutf8stringview.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qvariant.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qvarlengtharray.h \
@@ -127,19 +131,43 @@ C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-
   D:/qt/6.6.3/msvc2019_64/include/QtGui/qkeysequence.h \
   D:/qt/6.6.3/msvc2019_64/include/QtGui/qpaintdevice.h \
   D:/qt/6.6.3/msvc2019_64/include/QtGui/qpalette.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtGui/qpen.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtGui/qpicture.h \
   D:/qt/6.6.3/msvc2019_64/include/QtGui/qpixelformat.h \
   D:/qt/6.6.3/msvc2019_64/include/QtGui/qpixmap.h \
   D:/qt/6.6.3/msvc2019_64/include/QtGui/qpolygon.h \
   D:/qt/6.6.3/msvc2019_64/include/QtGui/qregion.h \
   D:/qt/6.6.3/msvc2019_64/include/QtGui/qrgb.h \
   D:/qt/6.6.3/msvc2019_64/include/QtGui/qrgba64.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtGui/qtextcursor.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtGui/qtextdocument.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtGui/qtextformat.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtGui/qtextoption.h \
   D:/qt/6.6.3/msvc2019_64/include/QtGui/qtgui-config.h \
   D:/qt/6.6.3/msvc2019_64/include/QtGui/qtguiexports.h \
   D:/qt/6.6.3/msvc2019_64/include/QtGui/qtguiglobal.h \
   D:/qt/6.6.3/msvc2019_64/include/QtGui/qtransform.h \
   D:/qt/6.6.3/msvc2019_64/include/QtGui/qwindowdefs.h \
   D:/qt/6.6.3/msvc2019_64/include/QtGui/qwindowdefs_win.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtWidgets/QFormLayout \
+  D:/qt/6.6.3/msvc2019_64/include/QtWidgets/QGroupBox \
+  D:/qt/6.6.3/msvc2019_64/include/QtWidgets/QLabel \
+  D:/qt/6.6.3/msvc2019_64/include/QtWidgets/QLayout \
+  D:/qt/6.6.3/msvc2019_64/include/QtWidgets/QLineEdit \
+  D:/qt/6.6.3/msvc2019_64/include/QtWidgets/QPushButton \
+  D:/qt/6.6.3/msvc2019_64/include/QtWidgets/QVBoxLayout \
   D:/qt/6.6.3/msvc2019_64/include/QtWidgets/QWidget \
+  D:/qt/6.6.3/msvc2019_64/include/QtWidgets/qabstractbutton.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtWidgets/qboxlayout.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtWidgets/qformlayout.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtWidgets/qframe.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtWidgets/qgridlayout.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtWidgets/qgroupbox.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtWidgets/qlabel.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtWidgets/qlayout.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtWidgets/qlayoutitem.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtWidgets/qlineedit.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtWidgets/qpushbutton.h \
   D:/qt/6.6.3/msvc2019_64/include/QtWidgets/qsizepolicy.h \
   D:/qt/6.6.3/msvc2019_64/include/QtWidgets/qtwidgets-config.h \
   D:/qt/6.6.3/msvc2019_64/include/QtWidgets/qtwidgetsexports.h \

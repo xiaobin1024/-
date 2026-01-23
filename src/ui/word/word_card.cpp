@@ -149,6 +149,9 @@ void WordCard::onThemeChanged()
     // 更新卡片特定样式
     updateCardStyle();
     updatePartOfSpeechStyle();
+
+    // 强制更新，确保paintEvent被调用
+    update();
 }
 
 void WordCard::mousePressEvent(QMouseEvent* event)
@@ -277,6 +280,10 @@ void WordCard::updateCardStyle()
     QString borderColor = getColor("border");
     QString hoverBackgroundColor = getColor("primary-light") + "20";  // 20% 透明度
     QString hoverBorderColor = getColor("primary");
+
+    qDebug() << "updateCardStyle - 主题:" << (uiTheme() == UITheme::Light ? "亮色" : "暗色");
+    qDebug() << "surface颜色:" << backgroundColor;
+    qDebug() << "border颜色:" << borderColor;
 
     // 设置卡片的样式表
     setStyleSheet(QString(

@@ -1,0 +1,30 @@
+{
+	"BUILD_DIR" : "C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/ui/ui_autogen",
+	"CMAKE_BINARY_DIR" : "C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug",
+	"CMAKE_CURRENT_BINARY_DIR" : "C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/ui",
+	"CMAKE_CURRENT_SOURCE_DIR" : "C:/Users/86152/Desktop/network_dictionary/src/ui",
+	"CMAKE_SOURCE_DIR" : "C:/Users/86152/Desktop/network_dictionary",
+	"CROSS_CONFIG" : false,
+	"GENERATOR" : "Ninja",
+	"INCLUDE_DIR" : "C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/ui/ui_autogen/include",
+	"INPUTS" : 
+	[
+		"C:/Users/86152/Desktop/network_dictionary/src/ui/rec/star_bright.png",
+		"C:/Users/86152/Desktop/network_dictionary/src/ui/rec/col_vocabulary.png",
+		"C:/Users/86152/Desktop/network_dictionary/src/ui/rec/speaker.png",
+		"C:/Users/86152/Desktop/network_dictionary/src/ui/rec/more_actions.png",
+		"C:/Users/86152/Desktop/network_dictionary/src/ui/rec/star_gray.png",
+		"C:/Users/86152/Desktop/network_dictionary/src/ui/rec/vocabulary.png"
+	],
+	"LOCK_FILE" : "C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/ui/CMakeFiles/ui_autogen.dir/AutoRcc_icons_7RSPFQ2DNO_Lock.lock",
+	"MULTI_CONFIG" : false,
+	"OPTIONS" : [ "--no-zstd", "-name", "icons" ],
+	"OUTPUT_CHECKSUM" : "7RSPFQ2DNO",
+	"OUTPUT_NAME" : "qrc_icons.cpp",
+	"RCC_EXECUTABLE" : "D:/qt/6.6.3/msvc2019_64/./bin/rcc.exe",
+	"RCC_LIST_OPTIONS" : [ "--list" ],
+	"SETTINGS_FILE" : "C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/ui/CMakeFiles/ui_autogen.dir/AutoRcc_icons_7RSPFQ2DNO_Used.txt",
+	"SOURCE" : "C:/Users/86152/Desktop/network_dictionary/src/ui/rec/icons.qrc",
+	"USE_BETTER_GRAPH" : false,
+	"VERBOSITY" : 0
+}

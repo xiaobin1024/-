@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>col_vocabulary.png</file>
+        <file>more_actions.png</file>
+        <file>speaker.png</file>
+        <file>star_bright.png</file>
+        <file>star_gray.png</file>
+        <file>vocabulary.png</file>
+    </qresource>
+</RCC>

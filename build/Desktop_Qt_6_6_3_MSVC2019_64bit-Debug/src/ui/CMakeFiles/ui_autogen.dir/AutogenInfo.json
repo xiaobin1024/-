@@ -56,7 +56,8 @@
 		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicToolHelpers.cmake",
 		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/QtPublicWalkLibsHelpers.cmake",
 		"D:/qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeFindDependencyMacro.cmake",
-		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/Qt6Dependencies.cmake"
+		"D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/Qt6Dependencies.cmake",
+		"C:/Users/86152/Desktop/network_dictionary/src/ui/rec/icons.qrc"
 	],
 	"CMAKE_SOURCE_DIR" : "C:/Users/86152/Desktop/network_dictionary",
 	"CROSS_CONFIG" : false,
@@ -68,6 +69,12 @@
 			"C:/Users/86152/Desktop/network_dictionary/src/ui/base/base_widget.h",
 			"MU",
 			"CZ4SVKUTXB/moc_base_widget.cpp",
+			null
+		],
+		[
+			"C:/Users/86152/Desktop/network_dictionary/src/ui/word/interactive_wordcard.h",
+			"MU",
+			"REEYQWTHGX/moc_interactive_wordcard.cpp",
 			null
 		],
 		[
@@ -139,6 +146,11 @@
 	[
 		[
 			"C:/Users/86152/Desktop/network_dictionary/src/ui/base/base_widget.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/86152/Desktop/network_dictionary/src/ui/word/interactive_wordcard.cpp",
 			"MU",
 			null
 		],

@@ -186,7 +186,7 @@
 				{
 					"directoryIndex" : 2,
 					"id" : "network::@311edf953348ef8fadde",
-					"jsonFile" : "target-network-Debug-506c55e772b338ea2ab8.json",
+					"jsonFile" : "target-network-Debug-0534aec3e8ba0452d35e.json",
 					"name" : "network",
 					"projectIndex" : 2
 				},
@@ -207,14 +207,14 @@
 				{
 					"directoryIndex" : 4,
 					"id" : "tests::@08b4cb1648a15a99be29",
-					"jsonFile" : "target-tests-Debug-536e850e45cfa6591371.json",
+					"jsonFile" : "target-tests-Debug-6120a1b1f47297703566.json",
 					"name" : "tests",
 					"projectIndex" : 4
 				},
 				{
 					"directoryIndex" : 3,
 					"id" : "ui::@e0ce1d6ecae3dc67b834",
-					"jsonFile" : "target-ui-Debug-e5dfe9efa912eeb8160e.json",
+					"jsonFile" : "target-ui-Debug-e5bca2525976b02ce10d.json",
 					"name" : "ui",
 					"projectIndex" : 3
 				},

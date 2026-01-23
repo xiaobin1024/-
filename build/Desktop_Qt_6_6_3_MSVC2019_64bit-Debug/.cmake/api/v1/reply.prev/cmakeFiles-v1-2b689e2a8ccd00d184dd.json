@@ -1841,6 +1841,9 @@
 			"path" : "D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/Qt6Dependencies.cmake"
 		},
 		{
+			"path" : "src/ui/rec/icons.qrc"
+		},
+		{
 			"path" : "src/tests/CMakeLists.txt"
 		},
 		{
