@@ -149,9 +149,6 @@ void WordCard::onThemeChanged()
     // 更新卡片特定样式
     updateCardStyle();
     updatePartOfSpeechStyle();
-
-    // 强制更新，确保paintEvent被调用
-    update();
 }
 
 void WordCard::mousePressEvent(QMouseEvent* event)
@@ -295,6 +292,9 @@ void WordCard::updateCardStyle()
                       "WordCard:hover {"
                       "  background-color: %3;"
                       "  border-color: %4;"
+                      "}"
+                      "WordCard QLabel {"
+                      "  background-color: transparent;"
                       "}"
                       ).arg(backgroundColor,
                            borderColor,

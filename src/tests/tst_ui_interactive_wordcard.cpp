@@ -335,7 +335,7 @@ TEST(UiTest,InterativeTest)
 
     EXPECT_EQ(card->uiTheme(), UITheme::Dark) << "主题应切换为暗色";
     qDebug() << "切换到暗色主题";
-    QTest::qWait(3000);
+    QTest::qWait(2000);
 
     // 切换回亮色主题
     card->setUITheme(UITheme::Light);
@@ -344,4 +344,23 @@ TEST(UiTest,InterativeTest)
 
     EXPECT_EQ(card->uiTheme(), UITheme::Light) << "主题应切换回亮色";
     qDebug() << "切换回亮色主题";
+     QTest::qWait(2000);
+
+    qDebug() << "\n=== 测试10: 数据更新测试 ===";
+
+    WordData newData("Beautiful", "/ˈbjuːtɪfl/",
+                     "adj. 美丽的；美好的",
+                     "adj.",
+                     "She has a beautiful voice.");
+
+    card->setWordData(newData);
+    QApplication::processEvents();
+    QTest::qWait(1000);
+
+    EXPECT_EQ(card->getWordData().word, "Beautiful") << "单词数据应更新";
+
+    // 验证状态重置
+    EXPECT_FALSE(card->isFavorite()) << "更新数据后收藏状态应重置";
+    EXPECT_FALSE(card->isAddedToVocabulary()) << "更新数据后生词本状态应重置";
+     QTest::qWait(2000);
 }

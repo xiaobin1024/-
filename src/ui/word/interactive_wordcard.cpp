@@ -345,28 +345,19 @@ void InteractiveWordCard::createMoreActionsMenu()
 void InteractiveWordCard::onThemeChanged()
 {
     WordCard::onThemeChanged();
+    // 更新按钮样式
     updateButtonStyles();
+    qDebug() << "InteractiveWordCard 主题切换完成";
 }
 
 void InteractiveWordCard::updateCardStyle()
 {
-    // 先调用父类的 updateCardStyle
+    // 调用父类实现
     WordCard::updateCardStyle();
 
-    qDebug() << "InteractiveWordCard::updateCardStyle - 主题:"
-             << (uiTheme() == UITheme::Light ? "亮色" : "暗色");
+    // 设置按钮容器透明
+     d->buttonContainer->setStyleSheet("background-color: transparent;");
 
-    // 确保按钮容器背景透明
-    if (d && d->buttonContainer) {
-        QString containerStyle = QString(
-            "QWidget {"
-            "  background-color: transparent;"
-            "  border: none;"
-            "}"
-            );
-        d->buttonContainer->setStyleSheet(containerStyle);
-    }
-
-    // 确保按钮也更新样式
+    // 更新按钮样式
     updateButtonStyles();
 }
