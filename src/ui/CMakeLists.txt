@@ -26,6 +26,8 @@ add_library(ui STATIC
   rec/icons.qrc
   word/interactive_wordcard.h
   word/interactive_wordcard.cpp
+  search/search_base.h
+  search/search_base.cpp
 )
 
 # 链接依赖库

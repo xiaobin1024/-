@@ -57,7 +57,8 @@ add_executable(tests
     #tst_network_network_manager_nextconnecttest.cpp
     #tst_ui_base_test.cpp
     #tst_ui_word_card_test.cpp
-    tst_ui_interactive_wordcard.cpp
+    #tst_ui_interactive_wordcard.cpp
+    tst_ui_search_base.cpp
 
     # 后续添加其他测试文件
 )

@@ -72,6 +72,12 @@
 			null
 		],
 		[
+			"C:/Users/86152/Desktop/network_dictionary/src/ui/search/search_base.h",
+			"MU",
+			"O2QWORDHJD/moc_search_base.cpp",
+			null
+		],
+		[
 			"C:/Users/86152/Desktop/network_dictionary/src/ui/word/interactive_wordcard.h",
 			"MU",
 			"REEYQWTHGX/moc_interactive_wordcard.cpp",
@@ -146,6 +152,11 @@
 	[
 		[
 			"C:/Users/86152/Desktop/network_dictionary/src/ui/base/base_widget.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/86152/Desktop/network_dictionary/src/ui/search/search_base.cpp",
 			"MU",
 			null
 		],

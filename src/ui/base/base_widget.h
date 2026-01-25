@@ -45,6 +45,8 @@ public:
     void setUITheme(UITheme theme);
     UITheme uiTheme() const { return m_uiTheme; }
 
+     QVBoxLayout* m_mainLayout{nullptr};
+
 protected:
     // 布局辅助函数
     QVBoxLayout* createMainLayout();
@@ -77,7 +79,7 @@ protected:
     UITheme m_uiTheme{UITheme::Light};
     QMap<QString, QString> m_colors;
 
-    QVBoxLayout* m_mainLayout{nullptr};
+
     QString m_currentMessage;
 
 private:

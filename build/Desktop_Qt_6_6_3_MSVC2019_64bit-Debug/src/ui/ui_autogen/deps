@@ -5,6 +5,8 @@ ui_autogen/timestamp: \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/base/base_widget.cpp \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/base/base_widget.h \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/rec/icons.qrc \
+	C:/Users/86152/Desktop/network_dictionary/src/ui/search/search_base.cpp \
+	C:/Users/86152/Desktop/network_dictionary/src/ui/search/search_base.h \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/word/interactive_wordcard.cpp \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/word/interactive_wordcard.h \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/word/word_card.cpp \

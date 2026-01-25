@@ -1,355 +1,312 @@
-// interactive_wordcard.cpp
-#include "interactive_wordcard.h"
-#include <QHBoxLayout>
-#include <QMenu>
-#include <QAction>
+// search_base.cpp
+#include "search_base.h"
+#include <QKeyEvent>
+#include <QShortcut>
+#include <QTimer>
 
 // 私有数据类
-class InteractiveWordCard::InteractiveWordCardPrivate
+class SearchBase::SearchBasePrivate
 {
 public:
-    QWidget* buttonContainer{ nullptr };
-    QHBoxLayout* buttonLayout{ nullptr };
-    QMenu* moreActionsMenu{ nullptr };
+    // 可以添加未来需要的数据
+    QString lastSearchKeyword;  // 上次搜索的关键词
+    bool isSearching{ false };    // 是否正在搜索
 };
 
-InteractiveWordCard::InteractiveWordCard(QWidget* parent)
-    : WordCard(parent)
-    , d(new InteractiveWordCardPrivate())
+SearchBase::SearchBase(QWidget* parent)
+    : BaseWidget(parent)
+    , d(new SearchBasePrivate())
 {
-    initInteractiveUI();
+    initUI();
     setupConnections();
+    updateStyles();
 }
 
-InteractiveWordCard::InteractiveWordCard(const WordData& data, QWidget* parent)
-    : WordCard(data, parent)
-    , d(new InteractiveWordCardPrivate())
+void SearchBase::initUI()
 {
-    initInteractiveUI();
-    setupConnections();
+    // 创建主布局
+    m_mainLayout = new QHBoxLayout(this);
+    m_mainLayout->setContentsMargins(0, 0, 0, 0);
+    m_mainLayout->setSpacing(8);
+
+    // 创建搜索输入框
+    m_input = new QLineEdit(this);
+    m_input->setPlaceholderText("搜索单词...");
+    m_input->setClearButtonEnabled(false);  // 使用自定义清除按钮
+    m_input->setObjectName("searchInput");
+
+    // 创建搜索按钮
+    m_searchButton = new QPushButton(this);
+    m_searchButton->setText("搜索");
+    m_searchButton->setObjectName("searchButton");
+    m_searchButton->setCursor(Qt::PointingHandCursor);
+    m_searchButton->setDefault(true);  // 设为默认按钮，响应回车
+
+    // 创建清除按钮
+    m_clearButton = new QPushButton(this);
+    m_clearButton->setText("×");
+    m_clearButton->setObjectName("clearButton");
+    m_clearButton->setCursor(Qt::PointingHandCursor);
+    m_clearButton->setVisible(false);  // 初始隐藏
+
+    // 添加到布局
+    m_mainLayout->addWidget(m_input, 1);  // 输入框占满剩余空间
+    m_mainLayout->addWidget(m_searchButton);
+    m_mainLayout->addWidget(m_clearButton);
+
+    // 设置焦点策略
+    setFocusPolicy(Qt::StrongFocus);
+    m_input->setFocusPolicy(Qt::StrongFocus);
+
+    // 设置对象名，便于样式定制
+    setObjectName("SearchBaseWidget");
 }
 
-void InteractiveWordCard::initInteractiveUI()
+void SearchBase::setupConnections()
 {
-    // 创建按钮容器
-    d->buttonContainer = new QWidget(this);
-    d->buttonLayout = new QHBoxLayout(d->buttonContainer);
-    d->buttonLayout->setContentsMargins(0, 0, 0, 0);
-    d->buttonLayout->setSpacing(4);
+    // 输入框文本变化
+    connect(m_input, &QLineEdit::textChanged,
+        this, &SearchBase::onTextChanged);
 
-    // 使用BaseWidget的函数创建按钮
-    m_favoriteButton = new QPushButton(d->buttonContainer);
-    m_favoriteButton->setFixedSize(24, 24);
-    m_favoriteButton->setFlat(true);
-    m_favoriteButton->setToolTip("收藏");
-    m_favoriteButton->setCursor(Qt::PointingHandCursor);
+    // 输入框回车键
+    connect(m_input, &QLineEdit::returnPressed,
+        this, &SearchBase::onReturnPressed);
 
-    m_pronunciationButton = new QPushButton(d->buttonContainer);
-    m_pronunciationButton->setFixedSize(24, 24);
-    m_pronunciationButton->setFlat(true);
-    m_pronunciationButton->setToolTip("发音");
-    m_pronunciationButton->setCursor(Qt::PointingHandCursor);
+    // 按钮点击
+    connect(m_searchButton, &QPushButton::clicked,
+        this, &SearchBase::onSearchClicked);
 
-    m_addToVocabularyButton = new QPushButton(d->buttonContainer);
-    m_addToVocabularyButton->setFixedSize(24, 24);
-    m_addToVocabularyButton->setFlat(true);
-    m_addToVocabularyButton->setToolTip("添加到生词本");
-    m_addToVocabularyButton->setCursor(Qt::PointingHandCursor);
+    connect(m_clearButton, &QPushButton::clicked,
+        this, &SearchBase::onClearClicked);
 
-    m_moreActionsButton = new QPushButton(d->buttonContainer);
-    m_moreActionsButton->setFixedSize(24, 24);
-    m_moreActionsButton->setFlat(true);
-    m_moreActionsButton->setToolTip("更多操作");
-    m_moreActionsButton->setCursor(Qt::PointingHandCursor);
+    // 输入框焦点变化
+    connect(m_input, &QLineEdit::editingFinished,
+        this, [this]() { emit inputLostFocus(); });
 
-    // 将按钮添加到布局
-    d->buttonLayout->addStretch();
-    d->buttonLayout->addWidget(m_favoriteButton);
-    d->buttonLayout->addWidget(m_pronunciationButton);
-    d->buttonLayout->addWidget(m_addToVocabularyButton);
-    d->buttonLayout->addWidget(m_moreActionsButton);
+    // 输入框焦点获得
+    connect(m_input, &QLineEdit::selectionChanged,
+        this, [this]() {
+            if (m_input->hasFocus()) {
+                emit inputFocused();
+            }
+        });
 
-    // 创建更多操作菜单
-    createMoreActionsMenu();
+    // 添加快捷键：Ctrl+F 聚焦到搜索框
+    QShortcut* focusShortcut = new QShortcut(QKeySequence("Ctrl+F"), this);
+    connect(focusShortcut, &QShortcut::activated,
+        this, &SearchBase::setFocusToInput);
 
-    // 将按钮容器添加到主布局顶部
-    m_mainLayout->insertWidget(0, d->buttonContainer);
-
-    // 更新按钮样式
-    updateButtonStyles();
-
-    // 控制按钮可见性
-    m_favoriteButton->setVisible(m_showFavoriteButton);
-    m_pronunciationButton->setVisible(m_showPronunciationButton);
-    m_addToVocabularyButton->setVisible(m_showAddToVocabularyButton);
-    m_moreActionsButton->setVisible(m_showMoreActionsButton);
+    // 添加快捷键：Esc 清除输入
+    QShortcut* clearShortcut = new QShortcut(QKeySequence("Esc"), this);
+    connect(clearShortcut, &QShortcut::activated,
+        this, &SearchBase::clearInput);
 }
 
-void InteractiveWordCard::setupConnections()
+void SearchBase::onThemeChanged()
 {
-    connect(m_favoriteButton, &QPushButton::clicked,
-        this, &InteractiveWordCard::onFavoriteButtonClicked);
-
-    connect(m_pronunciationButton, &QPushButton::clicked,
-        this, &InteractiveWordCard::onPronunciationButtonClicked);
-
-    connect(m_addToVocabularyButton, &QPushButton::clicked,
-        this, &InteractiveWordCard::onAddToVocabularyButtonClicked);
-
-    connect(m_moreActionsButton, &QPushButton::clicked,
-        this, &InteractiveWordCard::onMoreActionsButtonClicked);
+    BaseWidget::onThemeChanged();
+    updateStyles();
 }
 
-void InteractiveWordCard::onThemeChanged()
+void SearchBase::updateStyles()
 {
-    WordCard::onThemeChanged();
-    updateButtonStyles();
-}
+    QString borderColor = getColor("border");
+    QString surfaceColor = getColor("surface");
+    QString textColor = getColor("text-primary");
+    QString placeholderColor = getColor("text-secondary");
+    QString primaryColor = getColor("primary");
 
-void InteractiveWordCard::setFavorite(bool favorite)
-{
-    if (m_isFavorite != favorite) {
-        m_isFavorite = favorite;
-        updateButtonStyles();
-
-        // 显示反馈消息
-        if (favorite) {
-            showMessage("已添加到收藏", false, 1500);
-        }
-        else {
-            showMessage("已取消收藏", false, 1500);
-        }
-    }
-}
-
-void InteractiveWordCard::setAddedToVocabulary(bool added)
-{
-    if (m_isAddedToVocabulary != added) {
-        m_isAddedToVocabulary = added;
-        updateButtonStyles();
-    }
-}
-
-void InteractiveWordCard::setShowFavoriteButton(bool show)
-{
-    if (m_showFavoriteButton != show) {
-        m_showFavoriteButton = show;
-        m_favoriteButton->setVisible(show);
-    }
-}
-
-void InteractiveWordCard::setShowPronunciationButton(bool show)
-{
-    if (m_showPronunciationButton != show) {
-        m_showPronunciationButton = show;
-        m_pronunciationButton->setVisible(show);
-    }
-}
-
-void InteractiveWordCard::setShowAddToVocabularyButton(bool show)
-{
-    if (m_showAddToVocabularyButton != show) {
-        m_showAddToVocabularyButton = show;
-        m_addToVocabularyButton->setVisible(show);
-    }
-}
-
-void InteractiveWordCard::setShowMoreActionsButton(bool show)
-{
-    if (m_showMoreActionsButton != show) {
-        m_showMoreActionsButton = show;
-        m_moreActionsButton->setVisible(show);
-    }
-}
-
-void InteractiveWordCard::onFavoriteButtonClicked()
-{
-    m_isFavorite = !m_isFavorite;
-    updateButtonStyles();
-
-    // 发出信号
-    emit favoriteToggled(getWordData().word, m_isFavorite);
-
-    // 显示反馈
-    if (m_isFavorite) {
-        showMessage("已收藏", false, 1500);
-    }
-    else {
-        showMessage("已取消收藏", false, 1500);
-    }
-}
-
-void InteractiveWordCard::onPronunciationButtonClicked()
-{
-    if (!getWordData().word.isEmpty()) {
-        emit pronunciationRequested(getWordData().word);
-        showMessage("播放发音", false, 1000);
-    }
-}
-
-void InteractiveWordCard::onAddToVocabularyButtonClicked()
-{
-    if (getWordData().isValid()) {
-        if (m_isAddedToVocabulary) {
-            emit removeFromVocabularyRequested(getWordData().word);
-            m_isAddedToVocabulary = false;
-            showMessage("已从生词本移除", false, 1500);
-        }
-        else {
-            emit addToVocabularyRequested(getWordData());
-            m_isAddedToVocabulary = true;
-            showMessage("已添加到生词本", false, 1500);
-        }
-        updateButtonStyles();
-    }
-}
-
-void InteractiveWordCard::onMoreActionsButtonClicked()
-{
-    if (d->moreActionsMenu) {
-        d->moreActionsMenu->popup(m_moreActionsButton->mapToGlobal(
-            QPoint(0, m_moreActionsButton->height())));
-    }
-}
-
-void InteractiveWordCard::updateButtonStyles()
-{
-    // 收藏按钮样式
-    if (m_isFavorite) {
-        m_favoriteButton->setStyleSheet(QString(
-            "QPushButton {"
-            "  border: none;"
-            "  background-color: transparent;"
-            "  qproperty-icon: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDIxLjM1TDEwLjU1IDIwLjAzQzYuMDQgMTUuNzYgMyAxMi43OSAzIDkuNUMzIDUuOTEgNS45MSAzIDkuNSAzQzExLjI0IDMgMTIuOTggMy45NCAxNCA1LjI5QzE1LjAyIDMuOTQgMTYuNzYgMyAxOC41IDNDMjIuMDkgMyAyNSA1LjkxIDI1IDkuNUMyNSAxMi43OSAyMS45NiAxNS43NiAxNy40NSAyMC4wNEwxNiAyMS4zNVoiIGZpbGw9IiNFRjQ0NDQiIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIi8+Cjwvc3ZnPg==);"
-            "}"
-            "QPushButton:hover {"
-            "  background-color: #FEE2E2;"
-            "  border-radius: 4px;"
-            "}"
-        ));
-    }
-    else {
-        m_favoriteButton->setStyleSheet(QString(
-            "QPushButton {"
-            "  border: none;"
-            "  background-color: transparent;"
-            "  qproperty-icon: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE2LjUgM0MxNC43NiAzIDEzLjA5IDMuOTcgMTIgNS42OSAxMC45MSAzLjk3IDkuMjQgMyA3LjUgMyA0LjQyIDMgMiA1LjQyIDIgOC41IDIgMTUuNTUgOS41IDIwLjI5IDEyIDIyLjAxIDE0LjUgMjAuMjkgMjIgMTUuNTUgMjIgOC41IDIyIDUuNDIgMTkuNTggMyAxNi41IDNaIiBzdHJva2U9IiUxIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K);"
-            "}"
-            "QPushButton:hover {"
-            "  background-color: %1;"
-            "  border-radius: 4px;"
-            "}"
-        ).arg(getColor("primary-light") + "20"));
-
-        // 替换颜色
-        QString style = m_favoriteButton->styleSheet();
-        style.replace("%1", getColor("text-secondary"));
-        m_favoriteButton->setStyleSheet(style);
-    }
-
-    // 发音按钮样式
-    m_pronunciationButton->setStyleSheet(QString(
-        "QPushButton {"
-        "  border: none;"
-        "  background-color: transparent;"
-        "  qproperty-icon: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTMgOXY2aDNsNS41IDVWNEw2IDlIM1pNMTYuNSAxMkMxNi41IDEwLjIzIDE1LjQ4IDguNzEgMTQgOC4xOFYxNS44M0MxNS40OCAxNS4yOSAxNi41IDEzLjc3IDE2LjUgMTJabTAtM0MxNi41IDcuMjQgMTQuNyA1IDEyLjUgNUgxMXYxNGgxLjVDMTQuNyAxOSAxNi41IDE2Ljc2IDE2LjUgMTJaIiBmaWxsPSIlMSIvPgo8L3N2Zz4K);"
-        "}"
-        "QPushButton:hover {"
-        "  background-color: %1;"
-        "  border-radius: 4px;"
-        "}"
-    ).arg(getColor("primary-light") + "20").replace("%1", getColor("text-primary")));
-
-    // 添加到生词本按钮样式
-    if (m_isAddedToVocabulary) {
-        m_addToVocabularyButton->setStyleSheet(QString(
-            "QPushButton {"
-            "  border: none;"
-            "  background-color: transparent;"
-            "  qproperty-icon: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTUgMTMuMTFsMi41NCAyLjQ5QTkgOSAwIDAgMCAxMiAyMWM1IDAgOS0zLjU4IDktOHMtNC05LTktOGE5IDkgMCAwMC04LjkxIDRINDFsMyAzSDNsMy0zSDN2M3oiIGZpbGw9IiMxMEE5ODEiLz4KPC9zdmc+);"
-            "}"
-            "QPushButton:hover {"
-            "  background-color: #D1FAE5;"
-            "  border-radius: 4px;"
-            "}"
-        ));
-        m_addToVocabularyButton->setToolTip("从生词本移除");
-    }
-    else {
-        m_addToVocabularyButton->setStyleSheet(QString(
-            "QPushButton {"
-            "  border: none;"
-            "  background-color: transparent;"
-            "  qproperty-icon: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDV2MTRtLTctN2gxNFoiIHN0cm9rZT0iJTEiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPg==);"
-            "}"
-            "QPushButton:hover {"
-            "  background-color: %1;"
-            "  border-radius: 4px;"
-            "}"
-        ).arg(getColor("primary-light") + "20").replace("%1", getColor("text-primary")));
-        m_addToVocabularyButton->setToolTip("添加到生词本");
-    }
-
-    // 更多操作按钮样式
-    m_moreActionsButton->setStyleSheet(QString(
-        "QPushButton {"
-        "  border: none;"
-        "  background-color: transparent;"
-        "  qproperty-icon: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDEzYTEgMSAwIDEwMC0yIDEgMSAwIDAwMCAyem0tNy0xYTEgMSAwIDEwMC0yIDEgMSAwIDAwMCAyem0xNCAwYTEgMSAwIDEwMC0yIDEgMSAwIDAwMCAyeCIgZmlsbD0iJTEiLz4KPC9zdmc+);"
-        "}"
-        "QPushButton:hover {"
-        "  background-color: %1;"
-        "  border-radius: 4px;"
-        "}"
-    ).arg(getColor("primary-light") + "20").replace("%1", getColor("text-primary")));
-}
-
-void InteractiveWordCard::createMoreActionsMenu()
-{
-    d->moreActionsMenu = new QMenu(this);
-    d->moreActionsMenu->setStyleSheet(
-        "QMenu {"
-        "  background-color: white;"
-        "  border: 1px solid #E2E8F0;"
+    // 输入框样式
+    QString inputStyle = QString(
+        "QLineEdit {"
+        "  border: 2px solid %1;"
         "  border-radius: 6px;"
-        "  padding: 4px;"
+        "  padding: 8px 12px;"
+        "  font-size: 14px;"
+        "  color: %2;"
+        "  background-color: %3;"
+        "  selection-background-color: %4;"
         "}"
-        "QMenu::item {"
-        "  padding: 6px 12px;"
-        "  border-radius: 4px;"
-        "  color: #1E293B;"
-        "  font-size: 13px;"
+        "QLineEdit:focus {"
+        "  border-color: %4;"
+        "  outline: none;"
         "}"
-        "QMenu::item:selected {"
-        "  background-color: #F1F5F9;"
+        "QLineEdit::placeholder {"
+        "  color: %5;"
+        "  font-style: italic;"
         "}"
-    );
+    ).arg(borderColor, textColor, surfaceColor, primaryColor, placeholderColor);
 
-    QAction* editAction = new QAction("编辑单词", d->moreActionsMenu);
-    QAction* shareAction = new QAction("分享", d->moreActionsMenu);
-    QAction* noteAction = new QAction("添加笔记", d->moreActionsMenu);
-    QAction* copyAction = new QAction("复制", d->moreActionsMenu);
+    m_input->setStyleSheet(inputStyle);
 
-    d->moreActionsMenu->addAction(editAction);
-    d->moreActionsMenu->addAction(shareAction);
-    d->moreActionsMenu->addAction(noteAction);
-    d->moreActionsMenu->addSeparator();
-    d->moreActionsMenu->addAction(copyAction);
+    // 搜索按钮样式
+    QString searchButtonStyle = QString(
+        "QPushButton {"
+        "  background-color: %1;"
+        "  color: white;"
+        "  border: none;"
+        "  border-radius: 6px;"
+        "  padding: 8px 16px;"
+        "  font-size: 14px;"
+        "  font-weight: 500;"
+        "  min-width: 60px;"
+        "}"
+        "QPushButton:hover {"
+        "  background-color: %2;"
+        "}"
+        "QPushButton:pressed {"
+        "  background-color: %3;"
+        "}"
+        "QPushButton:disabled {"
+        "  background-color: %4;"
+        "  color: %5;"
+        "}"
+    ).arg(primaryColor,
+        getColor("primary-light"),
+        getColor("primary-dark"),
+        getColor("surface"),
+        getColor("text-disabled"));
 
-    connect(editAction, &QAction::triggered, this, [this]() {
-        emit editRequested(getWordData());
-        });
+    m_searchButton->setStyleSheet(searchButtonStyle);
 
-    connect(shareAction, &QAction::triggered, this, [this]() {
-        emit shareRequested(getWordData());
-        });
+    // 清除按钮样式
+    QString clearButtonStyle = QString(
+        "QPushButton {"
+        "  color: %1;"
+        "  background-color: transparent;"
+        "  border: 2px solid transparent;"
+        "  border-radius: 6px;"
+        "  padding: 8px;"
+        "  font-size: 16px;"
+        "  font-weight: bold;"
+        "  min-width: 30px;"
+        "  min-height: 30px;"
+        "}"
+        "QPushButton:hover {"
+        "  background-color: %2;"
+        "  color: %3;"
+        "}"
+    ).arg(placeholderColor,
+        getColor("surface-dark"),
+        getColor("text-primary"));
 
-    connect(noteAction, &QAction::triggered, this, [this]() {
-        showMessage("笔记功能开发中...", false, 1500);
-        });
+    m_clearButton->setStyleSheet(clearButtonStyle);
 
-    connect(copyAction, &QAction::triggered, this, [this]() {
-        QApplication::clipboard()->setText(getWordData().word);
-        showMessage("已复制到剪贴板", false, 1000);
-        });
+    // 整个组件的样式
+    setStyleSheet(QString(
+        "SearchBase {"
+        "  background-color: transparent;"
+        "}"
+    ));
+}
+
+void SearchBase::updateClearButtonVisibility()
+{
+    bool hasText = !m_input->text().trimmed().isEmpty();
+    m_clearButton->setVisible(hasText && m_showClearButton);
+}
+
+void SearchBase::onTextChanged(const QString& text)
+{
+    updateClearButtonVisibility();
+    emit keywordChanged(text.trimmed());
+}
+
+void SearchBase::onSearchClicked()
+{
+    QString keyword = m_input->text().trimmed();
+    if (!keyword.isEmpty()) {
+        d->lastSearchKeyword = keyword;
+        emit searchRequested(keyword);
+    }
+}
+
+void SearchBase::onClearClicked()
+{
+    clearInput();
+    m_input->setFocus();
+}
+
+void SearchBase::onReturnPressed()
+{
+    onSearchClicked();
+}
+
+QString SearchBase::keyword() const
+{
+    return m_input->text().trimmed();
+}
+
+void SearchBase::setKeyword(const QString& keyword)
+{
+    if (m_input->text() != keyword) {
+        m_input->setText(keyword);
+        updateClearButtonVisibility();
+    }
+}
+
+QString SearchBase::placeholder() const
+{
+    return m_input->placeholderText();
+}
+
+void SearchBase::setPlaceholder(const QString& placeholder)
+{
+    m_input->setPlaceholderText(placeholder);
+}
+
+void SearchBase::setShowClearButton(bool show)
+{
+    if (m_showClearButton != show) {
+        m_showClearButton = show;
+        updateClearButtonVisibility();
+    }
+}
+
+void SearchBase::setShowSearchButton(bool show)
+{
+    if (m_showSearchButton != show) {
+        m_showSearchButton = show;
+        m_searchButton->setVisible(show);
+    }
+}
+
+void SearchBase::setFocusToInput()
+{
+    m_input->setFocus();
+    m_input->selectAll();  // 选中所有文本，方便直接输入
+}
+
+void SearchBase::doSearch()
+{
+    onSearchClicked();
+}
+
+void SearchBase::clearInput()
+{
+    m_input->clear();
+    updateClearButtonVisibility();
+    emit keywordChanged("");
+}
+
+void SearchBase::keyPressEvent(QKeyEvent* event)
+{
+    // 处理键盘事件
+    switch (event->key()) {
+    case Qt::Key_Escape:
+        if (m_input->hasFocus() && !m_input->text().isEmpty()) {
+            clearInput();
+            event->accept();
+        }
+        break;
+    case Qt::Key_Enter:
+    case Qt::Key_Return:
+        if (m_input->hasFocus()) {
+            onReturnPressed();
+            event->accept();
+        }
+        break;
+    default:
+        BaseWidget::keyPressEvent(event);
+    }
 }
