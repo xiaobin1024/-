@@ -188,12 +188,16 @@ void SearchBase::updateStyles()
                                    "  min-height: 30px;"
                                    "}"
                                    "QPushButton:hover {"
-                                   "  background-color: %2;"
-                                   "  color: %3;"
+                                   "  color: %2;"  // 悬停时改变文本颜色
                                    "}"
-                                   ).arg(placeholderColor,
-                                        getColor("surface-dark"),
-                                        getColor("text-primary"));
+                                   "QPushButton:pressed {"
+                                   "  color: %3;"  // 按下时改变文本颜色
+                                   "}"
+                                   ).arg(
+                                       placeholderColor,  // 正常状态
+                                       getColor("primary"),  // 悬停时
+                                       getColor("primary-dark")  // 按下时
+                                       );
 
     m_clearButton->setStyleSheet(clearButtonStyle);
 
@@ -319,7 +323,7 @@ void SearchBase::keyPressEvent(QKeyEvent* event)
 bool SearchBase::eventFilter(QObject* watched, QEvent* event)
 {
     if (watched == m_input) {
-        qDebug() << "事件类型:" << event->type();  // 调试输出
+        //qDebug() << "事件类型:" << event->type();  // 调试输出
         if (event->type() == QEvent::FocusIn) {
             emit inputFocused();
         } else if (event->type() == QEvent::FocusOut) {

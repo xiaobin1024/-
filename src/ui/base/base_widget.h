@@ -46,6 +46,7 @@ public:
     UITheme uiTheme() const { return m_uiTheme; }
 
      QVBoxLayout* m_mainLayout{nullptr};
+      QString getColor(const QString& role) const;
 
 protected:
     // 布局辅助函数
@@ -66,7 +67,7 @@ protected:
 
     // 样式辅助函数
     void setupMessageTimer(int duration);
-    QString getColor(const QString& role) const;
+
     void updateWidgetStyles();
 
 protected slots:

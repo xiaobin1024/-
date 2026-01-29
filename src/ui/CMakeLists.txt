@@ -28,6 +28,7 @@ add_library(ui STATIC
   word/interactive_wordcard.cpp
   search/search_base.h
   search/search_base.cpp
+  search/searchhistory_widget.h search/searchhistory_widget.cpp
 )
 
 # 链接依赖库
