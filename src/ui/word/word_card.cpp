@@ -52,8 +52,9 @@ void WordCard::initUI()
     m_exampleLabel->setWordWrap(true);     // 允许例句换行
     m_exampleLabel->hide();                 // 默认隐藏，双击时显示
 
-    // 使用 BaseWidget 的 createButtonLayout 创建水平布局
-    auto middleLayout = createButtonLayout();
+    //创建一个水平布局来放置英标和词性标签
+    QHBoxLayout* middleLayout=new QHBoxLayout();
+    middleLayout->setContentsMargins(0,0,0,0);  //取消内边距
     middleLayout->setSpacing(8);  // 音标和词性之间的间距
 
     // 将音标和词性添加到水平布局

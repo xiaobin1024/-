@@ -53,13 +53,13 @@ TEST(UiTest, SearchHistoryWidgetTest)
     window.setStyleSheet("background-color: #f8fafc;");
     window.resize(600, 600);
 
-    window.m_mainLayout->setContentsMargins(20, 20, 20, 20);
-    window.m_mainLayout->setSpacing(20);
+    window.mainLayout()->setContentsMargins(20, 20, 20, 20);
+    window.mainLayout()->setSpacing(20);
 
     qDebug() << "=== 测试1: 创建 SearchHistoryWidget ===";
 
     SearchHistoryWidget* searchWidget = new SearchHistoryWidget(&window);
-    window.m_mainLayout->addWidget(searchWidget);
+    window.mainLayout()->addWidget(searchWidget);
 
     // 显示窗口
     window.show();
@@ -466,7 +466,7 @@ TEST(UiTest, SearchHistoryWidgetTest)
      QWidget* cardArea = new QWidget(&window);
      QVBoxLayout* cardLayout = new QVBoxLayout(cardArea);
      cardLayout->setContentsMargins(0, 0, 0, 0);
-     window.m_mainLayout->addWidget(cardArea, 1);
+     window.mainLayout()->addWidget(cardArea, 1);
 
      // 清空之前的内容
      QLayoutItem* child;

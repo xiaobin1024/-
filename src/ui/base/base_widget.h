@@ -11,6 +11,7 @@
 #include<QLineEdit>
 #include<QLabel>
 #include<QGroupBox>
+#include<QTimer>
 
 // 界面状态枚举
 enum class UIState {
@@ -25,65 +26,130 @@ enum class UITheme {
     Dark
 };
 
+//页面事件类型
+enum class PageEvent{
+    Show,       //页面显示
+    Hide,       //页面隐藏
+    Activated,  //页面激活
+    Deactivated,//页面失活
+    DataLoaded, //数据加载完成
+    Error       //页面错误
+};
+
+//系统功能类型
+enum class SystemFunction{
+    ThemeToggle,    //切换主题
+    Logout,         //退出登录
+    DeleteAccount,  //注销账号
+    Settings,       //设置
+    About,          //关于
+    Feeback         //反馈
+};
+
 class BaseWidget : public QWidget
 {
     Q_OBJECT
 
 public:
     explicit BaseWidget(QWidget* parent = nullptr);
+    virtual ~BaseWidget();
 
-    // 基本功能
+    // ============ 页面生命周期管理 ============
+    virtual void showPage();
+    virtual void hidePage();
+    virtual void activatePage();
+    virtual void deactivatePage();
+    virtual void setPageData(const QVariant& data);
+
+    // ============ 消息管理 ============
     void showMessage(const QString& message, bool isError = false,int duration=0);
     void clearMessage();
     void showLoading(const QString& message = "加载中...");
     void hideLoading();
 
-    // 样式管理
+   // ============ 样式管理 ============
     void setUIState(UIState state);
     UIState uiState() const { return m_uiState; }
-
     void setUITheme(UITheme theme);
     UITheme uiTheme() const { return m_uiTheme; }
+    //获取主布局
+    QVBoxLayout* mainLayout(){return m_mainLayout;}
+    //颜色管理
+    QString getColor(const QString& role) const;
 
-     QVBoxLayout* m_mainLayout{nullptr};
-      QString getColor(const QString& role) const;
+    // ============ 系统功能 ============
+    void requestSystemFunction(SystemFunction function, const QVariant& data = QVariant());
 
+signals:
+    //页面事件信号
+    void pageEvent(PageEvent event, const QVariant& data = QVariant());
+    // 页面跳转请求
+    void navigateRequested(const QString& pageName, const QVariant& data = QVariant());
+    // 系统功能请求
+    void systemFunctionRequested(SystemFunction function, const QVariant& data = QVariant());
+
+    // 用户操作信号
+    void logoutRequested();
+    void deleteAccountRequested();
+    void themeToggleRequested();
 protected:
-    // 布局辅助函数
-    QVBoxLayout* createMainLayout();
-    QHBoxLayout* createButtonLayout();
-    QFormLayout* createFormLayout();
+    // ============ 布局相关 ============
+    virtual void initUI();
+    virtual void setupLayout();
 
-    // 控件创建函数
-    QPushButton* createPrimaryButton(const QString& text);
-    QPushButton* createSecondaryButton(const QString& text);
-    QLineEdit* createLineEdit(const QString& placeholder = "");
-    QLabel* createLabel(const QString& text, const QString& type = "normal");
-    // 创建标准化的 GroupBox
-    QGroupBox* createGroupBox(const QString& title);
-    void updateGroupBoxStyle(QGroupBox* groupBox);  //更新GroupBox
+    // ============ 控件创建辅助 ============
+    QPushButton* createPrimaryButton(const QString& text, const QString& objectName = "");
+    QPushButton* createSecondaryButton(const QString& text, const QString& objectName = "");
+    QLineEdit* createLineEdit(const QString& placeholder = "", const QString& objectName = "");
+    QLabel* createLabel(const QString& text, const QString& type = "normal", const QString& objectName = "");
+    QGroupBox* createGroupBox(const QString& title, const QString& objectName = "");
 
-    void updateLabelStyle(QLabel* label, const QString& type = "normal");   //更新Label
+    // ============ 样式更新 ============
+    virtual void updateWidgetStyles();
+    void updateLabelStyle(QLabel* label, const QString& type = "normal");
+    void updateGroupBoxStyle(QGroupBox* groupBox);
 
-    // 样式辅助函数
-    void setupMessageTimer(int duration);
+    // ============ 事件处理 ============
+    virtual void onPageShow();
+    virtual void onPageHide();
+    virtual void onPageActivated();
+    virtual void onPageDeactivated();
+    virtual void onPageDataChanged(const QVariant& data);
 
-    void updateWidgetStyles();
-
-protected slots:
     virtual void onThemeChanged();
     virtual void onStateChanged();
 
+    // 错误处理
+    virtual void onError(const QString& errorMessage, bool show = true);
+
+    // 重写QWidget事件
+    void showEvent(QShowEvent* event) override;
+    void hideEvent(QHideEvent* event) override;
+
 protected:
+    // 布局
+    QVBoxLayout* m_mainLayout{nullptr};
+
     // 样式相关
     UIState m_uiState{UIState::Normal};
     UITheme m_uiTheme{UITheme::Light};
     QMap<QString, QString> m_colors;
 
+    // 页面数据
+    QVariant m_pageData;
 
-    QString m_currentMessage;
+    // 页面状态
+    bool m_pageVisible{false};
+    bool m_pageActivated{false};
 
+    // 控件存储（用于批量更新样式）
+    QList<QPushButton*> m_primaryButtons;
+    QList<QPushButton*> m_secondaryButtons;
+    QList<QLineEdit*> m_lineEdits;
+    QList<QLabel*> m_labels;
+    QList<QGroupBox*> m_groupBoxes;
 private:
+    // 颜色管理
     void loadColors();
 
     //样式统一格式辅助函数
@@ -94,15 +160,12 @@ private:
     QString createButtonStyle(const QString& type) const;
     QString createLineEditStyle() const;
 
-private:
+    // 消息管理
+    void setupMessageTimer(int duration);
 
-    QList<QLabel*> m_messageLabels;  // 存储所有消息标签
-    QTimer* m_messageTimer{nullptr};  // 用于消息自动清除
-
-    // 存储已创建的控件
-    QList<QGroupBox*> m_createdGroupBoxes;
-    QList<QLabel*> m_createdLabels;
-
+    QList<QLabel*> m_messageLabels;     // 存储所有消息标签
+    QTimer* m_messageTimer{nullptr};    // 用于消息自动清除
+    QString m_currentMessage;
 
 };
 

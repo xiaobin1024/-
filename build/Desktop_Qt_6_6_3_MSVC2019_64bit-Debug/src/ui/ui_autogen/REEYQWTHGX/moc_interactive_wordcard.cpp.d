@@ -4,6 +4,7 @@ C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-
   C:/Users/86152/Desktop/network_dictionary/src/ui/word/word_card.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/QMap \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/QString \
+  D:/qt/6.6.3/msvc2019_64/include/QtCore/QTimer \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/q20functional.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/q20memory.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/q20type_traits.h \
@@ -17,6 +18,7 @@ C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qatomic.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qatomic_cxx11.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qbasicatomic.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtCore/qbasictimer.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qbindingstorage.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qbytearray.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qbytearrayalgorithms.h \
@@ -103,6 +105,7 @@ C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qtdeprecationmarkers.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qtenvironmentvariables.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qtextstream.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtCore/qtimer.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qtmetamacros.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qtnoop.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qtpreprocessorsupport.h \
