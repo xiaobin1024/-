@@ -59,7 +59,8 @@ add_executable(tests
     #tst_ui_word_card_test.cpp
     #tst_ui_interactive_wordcard.cpp
     #tst_ui_search_base.cpp
-    tst_ui_searchhistory_widget.cpp
+    #tst_ui_searchhistory_widget.cpp
+    tst_page_stack.cpp
 
     # 后续添加其他测试文件
 )
@@ -70,6 +71,7 @@ target_link_libraries(tests PRIVATE
     network
     core
     ui
+    page_manager
     Qt${QT_VERSION_MAJOR}::Core  #添加Qt Core模块链接
     Qt${QT_VERSION_MAJOR}::Test
     "${GTEST_LIBRARY}"

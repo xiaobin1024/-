@@ -36,3 +36,4 @@ if(BUILD_TESTING)
 endif()
 
 
+add_subdirectory(src/page_manager)

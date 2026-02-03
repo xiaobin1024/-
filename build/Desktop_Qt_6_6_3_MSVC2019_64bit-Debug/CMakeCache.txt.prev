@@ -369,6 +369,15 @@ network_dictionary_IS_TOP_LEVEL:STATIC=ON
 network_dictionary_SOURCE_DIR:STATIC=C:/Users/86152/Desktop/network_dictionary
 
 //Value Computed by CMake
+page_manager_BINARY_DIR:STATIC=C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/page_manager
+
+//Value Computed by CMake
+page_manager_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+page_manager_SOURCE_DIR:STATIC=C:/Users/86152/Desktop/network_dictionary/src/page_manager
+
+//Value Computed by CMake
 ui_BINARY_DIR:STATIC=C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/ui
 
 //Value Computed by CMake
@@ -492,7 +501,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_MT
 CMAKE_MT-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=5
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=6
 //Platform information initialized
 CMAKE_PLATFORM_INFO_INITIALIZED:INTERNAL=1
 //noop for ranlib
