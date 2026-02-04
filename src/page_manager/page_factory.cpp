@@ -98,7 +98,7 @@ void PageFactory::clearCache()
 
     for (BaseWidget* page : m_cache) {
         if (page) {
-            page->deleteLater();
+             page->deleteLater();
         }
     }
 
@@ -110,7 +110,7 @@ void PageFactory::removeFromCache(PageType type)
     if (m_cache.contains(type)) {
         BaseWidget* page = m_cache.take(type);
         if (page) {
-            page->deleteLater();
+          page->deleteLater();
         }
         qDebug() << "从缓存移除页面:" << static_cast<int>(type);
     }
