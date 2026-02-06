@@ -2,12 +2,19 @@
 #include "page_stack.h"
 #include "base/base_widget.h"
 #include <QDebug>
+#include<QCoreApplication>
 
 PageStack::PageStack() {}
 
 PageStack::~PageStack()
 {
-    clear();
+    // 只在 QApplication 存在时清理
+    if (QCoreApplication::instance()) {
+         clear();
+    } else {
+        qWarning() << "PageStack 析构时 QApplication 已不存在，跳过清理";
+    }
+
 }
 
 void PageStack::push(const StackItem& item)

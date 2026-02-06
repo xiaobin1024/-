@@ -77,7 +77,5 @@ private:
     // 防止重入保护
     bool m_navigating{false};
 
-    // 单例实例
-    static PageManager* s_instance;
 };
 #endif // PAGE_MANAGER_H

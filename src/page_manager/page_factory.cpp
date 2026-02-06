@@ -2,12 +2,20 @@
 #include "page_factory.h"
 #include "base/base_widget.h"
 #include <QDebug>
+#include<QCoreApplication>
+
 
 PageFactory::PageFactory() {}
 
 PageFactory::~PageFactory()
 {
-    clearCache();
+    // 只在 QApplication 存在时清理
+    if (QCoreApplication::instance()) {
+       clearCache();
+    } else {
+        qWarning() << "PageFactory 析构时 QApplication 已不存在，跳过清理";
+    }
+
 }
 
 void PageFactory::registerPage(PageType type, PageCreator creator)

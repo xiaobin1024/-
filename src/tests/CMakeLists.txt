@@ -61,7 +61,8 @@ add_executable(tests
     #tst_ui_search_base.cpp
     #tst_ui_searchhistory_widget.cpp
     #tst_page_stack.cpp
-    tst_page_factory.cpp
+    #tst_page_factory.cpp
+    tst_page_manager.cpp
 
     # 后续添加其他测试文件
 )

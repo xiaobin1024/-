@@ -5,17 +5,11 @@
 #include <QDebug>
 #include <QApplication>
 
-// 初始化静态成员
-PageManager* PageManager::s_instance = nullptr;
-
 PageManager* PageManager::instance()
 {
-    if (!s_instance) {
-        s_instance = new PageManager(QApplication::instance());
-    }
-    return s_instance;
+    static PageManager instance;  // 静态局部变量，线程安全（C++11及以上）
+    return &instance;
 }
-
 PageManager::PageManager(QObject* parent)
     : QObject(parent)
     , m_stack(std::make_unique<PageStack>())
@@ -26,21 +20,47 @@ PageManager::PageManager(QObject* parent)
 
 PageManager::~PageManager()
 {
-    cleanup();
+    qDebug() << "PageManager 析构开始";
+
+    // 只在 QApplication 存在时清理
+    if (QCoreApplication::instance()) {
+        cleanup();
+    } else {
+        qWarning() << "PageManager 析构时 QApplication 已不存在，跳过清理";
+    }
+
     qDebug() << "PageManager 销毁";
 }
 
 void PageManager::initialize(QWidget* container)
 {
-    if (m_initialized) {
-        qWarning() << "PageManager 已经初始化";
+    qDebug() << "=== PageManager::initialize 开始 ===";
+    qDebug() << "传入容器地址:" << static_cast<void*>(container);
+    qDebug() << "传入容器对象名称:" << (container ? container->objectName() : "nullptr");
+    qDebug() << "传入容器类名:" << (container ? container->metaObject()->className() : "nullptr");
+    qDebug() << "当前 m_initialized:" << m_initialized;
+    qDebug() << "当前 m_container地址:" << static_cast<void*>(m_container);  // 只打印地址，不解引用
+
+    // 如果已初始化且容器相同，跳过
+    if (m_initialized && m_container == container) {
+        qDebug() << "PageManager 已用相同容器初始化，跳过";
+        qDebug() << "=== PageManager::initialize 结束 ===";
         return;
     }
 
-    m_container = container;
-    m_initialized = true;
+    // 如果已初始化但容器不同，警告
+    if (m_initialized && m_container != container) {
+        qWarning() << "PageManager 已初始化，正在重新设置容器"
+                   << "旧容器地址:" << static_cast<void*>(m_container)  // 只打印地址
+                   << "新容器地址:" << static_cast<void*>(container);
+    }
 
-    qDebug() << "PageManager 初始化完成，容器:" << container;
+    m_container = container;
+    m_initialized = (container != nullptr);
+
+    qDebug() << "PageManager 初始化完成，容器:" << container
+             << "，已初始化:" << m_initialized;
+    qDebug() << "=== PageManager::initialize 结束 ===";
 }
 
 void PageManager::cleanup()
@@ -53,13 +73,19 @@ void PageManager::cleanup()
 
     // 清理当前页面
     if (m_currentPage) {
+        // 只在页面有效时调用
         m_currentPage->hidePage();
         m_currentPage = nullptr;
     }
 
     // 清理堆栈和工厂
-    m_stack->clear();
-    m_factory->clearCache();
+    if (m_stack) {
+        m_stack->clear();
+    }
+
+    if (m_factory) {
+        m_factory->clearCache();
+    }
 
     m_container = nullptr;
     m_initialized = false;
@@ -165,8 +191,12 @@ bool PageManager::doNavigate(PageType to, const QVariant& data, const NavigateOp
     // 发射导航开始信号
     emit navigationStarted(fromPage, to, data);
 
+    qDebug() << "1. 发射信号完成";
+
     // 获取或创建目标页面
     BaseWidget* toPage = m_factory->getOrCreatePage(to);
+    qDebug() << "2. 获取页面完成，页面:" << toPage;
+
     if (!toPage) {
         qCritical() << "无法创建页面:" << static_cast<int>(to);
         emit navigationFailed(fromPage, to, "页面创建失败");
@@ -178,6 +208,8 @@ bool PageManager::doNavigate(PageType to, const QVariant& data, const NavigateOp
     if (options.clearStack) {
         m_stack->clear();
     }
+
+    qDebug() << "3. 准备堆栈项";
 
     // 准备新的堆栈项
     PageStack::StackItem newItem;
@@ -195,11 +227,17 @@ bool PageManager::doNavigate(PageType to, const QVariant& data, const NavigateOp
         m_stack->push(newItem);
     }
 
+    qDebug() << "4. 堆栈处理完成，准备切换页面";
+
     // 切换到新页面
     switchPage(currentItem.widget, toPage);
 
+    qDebug() << "5. 页面切换完成";
+
     // 设置页面数据
     toPage->setPageData(data);
+
+    qDebug() << "6. 设置页面数据完成";
 
     // 通知页面变化
     m_currentPage = toPage;
@@ -208,19 +246,28 @@ bool PageManager::doNavigate(PageType to, const QVariant& data, const NavigateOp
     emit navigationStateChanged(canGoBack());
     emit navigationCompleted(fromPage, to, data);
 
+    qDebug() << "7. 发射完成信号";
+
     m_navigating = false;
     return true;
 }
 
 void PageManager::switchPage(BaseWidget* from, BaseWidget* to)
 {
-    if (!m_container) {
+    // 先获取局部变量，避免多次访问成员变量
+    QWidget* container = m_container;
+    if (!container) {
         qWarning() << "没有容器，无法切换页面";
         return;
     }
 
+    qDebug() << "switchPage: 从" << from << "到" << to;
+    qDebug() << "容器:" << container;
+    qDebug() << "容器大小:" << (container ? container->size() : QSize(0, 0));
+
     // 隐藏旧页面
     if (from) {
+        qDebug() << "隐藏页面:" << from;
         from->deactivatePage();
         from->hidePage();
         from->hide();
@@ -228,13 +275,14 @@ void PageManager::switchPage(BaseWidget* from, BaseWidget* to)
 
     // 显示新页面
     if (to) {
+        qDebug() << "设置父对象，当前父对象:" << to->parent() << "新父对象:" << container;
         // 确保页面是容器的子控件
-        if (to->parent() != m_container) {
-            to->setParent(m_container);
+        if (to->parent() != container) {
+            to->setParent(container);
         }
 
         // 设置页面大小
-        to->resize(m_container->size());
+        to->resize(container->size());
         to->show();
         to->showPage();
         to->activatePage();
