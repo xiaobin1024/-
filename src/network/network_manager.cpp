@@ -48,6 +48,7 @@ void NetworkManager::connectToServer()
 
 void NetworkManager::disconnectFromServer()
 {
+     m_autoReconnect = false;
      m_reconnectionManager->stopReconnect();
     m_connectionManager->disconnectFromServer();
     //清空消息队列
@@ -98,52 +99,52 @@ void NetworkManager::onSocketReadyRead()
 {
     qDebug()<<"进入NetworkManager::onSocketReadyRead()";
     QVector<CoreMessage::Msg> messages=m_connectionManager->readMessages();
-    for(const auto& message: messages)
-    {
-        qDebug()<<"进入handleIncomingMessage";
-        handleIncomingMessage(message);
+    // 对每条消息，直接发射信号，不进行任何处理
+    for (const auto& message : messages) {
+        qDebug() << "NetworkManager 转发原始消息:" << message;
+        emit messageReceived(message);
     }
 }
-void NetworkManager::handleIncomingMessage(const CoreMessage::Msg &message)
-{
-    qDebug()<<"Received message: "<<message;
-    //根据消息类型处理
-    switch(message.type)
-    {
-    case CoreMessage::MsgType::HEARTBEAT:
-        qDebug()<<"Heartbeat received from: "<<message.name;
-        break;
-    case CoreMessage::MsgType::LOGIN:
-        qDebug()<<"Login request from: "<<message.name;
-        break;
-    case CoreMessage::MsgType::REGISTER:
-        qDebug()<<"Register request from: "<<message.name;
-        break;
-    case CoreMessage::MsgType::SEARCH:
-        qDebug()<<"Search request: "<<message.text;
-        break;
-    case CoreMessage::MsgType::HISTORY:
-        qDebug() << "History query from:" << message.name;
-        break;
+// void NetworkManager::handleIncomingMessage(const CoreMessage::Msg &message)
+// {
+//     qDebug()<<"Received message: "<<message;
+//     //根据消息类型处理
+//     switch(message.type)
+//     {
+//     case CoreMessage::MsgType::HEARTBEAT:
+//         qDebug()<<"Heartbeat received from: "<<message.name;
+//         break;
+//     case CoreMessage::MsgType::LOGIN:
+//         qDebug()<<"Login request from: "<<message.name;
+//         break;
+//     case CoreMessage::MsgType::REGISTER:
+//         qDebug()<<"Register request from: "<<message.name;
+//         break;
+//     case CoreMessage::MsgType::SEARCH:
+//         qDebug()<<"Search request: "<<message.text;
+//         break;
+//     case CoreMessage::MsgType::HISTORY:
+//         qDebug() << "History query from:" << message.name;
+//         break;
 
-    case CoreMessage::MsgType::COLLECT:
-        qDebug() << "Collect request:" << message.text;
-        break;
+//     case CoreMessage::MsgType::COLLECT:
+//         qDebug() << "Collect request:" << message.text;
+//         break;
 
-    case CoreMessage::MsgType::QUERYCOLLECT:
-        qDebug() << "Query collect from:" << message.name;
-        break;
+//     case CoreMessage::MsgType::QUERYCOLLECT:
+//         qDebug() << "Query collect from:" << message.name;
+//         break;
 
-    case CoreMessage::MsgType::Quit:
-        qDebug() << "Quit request from:" << message.name;
-        break;
+//     case CoreMessage::MsgType::Quit:
+//         qDebug() << "Quit request from:" << message.name;
+//         break;
 
-    default:
-        qDebug() << "Unknown message type received:" << static_cast<int>(message.type);
-        break;
-    }
-    emit messageReceived(message);
-}
+//     default:
+//         qDebug() << "Unknown message type received:" << static_cast<int>(message.type);
+//         break;
+//     }
+//     emit messageReceived(message);
+// }
 
 void NetworkManager::sendMessageAsync(const CoreMessage::Msg &message)
 {

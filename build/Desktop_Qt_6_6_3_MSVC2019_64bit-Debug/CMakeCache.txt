@@ -351,6 +351,15 @@ core_IS_TOP_LEVEL:STATIC=OFF
 core_SOURCE_DIR:STATIC=C:/Users/86152/Desktop/network_dictionary/src/core
 
 //Value Computed by CMake
+dispatcher_BINARY_DIR:STATIC=C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/dispatcher
+
+//Value Computed by CMake
+dispatcher_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+dispatcher_SOURCE_DIR:STATIC=C:/Users/86152/Desktop/network_dictionary/src/dispatcher
+
+//Value Computed by CMake
 network_BINARY_DIR:STATIC=C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/network
 
 //Value Computed by CMake
@@ -385,6 +394,15 @@ ui_IS_TOP_LEVEL:STATIC=OFF
 
 //Value Computed by CMake
 ui_SOURCE_DIR:STATIC=C:/Users/86152/Desktop/network_dictionary/src/ui
+
+//Value Computed by CMake
+user_session_BINARY_DIR:STATIC=C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/user_session
+
+//Value Computed by CMake
+user_session_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+user_session_SOURCE_DIR:STATIC=C:/Users/86152/Desktop/network_dictionary/src/user_session
 
 
 ########################
@@ -501,7 +519,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_MT
 CMAKE_MT-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=6
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=8
 //Platform information initialized
 CMAKE_PLATFORM_INFO_INITIALIZED:INTERNAL=1
 //noop for ranlib

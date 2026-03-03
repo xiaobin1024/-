@@ -37,3 +37,5 @@ endif()
 
 
 add_subdirectory(src/page_manager)
+add_subdirectory(src/user_session)
+add_subdirectory(src/dispatcher)

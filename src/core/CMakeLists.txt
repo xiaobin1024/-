@@ -20,9 +20,12 @@ endif()
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 
-# 打印调试信息
-message(STATUS "Found Qt${QT_VERSION_MAJOR}")
-message(STATUS "Qt version: ${QT_VERSION}")
+#包含路径，找到模块的头文件
+include_directories(
+    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR})
+
 
 # 创建静态库
 add_library(core STATIC
@@ -32,11 +35,13 @@ add_library(core STATIC
   utils.h
   utils.cpp
   word_data.h
+  #message_dispatcher.h message_dispatcher.cpp
 )
 
 # 链接Qt库并设置包含目录 - 修改：使用PUBLIC确保依赖传递
 target_link_libraries(core PUBLIC
     Qt${QT_VERSION_MAJOR}::Core
+
 )
 
 # 设置包含目录

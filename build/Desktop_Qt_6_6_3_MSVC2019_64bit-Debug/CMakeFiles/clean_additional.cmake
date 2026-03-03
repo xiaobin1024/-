@@ -6,6 +6,9 @@ if("${CONFIG}" STREQUAL "" OR "${CONFIG}" STREQUAL "Debug")
   "src\\core\\CMakeFiles\\core_autogen.dir\\AutogenUsed.txt"
   "src\\core\\CMakeFiles\\core_autogen.dir\\ParseCache.txt"
   "src\\core\\core_autogen"
+  "src\\dispatcher\\CMakeFiles\\dispatcher_autogen.dir\\AutogenUsed.txt"
+  "src\\dispatcher\\CMakeFiles\\dispatcher_autogen.dir\\ParseCache.txt"
+  "src\\dispatcher\\dispatcher_autogen"
   "src\\network\\CMakeFiles\\network_autogen.dir\\AutogenUsed.txt"
   "src\\network\\CMakeFiles\\network_autogen.dir\\ParseCache.txt"
   "src\\network\\network_autogen"
@@ -15,5 +18,8 @@ if("${CONFIG}" STREQUAL "" OR "${CONFIG}" STREQUAL "Debug")
   "src\\ui\\CMakeFiles\\ui_autogen.dir\\AutogenUsed.txt"
   "src\\ui\\CMakeFiles\\ui_autogen.dir\\ParseCache.txt"
   "src\\ui\\ui_autogen"
+  "src\\user_session\\CMakeFiles\\user_session_autogen.dir\\AutogenUsed.txt"
+  "src\\user_session\\CMakeFiles\\user_session_autogen.dir\\ParseCache.txt"
+  "src\\user_session\\user_session_autogen"
   )
 endif()

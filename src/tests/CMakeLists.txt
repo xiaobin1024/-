@@ -62,7 +62,9 @@ add_executable(tests
     #tst_ui_searchhistory_widget.cpp
     #tst_page_stack.cpp
     #tst_page_factory.cpp
-    tst_page_manager.cpp
+    #tst_page_manager.cpp
+    #tst_user_session.cpp
+    tst_dispatcher.cpp
 
     # 后续添加其他测试文件
 )
@@ -74,6 +76,7 @@ target_link_libraries(tests PRIVATE
     core
     ui
     page_manager
+    dispatcher
     Qt${QT_VERSION_MAJOR}::Core  #添加Qt Core模块链接
     Qt${QT_VERSION_MAJOR}::Test
     "${GTEST_LIBRARY}"

@@ -1,7 +1,7 @@
 #ifndef NETWORK_MANAGER_H
 #define NETWORK_MANAGER_H
-#include"core/app_config.h"
-#include"core/utils.h"
+#include"app_config.h"
+#include"utils.h"
 #include<QTcpSocket>
 #include<QTimer>
 #include<QQueue>
@@ -31,13 +31,16 @@ public:
     int getPendingMessageCount();
 
 signals:
-    void messageReceived(const  CoreMessage::Msg &message);                             //向上层传递收到数据信号
+    //void messageReceived(const  CoreMessage::Msg &message);                             //向上层传递收到数据信号
     void heartbeatSent();                                                               //向上层传递收到心跳包
     void reconnectAttempt(int m_currentReconnectAttempts,int m_maxReconnectAttempts);   //尝试重连的信号
 
     void connectionEstablished();
     void connectionLost();
     void networkError(QString error);
+
+    // 原始消息信号（不进行任何处理，只转发）
+    void messageReceived(const CoreMessage::Msg& message);
 
 private slots:
 

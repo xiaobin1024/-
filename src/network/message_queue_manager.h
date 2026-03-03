@@ -2,8 +2,8 @@
 #define MESSAGE_QUEUE_MANAGER_H
 
 #include <QObject>
-#include"core/utils.h"
-#include"core/message.h"
+#include"utils.h"
+#include"message.h"
 #include<QQueue>
 #include<QMutex>
 #include<functional>

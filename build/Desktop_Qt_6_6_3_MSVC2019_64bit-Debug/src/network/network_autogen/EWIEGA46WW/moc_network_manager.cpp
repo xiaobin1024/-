@@ -39,11 +39,8 @@ namespace {
 struct qt_meta_stringdata_CLASSNetworkManagerENDCLASS_t {};
 constexpr auto qt_meta_stringdata_CLASSNetworkManagerENDCLASS = QtMocHelpers::stringData(
     "NetworkManager",
-    "messageReceived",
-    "",
-    "CoreMessage::Msg",
-    "message",
     "heartbeatSent",
+    "",
     "reconnectAttempt",
     "m_currentReconnectAttempts",
     "m_maxReconnectAttempts",
@@ -51,6 +48,9 @@ constexpr auto qt_meta_stringdata_CLASSNetworkManagerENDCLASS = QtMocHelpers::st
     "connectionLost",
     "networkError",
     "error",
+    "messageReceived",
+    "CoreMessage::Msg",
+    "message",
     "processMessageQueue",
     "onNetworkError",
     "QString&",
@@ -65,18 +65,18 @@ constexpr auto qt_meta_stringdata_CLASSNetworkManagerENDCLASS = QtMocHelpers::st
 struct qt_meta_stringdata_CLASSNetworkManagerENDCLASS_t {
     uint offsetsAndSizes[44];
     char stringdata0[15];
-    char stringdata1[16];
+    char stringdata1[14];
     char stringdata2[1];
     char stringdata3[17];
-    char stringdata4[8];
-    char stringdata5[14];
-    char stringdata6[17];
-    char stringdata7[27];
-    char stringdata8[23];
-    char stringdata9[22];
-    char stringdata10[15];
-    char stringdata11[13];
-    char stringdata12[6];
+    char stringdata4[27];
+    char stringdata5[23];
+    char stringdata6[22];
+    char stringdata7[15];
+    char stringdata8[13];
+    char stringdata9[6];
+    char stringdata10[16];
+    char stringdata11[17];
+    char stringdata12[8];
     char stringdata13[20];
     char stringdata14[15];
     char stringdata15[9];
@@ -92,18 +92,18 @@ struct qt_meta_stringdata_CLASSNetworkManagerENDCLASS_t {
 Q_CONSTINIT static const qt_meta_stringdata_CLASSNetworkManagerENDCLASS_t qt_meta_stringdata_CLASSNetworkManagerENDCLASS = {
     {
         QT_MOC_LITERAL(0, 14),  // "NetworkManager"
-        QT_MOC_LITERAL(15, 15),  // "messageReceived"
-        QT_MOC_LITERAL(31, 0),  // ""
-        QT_MOC_LITERAL(32, 16),  // "CoreMessage::Msg"
-        QT_MOC_LITERAL(49, 7),  // "message"
-        QT_MOC_LITERAL(57, 13),  // "heartbeatSent"
-        QT_MOC_LITERAL(71, 16),  // "reconnectAttempt"
-        QT_MOC_LITERAL(88, 26),  // "m_currentReconnectAttempts"
-        QT_MOC_LITERAL(115, 22),  // "m_maxReconnectAttempts"
-        QT_MOC_LITERAL(138, 21),  // "connectionEstablished"
-        QT_MOC_LITERAL(160, 14),  // "connectionLost"
-        QT_MOC_LITERAL(175, 12),  // "networkError"
-        QT_MOC_LITERAL(188, 5),  // "error"
+        QT_MOC_LITERAL(15, 13),  // "heartbeatSent"
+        QT_MOC_LITERAL(29, 0),  // ""
+        QT_MOC_LITERAL(30, 16),  // "reconnectAttempt"
+        QT_MOC_LITERAL(47, 26),  // "m_currentReconnectAttempts"
+        QT_MOC_LITERAL(74, 22),  // "m_maxReconnectAttempts"
+        QT_MOC_LITERAL(97, 21),  // "connectionEstablished"
+        QT_MOC_LITERAL(119, 14),  // "connectionLost"
+        QT_MOC_LITERAL(134, 12),  // "networkError"
+        QT_MOC_LITERAL(147, 5),  // "error"
+        QT_MOC_LITERAL(153, 15),  // "messageReceived"
+        QT_MOC_LITERAL(169, 16),  // "CoreMessage::Msg"
+        QT_MOC_LITERAL(186, 7),  // "message"
         QT_MOC_LITERAL(194, 19),  // "processMessageQueue"
         QT_MOC_LITERAL(214, 14),  // "onNetworkError"
         QT_MOC_LITERAL(229, 8),  // "QString&"
@@ -115,11 +115,8 @@ Q_CONSTINIT static const qt_meta_stringdata_CLASSNetworkManagerENDCLASS_t qt_met
         QT_MOC_LITERAL(331, 11)   // "maxAttempts"
     },
     "NetworkManager",
-    "messageReceived",
-    "",
-    "CoreMessage::Msg",
-    "message",
     "heartbeatSent",
+    "",
     "reconnectAttempt",
     "m_currentReconnectAttempts",
     "m_maxReconnectAttempts",
@@ -127,6 +124,9 @@ Q_CONSTINIT static const qt_meta_stringdata_CLASSNetworkManagerENDCLASS_t qt_met
     "connectionLost",
     "networkError",
     "error",
+    "messageReceived",
+    "CoreMessage::Msg",
+    "message",
     "processMessageQueue",
     "onNetworkError",
     "QString&",
@@ -155,12 +155,12 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSNetworkManagerENDCLASS[] = {
        6,       // signalCount
 
  // signals: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    1,   86,    2, 0x06,    1 /* Public */,
-       5,    0,   89,    2, 0x06,    3 /* Public */,
-       6,    2,   90,    2, 0x06,    4 /* Public */,
-       9,    0,   95,    2, 0x06,    7 /* Public */,
-      10,    0,   96,    2, 0x06,    8 /* Public */,
-      11,    1,   97,    2, 0x06,    9 /* Public */,
+       1,    0,   86,    2, 0x06,    1 /* Public */,
+       3,    2,   87,    2, 0x06,    2 /* Public */,
+       6,    0,   92,    2, 0x06,    5 /* Public */,
+       7,    0,   93,    2, 0x06,    6 /* Public */,
+       8,    1,   94,    2, 0x06,    7 /* Public */,
+      10,    1,   97,    2, 0x06,    9 /* Public */,
 
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
       13,    0,  100,    2, 0x08,   11 /* Private */,
@@ -171,16 +171,16 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSNetworkManagerENDCLASS[] = {
       19,    2,  107,    2, 0x08,   17 /* Private */,
 
  // signals: parameters
-    QMetaType::Void, 0x80000000 | 3,    4,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Int, QMetaType::Int,    7,    8,
+    QMetaType::Void, QMetaType::Int, QMetaType::Int,    4,    5,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::QString,   12,
+    QMetaType::Void, QMetaType::QString,    9,
+    QMetaType::Void, 0x80000000 | 11,   12,
 
  // slots: parameters
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 15,   12,
+    QMetaType::Void, 0x80000000 | 15,    9,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -198,9 +198,6 @@ Q_CONSTINIT const QMetaObject NetworkManager::staticMetaObject = { {
     qt_incomplete_metaTypeArray<qt_meta_stringdata_CLASSNetworkManagerENDCLASS_t,
         // Q_OBJECT / Q_GADGET
         QtPrivate::TypeAndForceComplete<NetworkManager, std::true_type>,
-        // method 'messageReceived'
-        QtPrivate::TypeAndForceComplete<void, std::false_type>,
-        QtPrivate::TypeAndForceComplete<const CoreMessage::Msg &, std::false_type>,
         // method 'heartbeatSent'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'reconnectAttempt'
@@ -214,6 +211,9 @@ Q_CONSTINIT const QMetaObject NetworkManager::staticMetaObject = { {
         // method 'networkError'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         QtPrivate::TypeAndForceComplete<QString, std::false_type>,
+        // method 'messageReceived'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        QtPrivate::TypeAndForceComplete<const CoreMessage::Msg &, std::false_type>,
         // method 'processMessageQueue'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'onNetworkError'
@@ -239,12 +239,12 @@ void NetworkManager::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _
         auto *_t = static_cast<NetworkManager *>(_o);
         (void)_t;
         switch (_id) {
-        case 0: _t->messageReceived((*reinterpret_cast< std::add_pointer_t<CoreMessage::Msg>>(_a[1]))); break;
-        case 1: _t->heartbeatSent(); break;
-        case 2: _t->reconnectAttempt((*reinterpret_cast< std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[2]))); break;
-        case 3: _t->connectionEstablished(); break;
-        case 4: _t->connectionLost(); break;
-        case 5: _t->networkError((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
+        case 0: _t->heartbeatSent(); break;
+        case 1: _t->reconnectAttempt((*reinterpret_cast< std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[2]))); break;
+        case 2: _t->connectionEstablished(); break;
+        case 3: _t->connectionLost(); break;
+        case 4: _t->networkError((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
+        case 5: _t->messageReceived((*reinterpret_cast< std::add_pointer_t<CoreMessage::Msg>>(_a[1]))); break;
         case 6: _t->processMessageQueue(); break;
         case 7: _t->onNetworkError((*reinterpret_cast< std::add_pointer_t<QString&>>(_a[1]))); break;
         case 8: _t->onConnectionEstablished(); break;
@@ -256,43 +256,43 @@ void NetworkManager::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _
     } else if (_c == QMetaObject::IndexOfMethod) {
         int *result = reinterpret_cast<int *>(_a[0]);
         {
-            using _t = void (NetworkManager::*)(const CoreMessage::Msg & );
-            if (_t _q_method = &NetworkManager::messageReceived; *reinterpret_cast<_t *>(_a[1]) == _q_method) {
-                *result = 0;
-                return;
-            }
-        }
-        {
             using _t = void (NetworkManager::*)();
             if (_t _q_method = &NetworkManager::heartbeatSent; *reinterpret_cast<_t *>(_a[1]) == _q_method) {
-                *result = 1;
+                *result = 0;
                 return;
             }
         }
         {
             using _t = void (NetworkManager::*)(int , int );
             if (_t _q_method = &NetworkManager::reconnectAttempt; *reinterpret_cast<_t *>(_a[1]) == _q_method) {
-                *result = 2;
+                *result = 1;
                 return;
             }
         }
         {
             using _t = void (NetworkManager::*)();
             if (_t _q_method = &NetworkManager::connectionEstablished; *reinterpret_cast<_t *>(_a[1]) == _q_method) {
-                *result = 3;
+                *result = 2;
                 return;
             }
         }
         {
             using _t = void (NetworkManager::*)();
             if (_t _q_method = &NetworkManager::connectionLost; *reinterpret_cast<_t *>(_a[1]) == _q_method) {
-                *result = 4;
+                *result = 3;
                 return;
             }
         }
         {
             using _t = void (NetworkManager::*)(QString );
             if (_t _q_method = &NetworkManager::networkError; *reinterpret_cast<_t *>(_a[1]) == _q_method) {
+                *result = 4;
+                return;
+            }
+        }
+        {
+            using _t = void (NetworkManager::*)(const CoreMessage::Msg & );
+            if (_t _q_method = &NetworkManager::messageReceived; *reinterpret_cast<_t *>(_a[1]) == _q_method) {
                 *result = 5;
                 return;
             }
@@ -331,39 +331,39 @@ int NetworkManager::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 }
 
 // SIGNAL 0
-void NetworkManager::messageReceived(const CoreMessage::Msg & _t1)
+void NetworkManager::heartbeatSent()
 {
-    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t1))) };
-    QMetaObject::activate(this, &staticMetaObject, 0, _a);
+    QMetaObject::activate(this, &staticMetaObject, 0, nullptr);
 }
 
 // SIGNAL 1
-void NetworkManager::heartbeatSent()
-{
-    QMetaObject::activate(this, &staticMetaObject, 1, nullptr);
-}
-
-// SIGNAL 2
 void NetworkManager::reconnectAttempt(int _t1, int _t2)
 {
     void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t1))), const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t2))) };
-    QMetaObject::activate(this, &staticMetaObject, 2, _a);
+    QMetaObject::activate(this, &staticMetaObject, 1, _a);
+}
+
+// SIGNAL 2
+void NetworkManager::connectionEstablished()
+{
+    QMetaObject::activate(this, &staticMetaObject, 2, nullptr);
 }
 
 // SIGNAL 3
-void NetworkManager::connectionEstablished()
+void NetworkManager::connectionLost()
 {
     QMetaObject::activate(this, &staticMetaObject, 3, nullptr);
 }
 
 // SIGNAL 4
-void NetworkManager::connectionLost()
+void NetworkManager::networkError(QString _t1)
 {
-    QMetaObject::activate(this, &staticMetaObject, 4, nullptr);
+    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t1))) };
+    QMetaObject::activate(this, &staticMetaObject, 4, _a);
 }
 
 // SIGNAL 5
-void NetworkManager::networkError(QString _t1)
+void NetworkManager::messageReceived(const CoreMessage::Msg & _t1)
 {
     void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t1))) };
     QMetaObject::activate(this, &staticMetaObject, 5, _a);
