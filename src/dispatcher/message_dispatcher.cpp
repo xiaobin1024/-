@@ -40,6 +40,8 @@ void MessageDispatcher::setUserSession(UserSession* session)
                    this, &MessageDispatcher::onLogoutRequested);
         disconnect(m_userSession, &UserSession::registerRequest,
                    this, &MessageDispatcher::onRegisterRequested);
+        disconnect(m_userSession, &UserSession::unregisterRequest,  // 新增
+                   this, &MessageDispatcher::onUnregisterRequested);
     }
 
     m_userSession = session;
@@ -52,6 +54,8 @@ void MessageDispatcher::setUserSession(UserSession* session)
                 this, &MessageDispatcher::onLogoutRequested);
         connect(m_userSession, &UserSession::registerRequest,
                 this, &MessageDispatcher::onRegisterRequested);
+        connect(m_userSession, &UserSession::unregisterRequest,  // 新增
+                this, &MessageDispatcher::onUnregisterRequested);
 
         qDebug() << "UserSession 已设置到 MessageDispatcher";
     }
@@ -197,6 +201,10 @@ void MessageDispatcher::dispatchMessage(const CoreMessage::Msg& message)
         emit logoutResponseReceived(data);
         break;
 
+    case CoreMessage::MsgType::UNREGISTER:  // 新增
+        emit unregisterResponseReceived(data);
+        break;
+
     case CoreMessage::MsgType::SEARCH:
         emit searchResponseReceived(data);
         break;
@@ -282,16 +290,19 @@ void MessageDispatcher::onLogoutRequested()
         return;
     }
 
-    if (m_userSession->isLoggedIn()) {
-        QString username = m_userSession->currentUser().username();
+    // 使用UserSession的当前用户信息来获取用户名
+    UserData currentUser = m_userSession->currentUser();
+    if (currentUser.isValid() && currentUser.isLoggedIn()) {
+        QString username = currentUser.username();
         qDebug() << "MessageDispatcher: 处理登出请求, 用户名:" << username;
 
         if (!sendMessage(CoreMessage::MsgType::Quit, username)) {
             emit logoutResponseReceived("ERROR:网络未连接或消息发送失败");
         }
-    }
-    else {
-        qDebug() << "用户未登录，无需发送登出请求";
+    } else {
+        qDebug() << "MessageDispatcher::onLogoutRequested()：用户未登录，无需发送登出请求";
+        // 即使用户未登录，也要发出成功信号，因为这可能意味着本地登出
+        emit logoutResponseReceived("SUCCESS:本地登出");
     }
 }
 
@@ -301,5 +312,14 @@ void MessageDispatcher::onRegisterRequested(const QString& username, const QStri
 
     if (!sendMessage(CoreMessage::MsgType::REGISTER, username, password)) {
         emit registerResponseReceived("ERROR:网络未连接或消息发送失败");
+    }
+}
+
+void MessageDispatcher::onUnregisterRequested(const QString& username, const QString& password)
+{
+    qDebug() << "MessageDispatcher: 处理注销请求, 用户名:" << username;
+
+    if (!sendMessage(CoreMessage::MsgType::UNREGISTER, username, password)) {
+        emit unregisterResponseReceived("ERROR:网络未连接或消息发送失败");
     }
 }

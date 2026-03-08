@@ -22,9 +22,17 @@ UserSession::UserSession(QObject* parent)
 
 UserSession::~UserSession()
 {
+    // 断开所有连接
+    if (m_messageDispatcher) {
+        disconnect(m_messageDispatcher, nullptr, this, nullptr);
+    }
+
+    // 清理数据
+    m_currentUser = UserData();
+    m_userData = QJsonObject();
+
     qDebug() << "UserSession 销毁";
 }
-
 void UserSession::setMessageDispatcher(MessageDispatcher* dispatcher)
 {
     if (m_messageDispatcher == dispatcher) {
@@ -39,6 +47,8 @@ void UserSession::setMessageDispatcher(MessageDispatcher* dispatcher)
                    this, &UserSession::processRegisterResponse);
         disconnect(m_messageDispatcher, &MessageDispatcher::logoutResponseReceived,
                    this, &UserSession::processLogoutResponse);
+        disconnect(m_messageDispatcher, &MessageDispatcher::unregisterResponseReceived,  // 新增
+                   this, &UserSession::processUnregisterResponse);
         disconnect(m_messageDispatcher, &MessageDispatcher::errorOccurred,
                    this, &UserSession::error);
     }
@@ -53,6 +63,8 @@ void UserSession::setMessageDispatcher(MessageDispatcher* dispatcher)
                 this, &UserSession::processRegisterResponse);
         connect(m_messageDispatcher, &MessageDispatcher::logoutResponseReceived,
                 this, &UserSession::processLogoutResponse);
+        connect(m_messageDispatcher, &MessageDispatcher::unregisterResponseReceived,  // 新增
+                this, &UserSession::processUnregisterResponse);
         connect(m_messageDispatcher, &MessageDispatcher::errorOccurred,
                 this, &UserSession::error);
 
@@ -150,36 +162,42 @@ void UserSession::login(const QString& username, const QString& password, bool r
 void UserSession::logout()
 {
     if (!isLoggedIn()) {
+        qDebug() << "UserSession::logout()：用户未登录，无需登出";
         return;
     }
-
-    // 保存用户数据
-    if (m_currentUser.isValid()) {
-        m_storage->saveUserData(m_currentUser.userId(), m_userData);
-    }
-
-    // 清理会话
-    m_storage->clearSession();
 
     // 记录登出用户
     UserData oldUser = m_currentUser;
 
-    // 重置当前用户
-    m_currentUser = UserData();
-    m_userData = QJsonObject();
-
-    // 通过MessageDispatcher发送登出请求
+    // 通过MessageDispatcher发送登出请求 - 先发送请求
     if (m_messageDispatcher) {
         qDebug() << "通过MessageDispatcher发送登出请求:" << oldUser.username();
         emit logoutRequest();
     } else {
         qWarning() << "MessageDispatcher 未设置, 跳过服务器登出";
+
+        // 如果没有MessageDispatcher，直接本地登出
+        // 保存用户数据
+        if (m_currentUser.isValid()) {
+            m_storage->saveUserData(m_currentUser.userId(), m_userData);
+        }
+
+        // 清理会话
+        m_storage->clearSession();
+
+        // 重置当前用户
+        m_currentUser = UserData();
+        m_userData = QJsonObject();
+
+        emit logoutSuccess();
+        emit userChanged(m_currentUser);
+
+        qDebug() << "用户登出:" << oldUser.username();
+        return;
     }
 
-    emit logoutSuccess();
-    emit userChanged(m_currentUser);
-
-    qDebug() << "用户登出:" << oldUser.username();
+    // 注意：这里不清空用户信息，等到服务器响应后再清空
+    // 这样MessageDispatcher可以正确获取用户信息来发送登出请求
 }
 
 void UserSession::registerUser(const QString& username, const QString& password)
@@ -283,7 +301,7 @@ void UserSession::processLogoutResponse(const QString& responseData)
     qDebug() << "处理登出响应:" << responseData;
 
     if (responseData.startsWith("SUCCESS:")) {
-        // 登出成功
+        // 登出成功 - 现在可以安全地清空本地用户信息了
         if (m_currentUser.isValid() && m_currentUser.isLoggedIn()) {
             m_storage->saveUserData(m_currentUser.userId(), m_userData);
         }
@@ -301,9 +319,15 @@ void UserSession::processLogoutResponse(const QString& responseData)
     } else {
         // 即使服务器登出失败，也要执行本地登出
         UserData oldUser = m_currentUser;
+
+        // 保存用户数据
+        if (m_currentUser.isValid()) {
+            m_storage->saveUserData(m_currentUser.userId(), m_userData);
+        }
+
+        m_storage->clearSession();
         m_currentUser = UserData();
         m_userData = QJsonObject();
-        m_storage->clearSession();
 
         emit logoutSuccess();
         emit userChanged(m_currentUser);
@@ -343,30 +367,6 @@ void UserSession::processRegisterResponse(const QString& responseData)
     }
 }
 
-bool UserSession::tryAutoLogin()
-{
-    if (!m_initialized) {
-        qWarning() << "尝试自动登录失败: UserSession 未初始化";
-        return false;
-    }
-
-    if (m_storage->hasStoredSession()) {
-        UserData user = m_storage->loadSession();
-        if (user.isValid() && user.isLoggedIn()) {
-            m_currentUser = user;
-            m_currentUser.updateLastActiveTime();
-            m_userData = m_storage->loadUserData(user.userId());
-
-            emit loginSuccess(m_currentUser);
-            emit userChanged(m_currentUser);
-
-            qDebug() << "自动登录成功:" << user.username();
-            return true;
-        }
-    }
-
-    return false;
-}
 
 bool UserSession::canSaveWords() const
 {
@@ -475,34 +475,103 @@ void UserSession::reset()
 
     qDebug() << "UserSession 已重置";
 }
-
-bool UserSession::localAuthenticate(const QString& username, const QString& password, UserData& userData)
+bool UserSession::autoLoginFromSavedSession()
 {
-    // 开发环境下的简单本地认证
-    static QMap<QString, QPair<QString, UserRole>> userDatabase = {
-        {"admin", {"admin123", UserRole::PremiumUser}},
-        {"user1", {"password1", UserRole::FreeUser}},
-        {"user2", {"password2", UserRole::FreeUser}},
-        {"test", {"test", UserRole::PremiumUser}}
-    };
-
-    if (!userDatabase.contains(username)) {
-        qDebug() << "本地认证失败: 用户不存在" << username;
+    if (!m_initialized) {
+        qWarning() << "UserSession 未初始化，无法自动登录";
         return false;
     }
 
-    auto& userInfo = userDatabase[username];
-    if (userInfo.first != password) {
-        qDebug() << "本地认证失败: 密码错误" << username;
-        return false;
+    if (isLoggedIn()) {
+        qDebug() << "用户已登录，无需自动登录";
+        return true;
     }
 
-    // 认证成功，创建用户数据
-    QString userId = QString("%1_%2").arg(username).arg(QDateTime::currentMSecsSinceEpoch());
-    userData = UserData(userId, username, userInfo.second);
-    userData.setLoggedIn(true);
-    userData.updateLastActiveTime();
+    // 尝试从保存的会话中加载用户
+    if (m_storage->hasStoredSession()) {
+        UserData savedUser = m_storage->loadSession();
+        if (savedUser.isValid() && savedUser.isLoggedIn()) {
+            // 加载用户数据
+            QJsonObject userData = m_storage->loadUserData(savedUser.userId());
 
-    qDebug() << "本地认证成功:" << username << "用户类型:" << static_cast<int>(userInfo.second);
-    return true;
+            // 设置当前用户
+            m_currentUser = savedUser;
+            m_currentUser.updateLastActiveTime();
+            m_userData = userData;
+
+            // 发出登录成功的信号
+            emit loginSuccess(m_currentUser);
+            emit userChanged(m_currentUser);
+
+            qDebug() << "自动登录成功: 用户" << savedUser.username()
+                     << "ID:" << savedUser.userId();
+            return true;
+        }
+    }
+
+    qDebug() << "没有有效的保存会话，自动登录失败";
+    return false;
+}
+
+// 为了兼容，保留原有的 tryAutoLogin 方法
+bool UserSession::tryAutoLogin()
+{
+    return autoLoginFromSavedSession();
+}
+
+void UserSession::unregisterUser(const QString& username, const QString& password)
+{
+    if (!m_initialized) {
+        emit unregisterFailed("UserSession 未初始化");
+        return;
+    }
+
+    if (username.isEmpty() || password.isEmpty()) {
+        emit unregisterFailed("用户名或密码不能为空");
+        return;
+    }
+
+    if (!m_messageDispatcher) {
+        emit unregisterFailed("系统错误: 消息分发器未设置");
+        qWarning() << "MessageDispatcher 未设置, 无法发送注销请求";
+        return;
+    }
+
+    qDebug() << "通过MessageDispatcher发送注销请求:" << username;
+    emit unregisterRequest(username, password);
+}
+
+void UserSession::processUnregisterResponse(const QString& responseData)
+{
+    qDebug() << "处理注销响应:" << responseData;
+
+    if (responseData.startsWith("SUCCESS:")) {
+        QStringList parts = responseData.mid(8).split(":");
+        if (parts.size() >= 2) {
+            QString username = parts[0];
+            int userId = parts[1].toInt();
+
+            // 注销成功后，清理当前用户信息
+            if (m_currentUser.isValid() && m_currentUser.isLoggedIn()) {
+                //m_storage->saveUserData(m_currentUser.userId(), m_userData);
+                m_storage->deleteUserData(m_currentUser.userId());
+            }
+
+            m_storage->clearSession();
+            m_currentUser = UserData();
+            m_userData = QJsonObject();
+
+            emit unregisterSuccess(username, userId);
+            emit userChanged(m_currentUser);
+
+            qDebug() << "用户注销成功:" << username << "用户ID:" << userId;
+        } else {
+            emit unregisterFailed("注销响应格式错误");
+        }
+    } else if (responseData.startsWith("ERROR:")) {
+        QString errorMsg = responseData.mid(6);
+        emit unregisterFailed(errorMsg);
+    } else {
+        emit unregisterFailed("注销失败: 未知响应格式");
+    }
 }

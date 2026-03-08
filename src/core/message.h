@@ -14,7 +14,8 @@ enum class MsgType:int{
     HISTORY=5,
     HEARTBEAT=6,
     COLLECT=7,
-    QUERYCOLLECT=8
+    QUERYCOLLECT=8,
+    UNREGISTER=9
 };
 //QDebug输出支持
 inline QDebug operator<<(QDebug debug,MsgType type)
@@ -29,6 +30,7 @@ inline QDebug operator<<(QDebug debug,MsgType type)
     case MsgType::HEARTBEAT: typeStr="HEARTBEAT"; break;
     case MsgType::COLLECT: typeStr="COLLECT"; break;
     case MsgType::QUERYCOLLECT: typeStr="QUERYCOLLECT"; break;
+    case MsgType::UNREGISTER: typeStr="UNREGISTER"; break;
     default: typeStr="UNKNOWN"; break;
     }
     debug<<typeStr<<"("<<static_cast<int>(type)<<")";

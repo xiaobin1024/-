@@ -29,6 +29,7 @@ add_library(ui STATIC
   search/search_base.h
   search/search_base.cpp
   search/searchhistory_widget.h search/searchhistory_widget.cpp
+  system/system_sidebar.cpp system/system_sidebar.h system/theme_manager.cpp system/theme_manager.h
 )
 
 # 链接依赖库
@@ -36,6 +37,8 @@ target_link_libraries(ui PUBLIC
     # 如果依赖其他内部库
     network
     core
+    dispatcher
+    user_session
     Qt${QT_VERSION_MAJOR}::Core
     Qt${QT_VERSION_MAJOR}::Widgets
 )

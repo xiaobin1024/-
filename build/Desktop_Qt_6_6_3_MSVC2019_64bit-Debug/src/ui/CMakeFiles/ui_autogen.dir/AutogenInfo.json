@@ -84,6 +84,18 @@
 			null
 		],
 		[
+			"C:/Users/86152/Desktop/network_dictionary/src/ui/system/system_sidebar.h",
+			"MU",
+			"M757I3AIOJ/moc_system_sidebar.cpp",
+			null
+		],
+		[
+			"C:/Users/86152/Desktop/network_dictionary/src/ui/system/theme_manager.h",
+			"MU",
+			"M757I3AIOJ/moc_theme_manager.cpp",
+			null
+		],
+		[
 			"C:/Users/86152/Desktop/network_dictionary/src/ui/word/interactive_wordcard.h",
 			"MU",
 			"REEYQWTHGX/moc_interactive_wordcard.cpp",
@@ -125,6 +137,8 @@
 		"C:/Users/86152/Desktop/network_dictionary/src/ui",
 		"C:/Users/86152/Desktop/network_dictionary/src/network",
 		"C:/Users/86152/Desktop/network_dictionary/src/core",
+		"C:/Users/86152/Desktop/network_dictionary/src/dispatcher",
+		"C:/Users/86152/Desktop/network_dictionary/src/user_session",
 		"D:/qt/6.6.3/msvc2019_64/include/QtCore",
 		"D:/qt/6.6.3/msvc2019_64/include",
 		"D:/qt/6.6.3/msvc2019_64/mkspecs/win32-msvc",
@@ -168,6 +182,16 @@
 		],
 		[
 			"C:/Users/86152/Desktop/network_dictionary/src/ui/search/searchhistory_widget.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/86152/Desktop/network_dictionary/src/ui/system/system_sidebar.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/86152/Desktop/network_dictionary/src/ui/system/theme_manager.cpp",
 			"MU",
 			null
 		],

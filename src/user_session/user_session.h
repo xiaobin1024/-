@@ -32,18 +32,22 @@ public:
     bool isFreeUser() const;
     bool isPremiumUser() const;
 
-    // 登录/登出/注册
+    // 登录/登出/注册/注销
     void login(const QString& username, const QString& password, bool rememberMe = true);
     void logout();
     void registerUser(const QString& username, const QString& password);
+    void unregisterUser(const QString& username, const QString& password);
 
     // 响应处理（被调用，不主动请求）
     void processLoginResponse(const QString& responseData);
     void processLogoutResponse(const QString& responseData);
     void processRegisterResponse(const QString& responseData);
+    void processUnregisterResponse(const QString& responseData);
 
     // 自动登录
     bool tryAutoLogin();
+    // 自动登录上次保存的用户
+    bool autoLoginFromSavedSession();
 
     // 权限检查
     bool canSaveWords() const;
@@ -72,6 +76,11 @@ signals:
     void registerSuccess(const QString& username);
     void registerFailed(const QString& error);
 
+    void unregisterRequest(const QString& username, const QString& password);
+    void unregisterSuccess(const QString& username, int userId);
+    void unregisterFailed(const QString& error);
+
+
     // 请求信号（不处理网络，只发出请求）
     void loginRequest(const QString& username, const QString& password);
     void logoutRequest();
@@ -84,8 +93,6 @@ private:
     UserSession(QObject* parent = nullptr);
     ~UserSession();
 
-    // 简单本地认证（开发用）
-    bool localAuthenticate(const QString& username, const QString& password, UserData& userData);
 
 private:
     static UserSession* m_instance;

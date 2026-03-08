@@ -230,3 +230,27 @@ QJsonObject SessionStorage::readJsonFile(const QString& filePath) const
 
     return doc.object();
 }
+
+bool SessionStorage::deleteUserData(const QString& userId)
+{
+    if (userId.isEmpty()) {
+        emit error("无法删除用户数据: 用户ID为空");
+        return false;
+    }
+
+    QString filePath = getUserDataFilePath(userId);
+    QFile file(filePath);
+
+    if (file.exists()) {
+        if (file.remove()) {
+            qDebug() << "用户数据已删除:" << userId << "文件:" << filePath;
+            return true;
+        } else {
+            emit error("删除用户数据失败: " + file.errorString());
+            return false;
+        }
+    } else {
+        qDebug() << "用户数据文件不存在，无需删除:" << filePath;
+        return true; // 文件不存在也算删除成功
+    }
+}

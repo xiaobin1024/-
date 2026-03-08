@@ -143,8 +143,8 @@ protected:
     bool m_pageActivated{false};
 
     // 控件存储（用于批量更新样式）
-    QList<QPushButton*> m_primaryButtons;
-    QList<QPushButton*> m_secondaryButtons;
+    QList<QPointer<QPushButton>> m_primaryButtons;
+    QList<QPointer<QPushButton>> m_secondaryButtons;
     QList<QLineEdit*> m_lineEdits;
     QList<QLabel*> m_labels;
     QList<QGroupBox*> m_groupBoxes;

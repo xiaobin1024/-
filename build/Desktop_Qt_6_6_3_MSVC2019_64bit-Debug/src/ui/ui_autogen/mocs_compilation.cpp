@@ -2,5 +2,7 @@
 #include "CZ4SVKUTXB/moc_base_widget.cpp"
 #include "O2QWORDHJD/moc_search_base.cpp"
 #include "O2QWORDHJD/moc_searchhistory_widget.cpp"
+#include "M757I3AIOJ/moc_system_sidebar.cpp"
+#include "M757I3AIOJ/moc_theme_manager.cpp"
 #include "REEYQWTHGX/moc_interactive_wordcard.cpp"
 #include "REEYQWTHGX/moc_word_card.cpp"

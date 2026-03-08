@@ -8,6 +8,7 @@
 #include <QShowEvent>
 #include <QHideEvent>
 #include <QDebug>
+#include"system/theme_manager.h"
 
 BaseWidget::BaseWidget(QWidget* parent)
     : QWidget(parent)
@@ -16,6 +17,9 @@ BaseWidget::BaseWidget(QWidget* parent)
     // 设置消息定时器
     m_messageTimer->setSingleShot(true);
     connect(m_messageTimer, &QTimer::timeout, this, &BaseWidget::clearMessage);
+
+    // ==== 新增：向全局主题管理器注册 ====
+    ThemeManager::instance()->registerWidget(this);
 
     // 加载颜色配置
     loadColors();
@@ -33,11 +37,14 @@ BaseWidget::~BaseWidget()
     if (m_messageTimer) {
         m_messageTimer->stop();
     }
+    ThemeManager::instance()->unregisterWidget(this);
 }
 
 // ============ 页面生命周期管理 ============
 void BaseWidget::initUI()
 {
+    static int callCount = 0;
+    qDebug() << "BASEWIDGET::INITUI() 调用 #" << ++callCount;
     // 创建主布局
     m_mainLayout = new QVBoxLayout(this);
     m_mainLayout->setContentsMargins(0, 0, 0, 0);
@@ -50,6 +57,7 @@ void BaseWidget::initUI()
 void BaseWidget::setupLayout()
 {
     // 默认实现为空，子类重写
+    qDebug()<<"BaseWidget::setupLayout()";
 }
 
 void BaseWidget::showPage()
@@ -234,6 +242,7 @@ void BaseWidget::setUITheme(UITheme theme)
 
 void BaseWidget::updateWidgetStyles()
 {
+    qDebug() << "updateWidgetStyles() 调用，secondary 按钮数量：" << m_secondaryButtons.size();
     QString bgColor = getColor("background");
     setStyleSheet(QString("BaseWidget { background-color: %1; }").arg(bgColor));
 
@@ -251,12 +260,16 @@ void BaseWidget::updateWidgetStyles()
         updateGroupBoxStyle(groupBox);
     }
 
-    //更新所有的按钮
-    for(auto button : m_primaryButtons){
-        button->setStyleSheet(createButtonStyle("primary"));
+    // 更新所有的按钮
+    for(auto button : m_primaryButtons) {
+        if (button) {  // 检查指针是否有效
+            button->setStyleSheet(createButtonStyle("primary"));
+        }
     }
-    for(auto button : m_secondaryButtons){
-        button->setStyleSheet(createButtonStyle("secondary"));
+    for(auto button : m_secondaryButtons) {
+        if (button) {  // 检查指针是否有效
+            button->setStyleSheet(createButtonStyle("secondary"));
+        }
     }
 
     //更新所有输入框
@@ -345,7 +358,7 @@ void BaseWidget::loadColors()
 QPushButton* BaseWidget::createPrimaryButton(const QString& text,const QString& objectName)
 {
     auto button = new QPushButton(text, this);
-    if(objectName.isEmpty()){
+    if(!objectName.isEmpty()){
         button->setObjectName(objectName);
     }
     button->setStyleSheet(createButtonStyle("primary"));
@@ -356,7 +369,7 @@ QPushButton* BaseWidget::createPrimaryButton(const QString& text,const QString& 
 QPushButton* BaseWidget::createSecondaryButton(const QString& text,const QString& objectName)
 {
     auto button = new QPushButton(text, this);
-    if(objectName.isEmpty()){
+    if(!objectName.isEmpty()){
         button->setObjectName(objectName);
     }
     button->setStyleSheet(createButtonStyle("secondary"));
@@ -367,7 +380,7 @@ QPushButton* BaseWidget::createSecondaryButton(const QString& text,const QString
 QLineEdit* BaseWidget::createLineEdit(const QString& placeholder,const QString& objectName)
 {
     auto lineEdit = new QLineEdit(this);
-    if(objectName.isEmpty()){
+    if(!objectName.isEmpty()){
         lineEdit->setObjectName(objectName);
     }
     lineEdit->setStyleSheet(createLineEditStyle());

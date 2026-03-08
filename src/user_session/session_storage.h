@@ -27,6 +27,7 @@ public:
     // 用户数据
     bool saveUserData(const QString& userId, const QJsonObject& data);
     QJsonObject loadUserData(const QString& userId);
+    bool deleteUserData(const QString& userId);
 
 signals:
     void sessionSaved(const QString& userId);

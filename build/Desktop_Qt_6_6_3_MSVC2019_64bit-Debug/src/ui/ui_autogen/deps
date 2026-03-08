@@ -1,6 +1,14 @@
 ui_autogen/timestamp: \
 	C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/.qtc/package-manager/auto-setup.cmake \
+	C:/Users/86152/Desktop/network_dictionary/src/core/app_config.h \
+	C:/Users/86152/Desktop/network_dictionary/src/core/message.h \
+	C:/Users/86152/Desktop/network_dictionary/src/core/utils.h \
 	C:/Users/86152/Desktop/network_dictionary/src/core/word_data.h \
+	C:/Users/86152/Desktop/network_dictionary/src/dispatcher/message_dispatcher.h \
+	C:/Users/86152/Desktop/network_dictionary/src/network/connection_manager.h \
+	C:/Users/86152/Desktop/network_dictionary/src/network/message_queue_manager.h \
+	C:/Users/86152/Desktop/network_dictionary/src/network/network_manager.h \
+	C:/Users/86152/Desktop/network_dictionary/src/network/reconnection_manager.h \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/CMakeLists.txt \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/base/base_widget.cpp \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/base/base_widget.h \
@@ -9,26 +17,44 @@ ui_autogen/timestamp: \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/search/search_base.h \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/search/searchhistory_widget.cpp \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/search/searchhistory_widget.h \
+	C:/Users/86152/Desktop/network_dictionary/src/ui/system/system_sidebar.cpp \
+	C:/Users/86152/Desktop/network_dictionary/src/ui/system/system_sidebar.h \
+	C:/Users/86152/Desktop/network_dictionary/src/ui/system/theme_manager.cpp \
+	C:/Users/86152/Desktop/network_dictionary/src/ui/system/theme_manager.h \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/word/interactive_wordcard.cpp \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/word/interactive_wordcard.h \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/word/word_card.cpp \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/word/word_card.h \
+	C:/Users/86152/Desktop/network_dictionary/src/user_session/session_storage.h \
+	C:/Users/86152/Desktop/network_dictionary/src/user_session/user_data.h \
+	C:/Users/86152/Desktop/network_dictionary/src/user_session/user_session.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/QDateTime \
+	D:/qt/6.6.3/msvc2019_64/include/QtCore/QDebug \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/QJsonArray \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/QJsonDocument \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/QJsonObject \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/QList \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/QMap \
+	D:/qt/6.6.3/msvc2019_64/include/QtCore/QMutex \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/QObject \
+	D:/qt/6.6.3/msvc2019_64/include/QtCore/QPropertyAnimation \
+	D:/qt/6.6.3/msvc2019_64/include/QtCore/QQueue \
+	D:/qt/6.6.3/msvc2019_64/include/QtCore/QReadWriteLock \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/QRect \
+	D:/qt/6.6.3/msvc2019_64/include/QtCore/QRegularExpression \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/QSize \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/QSizeF \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/QString \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/QTimer \
+	D:/qt/6.6.3/msvc2019_64/include/QtCore/QVariant \
+	D:/qt/6.6.3/msvc2019_64/include/QtCore/QVector \
+	D:/qt/6.6.3/msvc2019_64/include/QtCore/QtDebug \
+	D:/qt/6.6.3/msvc2019_64/include/QtCore/QtEndian \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/q20functional.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/q20memory.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/q20type_traits.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/q23utility.h \
+	D:/qt/6.6.3/msvc2019_64/include/QtCore/qabstractanimation.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qabstractitemmodel.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qalgorithms.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qanystringview.h \
@@ -62,7 +88,10 @@ ui_autogen/timestamp: \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qdarwinhelpers.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qdatastream.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qdatetime.h \
+	D:/qt/6.6.3/msvc2019_64/include/QtCore/qdeadlinetimer.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qdebug.h \
+	D:/qt/6.6.3/msvc2019_64/include/QtCore/qeasingcurve.h \
+	D:/qt/6.6.3/msvc2019_64/include/QtCore/qelapsedtimer.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qendian.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qexceptionhandling.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qflags.h \
@@ -96,6 +125,7 @@ ui_autogen/timestamp: \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qmetacontainer.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qmetatype.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qminmax.h \
+	D:/qt/6.6.3/msvc2019_64/include/QtCore/qmutex.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qnamespace.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qnativeinterface.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qnumeric.h \
@@ -108,6 +138,9 @@ ui_autogen/timestamp: \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qpoint.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qpointer.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qprocessordetection.h \
+	D:/qt/6.6.3/msvc2019_64/include/QtCore/qpropertyanimation.h \
+	D:/qt/6.6.3/msvc2019_64/include/QtCore/qqueue.h \
+	D:/qt/6.6.3/msvc2019_64/include/QtCore/qreadwritelock.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qrect.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qrefcount.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qregularexpression.h \
@@ -146,6 +179,7 @@ ui_autogen/timestamp: \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qtnoop.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qtpreprocessorsupport.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qtresource.h \
+	D:/qt/6.6.3/msvc2019_64/include/QtCore/qtsan_impl.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qttranslation.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qttypetraits.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qtversion.h \
@@ -156,7 +190,9 @@ ui_autogen/timestamp: \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qutf8stringview.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/quuid.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qvariant.h \
+	D:/qt/6.6.3/msvc2019_64/include/QtCore/qvariantanimation.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qvarlengtharray.h \
+	D:/qt/6.6.3/msvc2019_64/include/QtCore/qvector.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qversiontagging.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qxptype_traits.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtGui/QMouseEvent \
@@ -200,6 +236,13 @@ ui_autogen/timestamp: \
 	D:/qt/6.6.3/msvc2019_64/include/QtGui/qvectornd.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtGui/qwindowdefs.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtGui/qwindowdefs_win.h \
+	D:/qt/6.6.3/msvc2019_64/include/QtNetwork/QTcpSocket \
+	D:/qt/6.6.3/msvc2019_64/include/QtNetwork/qabstractsocket.h \
+	D:/qt/6.6.3/msvc2019_64/include/QtNetwork/qhostaddress.h \
+	D:/qt/6.6.3/msvc2019_64/include/QtNetwork/qtcpsocket.h \
+	D:/qt/6.6.3/msvc2019_64/include/QtNetwork/qtnetwork-config.h \
+	D:/qt/6.6.3/msvc2019_64/include/QtNetwork/qtnetworkexports.h \
+	D:/qt/6.6.3/msvc2019_64/include/QtNetwork/qtnetworkglobal.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtWidgets/QFormLayout \
 	D:/qt/6.6.3/msvc2019_64/include/QtWidgets/QGroupBox \
 	D:/qt/6.6.3/msvc2019_64/include/QtWidgets/QLabel \

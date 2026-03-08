@@ -32,6 +32,7 @@ signals:
     void historyResponseReceived(const QString& responseData);
     void collectResponseReceived(const QString& responseData);
     void queryCollectResponseReceived(const QString& responseData);
+    void unregisterResponseReceived(const QString& responseData);
 
     // 通用消息信号
     void messageDispatched(CoreMessage::MsgType type, const QString& data);
@@ -47,6 +48,7 @@ private slots:
     void onLoginRequested(const QString& username, const QString& password);
     void onLogoutRequested();
     void onRegisterRequested(const QString& username, const QString& password);
+    void onUnregisterRequested(const QString& username, const QString& password);
 
     // 网络状态处理
     void onNetworkConnected();
@@ -57,6 +59,7 @@ private:
     void dispatchMessage(const CoreMessage::Msg& message);
     void connectNetworkSignals();
     void disconnectNetworkSignals();
+
 
     // 发送消息辅助函数
     bool sendMessage(CoreMessage::MsgType type, const QString& name,
