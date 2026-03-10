@@ -12,6 +12,7 @@
 #include<QLabel>
 #include<QGroupBox>
 #include<QTimer>
+#include <QPointer>  //安全指针
 
 // 界面状态枚举
 enum class UIState {
@@ -53,6 +54,7 @@ class BaseWidget : public QWidget
 public:
     explicit BaseWidget(QWidget* parent = nullptr);
     virtual ~BaseWidget();
+    void initialize();
 
     // ============ 页面生命周期管理 ============
     virtual void showPage();
@@ -97,6 +99,7 @@ protected:
     virtual void initUI();
     virtual void setupLayout();
 
+
     // ============ 控件创建辅助 ============
     QPushButton* createPrimaryButton(const QString& text, const QString& objectName = "");
     QPushButton* createSecondaryButton(const QString& text, const QString& objectName = "");
@@ -129,6 +132,16 @@ protected:
 protected:
     // 布局
     QVBoxLayout* m_mainLayout{nullptr};
+
+    // 【修复】使用悬浮层方式，不依赖布局
+    QPointer<QLabel> m_messageOverlay;  // 悬浮消息标签
+    QTimer* m_messageTimer{nullptr};
+    QString m_currentMessage;
+
+    // 初始化悬浮层
+    void ensureMessageOverlay();
+    // 重写 resizeEvent 更新消息位置
+    void resizeEvent(QResizeEvent* event) override;
 
     // 样式相关
     UIState m_uiState{UIState::Normal};
@@ -163,9 +176,7 @@ private:
     // 消息管理
     void setupMessageTimer(int duration);
 
-    QList<QLabel*> m_messageLabels;     // 存储所有消息标签
-    QTimer* m_messageTimer{nullptr};    // 用于消息自动清除
-    QString m_currentMessage;
+    QList<QPointer<QWidget>> m_messageLabels;  //存储容器而不是 QLabel
 
 };
 

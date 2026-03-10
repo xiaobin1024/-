@@ -66,7 +66,8 @@ add_executable(tests
     #tst_user_session.cpp
     #tst_dispatcher.cpp
     #tst_system_sidebar.cpp
-    tst_composite_module.cpp
+    #tst_composite_module.cpp
+    tst_login_page.cpp
 
     # 后续添加其他测试文件
 )

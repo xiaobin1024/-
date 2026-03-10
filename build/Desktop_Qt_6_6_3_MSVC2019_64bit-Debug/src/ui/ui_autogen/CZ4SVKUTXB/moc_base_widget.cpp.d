@@ -1,5 +1,6 @@
 C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/ui/ui_autogen/CZ4SVKUTXB/moc_base_widget.cpp: C:/Users/86152/Desktop/network_dictionary/src/ui/base/base_widget.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/QMap \
+  D:/qt/6.6.3/msvc2019_64/include/QtCore/QPointer \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/QString \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/QTimer \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/q20functional.h \
@@ -69,6 +70,7 @@ C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qoverload.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qpair.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qpoint.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtCore/qpointer.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qprocessordetection.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qrect.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qrefcount.h \

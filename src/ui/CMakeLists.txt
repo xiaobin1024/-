@@ -30,6 +30,7 @@ add_library(ui STATIC
   search/search_base.cpp
   search/searchhistory_widget.h search/searchhistory_widget.cpp
   system/system_sidebar.cpp system/system_sidebar.h system/theme_manager.cpp system/theme_manager.h
+  view/login_page.cpp view/login_page.h
 )
 
 # 链接依赖库

@@ -284,6 +284,7 @@ void UserSession::processLoginResponse(const QString& responseData)
             emit userChanged(m_currentUser);
 
             qDebug() << "登录成功:" << username << "用户ID:" << userId;
+             qDebug() << "UserSession 已发射 loginSuccess 信号";
             return;
         }
     } else if (responseData.startsWith("ERROR:")) {
@@ -456,7 +457,7 @@ UserData UserSession::deserializeUserData(const QString& data)
     return UserData::fromJson(doc.object());
 }
 
-void UserSession::reset()
+void UserSession::reset(bool clearSessionFile)
 {
     // 保存当前用户数据
     if (m_currentUser.isValid() && m_currentUser.isLoggedIn()) {
@@ -466,15 +467,23 @@ void UserSession::reset()
         }
     }
 
-    // 清除所有数据
+    // 清除内存数据
     m_currentUser = UserData();
     m_userData = QJsonObject();
-    m_storage->clearSession();
+
+    //根据参数决定是否清除会话文件
+    if (clearSessionFile) {
+        m_storage->clearSession();
+        qDebug() << "会话文件已清除";
+    } else {
+        qDebug() << "会话文件保留（模拟程序重启）";
+    }
 
     m_initialized = false;
 
     qDebug() << "UserSession 已重置";
 }
+
 bool UserSession::autoLoginFromSavedSession()
 {
     if (!m_initialized) {

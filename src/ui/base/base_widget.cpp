@@ -12,7 +12,7 @@
 
 BaseWidget::BaseWidget(QWidget* parent)
     : QWidget(parent)
-   , m_messageTimer(new QTimer(this))
+    , m_messageTimer(new QTimer(this))
 {
     // 设置消息定时器
     m_messageTimer->setSingleShot(true);
@@ -23,34 +23,56 @@ BaseWidget::BaseWidget(QWidget* parent)
 
     // 加载颜色配置
     loadColors();
+}
 
-    // 初始化UI
+void BaseWidget::initialize() {
     initUI();
-
-    // 设置基本样式
     updateWidgetStyles();
 }
 
+
 BaseWidget::~BaseWidget()
 {
-    // 清理消息定时器
+    //清理消息定时器
     if (m_messageTimer) {
         m_messageTimer->stop();
+        m_messageTimer->deleteLater();
     }
     ThemeManager::instance()->unregisterWidget(this);
+}
+
+void BaseWidget::ensureMessageOverlay() {
+    if (m_messageOverlay) {
+        return;  // 已创建
+    }
+
+    // 创建悬浮标签
+    m_messageOverlay = new QLabel(this);
+    m_messageOverlay->setAlignment(Qt::AlignCenter);
+    m_messageOverlay->setWordWrap(true);
+    m_messageOverlay->setAttribute(Qt::WA_TransparentForMouseEvents);  // 鼠标事件穿透
+    m_messageOverlay->setVisible(false);
+    m_messageOverlay->raise();  // 置于顶层
+
+    qDebug() << "消息悬浮层已创建";
 }
 
 // ============ 页面生命周期管理 ============
 void BaseWidget::initUI()
 {
+    if (m_mainLayout != nullptr) {
+        return;
+    }
+
     static int callCount = 0;
     qDebug() << "BASEWIDGET::INITUI() 调用 #" << ++callCount;
+
     // 创建主布局
     m_mainLayout = new QVBoxLayout(this);
     m_mainLayout->setContentsMargins(0, 0, 0, 0);
     m_mainLayout->setSpacing(12);
 
-    // 子类可以重写setupLayout来添加具体内容
+    // 子类可以重写 setupLayout 来添加具体内容
     setupLayout();
 }
 
@@ -106,55 +128,74 @@ void BaseWidget::setPageData(const QVariant& data)
 }
 
 // ============ 消息管理 ============
-void BaseWidget::showMessage(const QString& message, bool isError,int duration)
-{
+void BaseWidget::showMessage(const QString& message, bool isError, int duration) {
     qDebug() << "显示消息：" << message << "，持续时间：" << duration << "ms";
 
-    clearMessage();
+    // 【修复】确保悬浮层已创建
+    ensureMessageOverlay();
 
-    QLabel* messageLabel = new QLabel(message, this);
-    messageLabel->setProperty("message", true);
-    messageLabel->setProperty("error", isError);
+    if (!m_messageOverlay) {
+        qCritical() << "无法创建消息悬浮层";
+        return;
+    }
 
-    // 使用样式辅助函数
+    // 停止之前的定时器
+    if (m_messageTimer && m_messageTimer->isActive()) {
+        m_messageTimer->stop();
+    }
+
+    // 设置消息内容和样式
     QString type = isError ? "error" : "success";
     QString style = createMessageStyle(type);
-    messageLabel->setStyleSheet(style);
-    messageLabel->setWordWrap(true);
+    m_messageOverlay->setStyleSheet(style);
+    m_messageOverlay->setText(message);
 
-    m_mainLayout->insertWidget(0, messageLabel);
-    m_messageLabels.append(messageLabel);
+    // 计算并设置位置（顶部居中）
+    int overlayWidth = 400;
+    int overlayHeight = 50;
+    int x = (this->width() - overlayWidth) / 2;
+    int y = 20;  // 距离顶部 20px
+
+    m_messageOverlay->setGeometry(x, y, overlayWidth, overlayHeight);
+    m_messageOverlay->setVisible(true);
+    m_messageOverlay->raise();  // 确保在最上层
+
     m_currentMessage = message;
 
     if (duration > 0) {
-        setupMessageTimer(duration);
+        m_messageTimer->start(duration);
+        qDebug() << "已设置消息自动清除定时器：" << duration << "ms";
     }
 }
 
-void BaseWidget::clearMessage()
-{
-    qDebug() << "开始清除所有消息，当前消息数量：" << m_messageLabels.count();
+void BaseWidget::clearMessage() {
+    qDebug() << "开始清除所有消息";
 
-    // 停止消息定时器
     if (m_messageTimer && m_messageTimer->isActive()) {
         m_messageTimer->stop();
         qDebug() << "已停止消息定时器";
     }
 
-    // 移除并删除所有消息标签
-    for (QLabel* label : m_messageLabels) {
-        if (label) {
-            qDebug() << "删除消息标签：" << label->text();
-            m_mainLayout->removeWidget(label);
-            label->deleteLater();
-        }
+    if (m_messageOverlay) {
+        m_messageOverlay->clear();
+        m_messageOverlay->setVisible(false);
     }
 
-    // 清空列表
-    m_messageLabels.clear();
     m_currentMessage.clear();
-
     qDebug() << "消息清除完成";
+}
+
+void BaseWidget::resizeEvent(QResizeEvent* event) {
+    QWidget::resizeEvent(event);
+
+    // 更新悬浮消息位置
+    if (m_messageOverlay && m_messageOverlay->isVisible()) {
+        int overlayWidth = 400;
+        int overlayHeight = 50;
+        int x = (this->width() - overlayWidth) / 2;
+        int y = 20;
+        m_messageOverlay->setGeometry(x, y, overlayWidth, overlayHeight);
+    }
 }
 
 void BaseWidget::showLoading(const QString& message)
@@ -595,16 +636,18 @@ QString BaseWidget::createMessageStyle(const QString& type) const
         borderColor = m_colors.value("message-success-border", "#86efac");
     }
 
+    // 【修复】优化样式，减小边距和高度
     return QString(
                "QLabel {"
                "  color: %1;"
                "  background-color: %2;"
                "  border: 1px solid %3;"
                "  border-radius: 6px;"
-               "  padding: 8px 12px;"
-               "  font-size: 14px;"
-               "  margin: 4px 0;"
+               "  padding: 6px 16px;"      // 原来 8px 12px，现在减小垂直内边距
+               "  font-size: 13px;"        // 原来 14px，稍微减小
+               "  margin: 8px auto;"       // 原来 4px 0，增加上下边距让消息更独立
                "  min-height: 20px;"
+               "  max-height: 40px;"       //限制最大高度
                "}"
                ).arg(textColor, bgColor, borderColor);
 }
@@ -731,6 +774,12 @@ QString BaseWidget::createLineEditStyle() const
 
 void BaseWidget::setupMessageTimer(int duration)
 {
+    //安全检查
+    if (!m_messageTimer) {
+        qWarning() << "BaseWidget::setupMessageTimer - 定时器未初始化";
+        return;
+    }
+
     m_messageTimer->start(duration);
     qDebug() << "已设置消息自动清除定时器：" << duration << "ms";
 }

@@ -64,7 +64,7 @@ public:
     static UserData deserializeUserData(const QString& data);
 
     // 重置
-    void reset();
+    void reset(bool clearSessionFile = true);
 
 signals:
     // 状态变化

@@ -6,8 +6,7 @@
 WordCard::WordCard(QWidget* parent)
     : BaseWidget(parent)  // 调用 BaseWidget 构造函数
 {
-    initUI();
-    // 手动初始化
+    initialize();
 }
 
 WordCard::WordCard(const WordData& data, QWidget* parent)
