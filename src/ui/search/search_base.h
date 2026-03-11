@@ -98,7 +98,7 @@ private slots:
     bool eventFilter(QObject* watched, QEvent* event) override;
 
 private:
-    void initUI();
+    void initSearchUI();
     void setupConnections();
     void updateStyles();
     void updateClearButtonVisibility();

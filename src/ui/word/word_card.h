@@ -114,7 +114,7 @@ protected:
     virtual void updateCardStyle();
 private:
     // 初始化UI
-    void initUI();
+    void initCardUI() ;
 
     // 更新内容显示
     void updateContent();

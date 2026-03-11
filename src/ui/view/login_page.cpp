@@ -19,7 +19,6 @@ LoginPage::LoginPage(QWidget* parent)
     , m_layoutSetupDone(false)
 {
     qDebug() << "LoginPage 创建";
-    //initUI();
     initialize();
     // 初始化 UserSession
     if (!m_userSession->isInitialized()) {
@@ -54,14 +53,6 @@ void LoginPage::setupLayout()
     }
     qDebug()<<"LoginPage::setupLayout()";
 
-    // 清除基类已有的布局内容
-    // QLayoutItem* child;
-    // while ((child = m_mainLayout->takeAt(0)) != nullptr) {
-    //     if (child->widget()) {
-    //         child->widget()->deleteLater();
-    //     }
-    //     delete child;
-    // }
 
     // 创建主布局容器
     auto* mainContainer = new QWidget(this);

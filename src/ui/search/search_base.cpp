@@ -16,14 +16,14 @@ SearchBase::SearchBase(QWidget* parent)
     : BaseWidget(parent)
     , d(new SearchBasePrivate())
 {
-    initUI();
+    initSearchUI();
     setupConnections();
     updateStyles();
 }
 
-void SearchBase::initUI()
+void SearchBase::initSearchUI()
 {
-    qDebug() << "=== SearchBase::initUI 开始 ===";
+    qDebug() << "=== SearchBase::initSearchUI 开始 ===";
 
     // 1. 先获取或创建容器
     if (!BaseWidget::m_mainLayout) {

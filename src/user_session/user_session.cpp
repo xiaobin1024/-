@@ -354,9 +354,9 @@ void UserSession::processRegisterResponse(const QString& responseData)
             qDebug() << "发出 registerSuccess 信号...";
             emit registerSuccess(username);
 
-            // 尝试自动登录
-            emit loginRequest(username, password);
-            qDebug() << "尝试自动登录，发出 loginRequest 信号...";
+            // // 尝试自动登录
+            // emit loginRequest(username, password);
+            // qDebug() << "尝试自动登录，发出 loginRequest 信号...";
         } else {
             emit registerFailed("注册响应格式错误");
         }

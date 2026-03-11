@@ -23,6 +23,8 @@ ui_autogen/timestamp: \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/system/theme_manager.h \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/view/login_page.cpp \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/view/login_page.h \
+	C:/Users/86152/Desktop/network_dictionary/src/ui/view/register_page.cpp \
+	C:/Users/86152/Desktop/network_dictionary/src/ui/view/register_page.h \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/word/interactive_wordcard.cpp \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/word/interactive_wordcard.h \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/word/word_card.cpp \
