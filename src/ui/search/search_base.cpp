@@ -16,18 +16,23 @@ SearchBase::SearchBase(QWidget* parent)
     : BaseWidget(parent)
     , d(new SearchBasePrivate())
 {
-    initSearchUI();
+    initialize();
+    qDebug() << "调用 setupConnections()";
     setupConnections();
+    qDebug() << "setupConnections() 完成";
+
     updateStyles();
+    qDebug() << "updateStyles() 完成";
+    qDebug() << "SearchBase 构造函数完成";
 }
 
-void SearchBase::initSearchUI()
+void SearchBase::setupLayout()
 {
-    qDebug() << "=== SearchBase::initSearchUI 开始 ===";
+    qDebug() << "=== SearchBase::setupLayout 开始 ===";
 
-    // 1. 先获取或创建容器
+    // 安全检查
     if (!BaseWidget::m_mainLayout) {
-        qCritical() << "BaseWidget 布局不存在！";
+        qCritical() << "BaseWidget 布局不存在！无法初始化 SearchBase UI";
         return;
     }
 
@@ -81,6 +86,12 @@ void SearchBase::initSearchUI()
 
 void SearchBase::setupConnections()
 {
+    // 【修复】安全检查后再连接信号
+    if (!m_input || !m_searchButton || !m_clearButton) {
+        qDebug() << "SearchBase::setupConnections - 控件未初始化，延迟连接";
+        return;
+    }
+
     // 输入框文本变化
     connect(m_input, &QLineEdit::textChanged,
             this, &SearchBase::onTextChanged);
@@ -115,6 +126,11 @@ void SearchBase::onThemeChanged()
 
 void SearchBase::updateStyles()
 {
+    // 【新增】安全检查
+    if (!m_input || !m_searchButton || !m_clearButton) {
+        qWarning() << "SearchBase::updateStyles - 控件未初始化，跳过样式更新";
+        return;
+    }
     QString borderColor = getColor("border");
     QString surfaceColor = getColor("surface");
     QString textColor = getColor("text-primary");

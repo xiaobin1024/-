@@ -124,6 +124,7 @@ public slots:
     void onUserLogoutSuccess();
     void onUserUnregisterSuccess(const QString& username, int userId);
     void onUserUnregisterFailed(const QString& error);
+    void onUserChanged(const UserData& user);
 
 private slots:
     // 按钮点击处理

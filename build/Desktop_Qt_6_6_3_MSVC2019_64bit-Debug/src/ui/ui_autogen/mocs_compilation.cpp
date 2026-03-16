@@ -5,6 +5,8 @@
 #include "M757I3AIOJ/moc_system_sidebar.cpp"
 #include "M757I3AIOJ/moc_theme_manager.cpp"
 #include "OTUN7GXZT4/moc_login_page.cpp"
+#include "OTUN7GXZT4/moc_main_page.cpp"
+#include "OTUN7GXZT4/moc_page_controller.cpp"
 #include "OTUN7GXZT4/moc_register_page.cpp"
 #include "REEYQWTHGX/moc_interactive_wordcard.cpp"
 #include "REEYQWTHGX/moc_word_card.cpp"

@@ -24,11 +24,6 @@ class WordCard :public BaseWidget
     Q_OBJECT
 
 public:
-    /**
-     * @brief 构造函数
-     * @param parent 父组件指针
-     */
-    explicit WordCard(QWidget* parent = nullptr);
 
     /**
      * @brief 构造函数
@@ -114,7 +109,7 @@ protected:
     virtual void updateCardStyle();
 private:
     // 初始化UI
-    void initCardUI() ;
+    void setupLayout() override;
 
     // 更新内容显示
     void updateContent();

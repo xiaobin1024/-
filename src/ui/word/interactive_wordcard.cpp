@@ -13,14 +13,6 @@ public:
     QMenu* moreActionsMenu{ nullptr };
 };
 
-InteractiveWordCard::InteractiveWordCard(QWidget* parent)
-    : WordCard(parent)
-    , d(new InteractiveWordCardPrivate())
-{
-    initInteractiveUI();
-    setupConnections();
-}
-
 InteractiveWordCard::InteractiveWordCard(const WordData& data, QWidget* parent)
     : WordCard(data, parent)
     , d(new InteractiveWordCardPrivate())

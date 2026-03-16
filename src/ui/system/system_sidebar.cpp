@@ -30,16 +30,11 @@ SystemSidebar::SystemSidebar(QWidget* parent)
     m_expanded = false;
     m_currentWidth = COLLAPSED_WIDTH;
 
-    // 初始化模块
-    //initializeModules();
+    initialize();
+
 
     // 初始化动画
     setupAnimations();
-
-    setupLayout();
-
-    // 确保初始样式正确应用
-    updateSidebarStyle();
 
     qDebug() << "SystemSidebar 初始化完成，初始状态：收起";
 }
@@ -64,6 +59,7 @@ void SystemSidebar::setUserSession(UserSession* session)
                    this, &SystemSidebar::onUserUnregisterSuccess);
         disconnect(m_userSession, &UserSession::unregisterFailed,  // 新增
                    this, &SystemSidebar::onUserUnregisterFailed);
+        disconnect(m_userSession, &UserSession::userChanged, this, &SystemSidebar::onUserChanged);
     }
 
     m_userSession = session;
@@ -82,11 +78,32 @@ void SystemSidebar::setUserSession(UserSession* session)
                 this, &SystemSidebar::onUserUnregisterSuccess);
         connect(m_userSession, &UserSession::unregisterFailed,  // 新增
                 this, &SystemSidebar::onUserUnregisterFailed);
+        connect(m_userSession, &UserSession::userChanged, this, &SystemSidebar::onUserChanged);
 
-        updateUserButtonsState();
+        // updateUserButtonsState();
+        // 立即更新当前用户状态
+        UserData currentUser = m_userSession->currentUser();
+        onUserLoggedIn(currentUser);
     }
 }
+void SystemSidebar::onUserChanged(const UserData& user)
+{
+    if (!m_logoutButton || !m_deleteButton) {
+        return;
+    }
 
+    if (user.isLoggedIn() && !user.username().isEmpty()) {
+        m_logoutButton->setText(QString("🚪 退出").arg(user.username()));
+        m_logoutButton->setEnabled(true);
+        m_deleteButton->setEnabled(true);
+    } else {
+        m_logoutButton->setText("🚪 未登录");
+        m_logoutButton->setEnabled(false);
+        m_deleteButton->setEnabled(false);
+    }
+
+    updateUserButtonsState();
+}
 void SystemSidebar::setMessageDispatcher(MessageDispatcher* dispatcher)
 {
     m_messageDispatcher = dispatcher;
@@ -506,9 +523,6 @@ void SystemSidebar::updateSidebarStyle()
     // 强制重绘以确保分割线正确显示
     update();
 
-    // 确保所有按钮都应用了BaseWidget的样式
-    updateWidgetStyles();
-
     qDebug() << "SystemSidebar 样式更新完成，展开状态：" << isExpandedState;
 }
 void SystemSidebar::resizeEvent(QResizeEvent* event)
@@ -594,6 +608,7 @@ void SystemSidebar::updateUserButtonsState()
     }
 
     bool loggedIn = m_userSession && m_userSession->isLoggedIn();
+    QString username = m_userSession ? m_userSession->currentUser().username() : "";
 
     // 根据登录状态启用/禁用按钮
     m_logoutButton->setEnabled(loggedIn);
@@ -602,7 +617,11 @@ void SystemSidebar::updateUserButtonsState()
     // 更新按钮文本（根据展开状态）
     bool isExpandedState = m_expanded && (m_currentWidth > COLLAPSED_WIDTH + 20);
     if (isExpandedState) {
-        m_logoutButton->setText(loggedIn ? "🚪 退出登录" : "🚪 未登录");
+        if (loggedIn && !username.isEmpty()) {
+            m_logoutButton->setText(QString("🚪 退出").arg(username));
+        } else {
+            m_logoutButton->setText("🚪 未登录");
+        }
         m_deleteButton->setText(loggedIn ? "🗑️ 注销账号" : "🗑️ 请登录");
     } else {
         // 收起状态只显示图标

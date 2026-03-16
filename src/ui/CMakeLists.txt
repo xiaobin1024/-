@@ -32,6 +32,8 @@ add_library(ui STATIC
   system/system_sidebar.cpp system/system_sidebar.h system/theme_manager.cpp system/theme_manager.h
   view/login_page.cpp view/login_page.h
   view/register_page.h view/register_page.cpp
+  view/page_controller.h view/page_controller.cpp
+  view/main_page.h view/main_page.cpp
 )
 
 # 链接依赖库

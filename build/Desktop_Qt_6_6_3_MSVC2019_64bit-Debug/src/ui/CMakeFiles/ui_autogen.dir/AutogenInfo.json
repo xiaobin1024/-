@@ -102,6 +102,18 @@
 			null
 		],
 		[
+			"C:/Users/86152/Desktop/network_dictionary/src/ui/view/main_page.h",
+			"MU",
+			"OTUN7GXZT4/moc_main_page.cpp",
+			null
+		],
+		[
+			"C:/Users/86152/Desktop/network_dictionary/src/ui/view/page_controller.h",
+			"MU",
+			"OTUN7GXZT4/moc_page_controller.cpp",
+			null
+		],
+		[
 			"C:/Users/86152/Desktop/network_dictionary/src/ui/view/register_page.h",
 			"MU",
 			"OTUN7GXZT4/moc_register_page.cpp",
@@ -209,6 +221,16 @@
 		],
 		[
 			"C:/Users/86152/Desktop/network_dictionary/src/ui/view/login_page.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/86152/Desktop/network_dictionary/src/ui/view/main_page.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/86152/Desktop/network_dictionary/src/ui/view/page_controller.cpp",
 			"MU",
 			null
 		],

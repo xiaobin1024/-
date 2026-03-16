@@ -1,0 +1,53 @@
+#ifndef PAGE_CONTROLLER_H
+#define PAGE_CONTROLLER_H
+
+#include "base/base_widget.h"
+#include "login_page.h"
+#include "register_page.h"
+#include "main_page.h"
+#include <QStackedWidget>
+
+class PageController : public BaseWidget
+{
+    Q_OBJECT
+
+public:
+    explicit PageController(QWidget* parent = nullptr);
+    ~PageController() override;
+
+    enum PageType {
+        Login = 0,
+        Register = 1,
+         Main = 2
+    };
+
+    void setCurrentPage(PageType pageType);
+    LoginPage* getLoginPage() const { return m_loginPage; }
+    RegisterPage* getRegisterPage() const { return m_registerPage; }
+     MainPage* getMainPage() const { return m_mainPage; }
+signals:
+    void loginSuccess(const UserData& user);
+    void registerSuccess(const UserData& user);
+
+protected:
+    void initUI() override;
+    void setupLayout() override;
+
+private slots:
+    void handleLoginSuccess(const UserData& user);
+    void handleRegisterSuccess(const UserData& user);
+    void handleNavigateToRegister();
+    void handleNavigateToLogin();
+    void handleNavigateToMain();
+
+private:
+    void setupPages();
+    void connectPageSignals();
+
+    QStackedWidget* m_stackedWidget{nullptr};
+    LoginPage* m_loginPage{nullptr};
+    RegisterPage* m_registerPage{nullptr};
+    MainPage* m_mainPage{nullptr};
+};
+
+#endif // PAGE_CONTROLLER_H

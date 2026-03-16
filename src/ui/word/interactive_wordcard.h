@@ -20,7 +20,6 @@ class InteractiveWordCard : public WordCard
 {
     Q_OBJECT
 public:
-    explicit InteractiveWordCard(QWidget* parent = nullptr);
     explicit InteractiveWordCard(const WordData& data, QWidget* parent = nullptr);
 
     // 状态获取

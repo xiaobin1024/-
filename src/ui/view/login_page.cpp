@@ -264,21 +264,6 @@ void LoginPage::onForgotPasswordClicked()
 }
 
 void LoginPage::onLoginSuccess(const UserData& user) {
-    // 【修复】防止重复处理
-    if (m_processingLogin) {
-        qDebug() << "LoginPage::onLoginSuccess - 正在处理登录，忽略重复调用";
-        return;
-    }
-
-    // 【修复】检查是否同一用户重复登录
-    if (m_lastLoggedInUser.userId() == user.userId() &&
-        m_lastLoggedInUser.isLoggedIn() &&
-        !user.username().isEmpty()) {
-        qDebug() << "LoginPage::onLoginSuccess - 同一用户重复登录，忽略";
-        return;
-    }
-
-    m_processingLogin = true;
 
     qDebug() << "LoginPage::onLoginSuccess 被调用，用户名:" << user.username();
 

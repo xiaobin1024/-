@@ -21,6 +21,7 @@ class SearchBase:public BaseWidget
 public:
     explicit SearchBase(QWidget* parent = nullptr);
 
+
     // 获取和设置搜索关键词
     QString keyword() const;
     void setKeyword(const QString& keyword);
@@ -98,7 +99,7 @@ private slots:
     bool eventFilter(QObject* watched, QEvent* event) override;
 
 private:
-    void initSearchUI();
+    void setupLayout() override;
     void setupConnections();
     void updateStyles();
     void updateClearButtonVisibility();
@@ -118,6 +119,7 @@ private:
     // 私有数据
     class SearchBasePrivate;
     SearchBasePrivate* d;
+
 };
 
 #endif // SEARCH_BASE_H

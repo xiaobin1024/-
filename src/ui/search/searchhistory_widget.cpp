@@ -17,39 +17,34 @@ SearchHistoryWidget::SearchHistoryWidget(QWidget* parent)
     : SearchBase(parent)
     , d(new SearchHistoryWidgetPrivate())
 {
-    // 初始化历史UI
+    qDebug() << "=== SearchHistoryWidget 构造函数开始 ===";
+
     initHistoryUI();
+    qDebug() << "initHistoryUI() 完成";
 
-    // 设置连接
     setupHistoryConnections();
+    qDebug() << "setupHistoryConnections() 完成";
 
-    // 加载历史记录
     loadHistory();
+    qDebug() << "loadHistory() 完成";
 
     // 创建隐藏定时器
+    qDebug() << "创建隐藏定时器";
     m_hideTimer = new QTimer(this);
     m_hideTimer->setSingleShot(true);
-    m_hideTimer->setInterval(500);  // 500ms后隐藏
-
+    m_hideTimer->setInterval(500);
     connect(m_hideTimer, &QTimer::timeout, this, [this]() {
-        qDebug() << "隐藏定时器触发，检查焦点状态...";
-
-        // 获取当前焦点控件
         QWidget* focusedWidget = QApplication::focusWidget();
         bool inputHasFocus = (focusedWidget == inputField());
-
-        qDebug() << "当前焦点控件:" << focusedWidget;
-        qDebug() << "输入框是否有焦点:" << inputHasFocus;
-
-        // 如果输入框没有焦点，隐藏历史记录
         if (!inputHasFocus) {
             hideHistory();
-        } else {
-            qDebug() << "输入框仍有焦点，不隐藏历史记录";
         }
     });
-    qDebug() << "SearchHistoryWidget 创建完成";
+
+    qDebug() << "=== SearchHistoryWidget 构造函数完成 ===";
 }
+
+
 SearchHistoryWidget::~SearchHistoryWidget()
 {
     // 保存历史记录
@@ -66,6 +61,12 @@ SearchHistoryWidget::~SearchHistoryWidget()
 void SearchHistoryWidget::initHistoryUI()
 {
     qDebug() << "初始化搜索历史UI";
+
+    // 【修复】安全检查
+    if (!inputField()) {
+        qCritical() << "SearchHistoryWidget::initHistoryUI - 输入框未初始化";
+        return;
+    }
 
     // 1. 创建独立的弹出窗口
     m_historyContainer = new QWidget(nullptr);  // 独立窗口，不设父对象
@@ -111,6 +112,12 @@ void SearchHistoryWidget::initHistoryUI()
 
 void SearchHistoryWidget::setupHistoryConnections()
 {
+    // 【修复】安全检查
+    if (!inputField()) {
+        qWarning() << "SearchHistoryWidget::setupHistoryConnections - 输入框未初始化";
+        return;
+    }
+
     // 使用父类SearchBase的焦点信号
     connect(this, &SearchBase::inputFocused,
             this, &SearchHistoryWidget::onInputFocused);

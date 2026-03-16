@@ -23,6 +23,10 @@ ui_autogen/timestamp: \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/system/theme_manager.h \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/view/login_page.cpp \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/view/login_page.h \
+	C:/Users/86152/Desktop/network_dictionary/src/ui/view/main_page.cpp \
+	C:/Users/86152/Desktop/network_dictionary/src/ui/view/main_page.h \
+	C:/Users/86152/Desktop/network_dictionary/src/ui/view/page_controller.cpp \
+	C:/Users/86152/Desktop/network_dictionary/src/ui/view/page_controller.h \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/view/register_page.cpp \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/view/register_page.h \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/word/interactive_wordcard.cpp \
@@ -259,6 +263,8 @@ ui_autogen/timestamp: \
 	D:/qt/6.6.3/msvc2019_64/include/QtWidgets/QListWidget \
 	D:/qt/6.6.3/msvc2019_64/include/QtWidgets/QMenu \
 	D:/qt/6.6.3/msvc2019_64/include/QtWidgets/QPushButton \
+	D:/qt/6.6.3/msvc2019_64/include/QtWidgets/QScrollArea \
+	D:/qt/6.6.3/msvc2019_64/include/QtWidgets/QStackedWidget \
 	D:/qt/6.6.3/msvc2019_64/include/QtWidgets/QVBoxLayout \
 	D:/qt/6.6.3/msvc2019_64/include/QtWidgets/QWidget \
 	D:/qt/6.6.3/msvc2019_64/include/QtWidgets/qabstractbutton.h \
@@ -282,8 +288,10 @@ ui_autogen/timestamp: \
 	D:/qt/6.6.3/msvc2019_64/include/QtWidgets/qmenu.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtWidgets/qpushbutton.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtWidgets/qrubberband.h \
+	D:/qt/6.6.3/msvc2019_64/include/QtWidgets/qscrollarea.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtWidgets/qsizepolicy.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtWidgets/qslider.h \
+	D:/qt/6.6.3/msvc2019_64/include/QtWidgets/qstackedwidget.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtWidgets/qstyle.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtWidgets/qstyleoption.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtWidgets/qtabbar.h \

@@ -3,22 +3,18 @@
 #include <QPainter>
 #include <QStyleOption>
 
-WordCard::WordCard(QWidget* parent)
-    : BaseWidget(parent)  // 调用 BaseWidget 构造函数
-{
-    initialize();
-}
 
 WordCard::WordCard(const WordData& data, QWidget* parent)
     : BaseWidget(parent)  // 调用 BaseWidget 构造函数
     , m_data(data)        // 初始化单词数据
 {
+    initialize();
     updateContent();  // 初始化后立即更新内容
 }
 
-void WordCard::initCardUI()
+void WordCard::setupLayout()
 {
-
+    qDebug()<<"WordCard::setupLayout()";
 
     // 设置卡片基本尺寸约束
     setMinimumWidth(200);   // 最小宽度

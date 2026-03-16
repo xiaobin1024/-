@@ -283,7 +283,6 @@ void BaseWidget::setUITheme(UITheme theme)
 
 void BaseWidget::updateWidgetStyles()
 {
-    qDebug() << "updateWidgetStyles() 调用，secondary 按钮数量：" << m_secondaryButtons.size();
     QString bgColor = getColor("background");
     setStyleSheet(QString("BaseWidget { background-color: %1; }").arg(bgColor));
 

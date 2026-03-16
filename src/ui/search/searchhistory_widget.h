@@ -27,6 +27,7 @@ public:
     explicit SearchHistoryWidget(QWidget* parent = nullptr);
     ~SearchHistoryWidget();
 
+
     // 历史记录管理
     void addHistory(const QString& keyword);
     void clearHistory();
@@ -55,7 +56,7 @@ signals:
     // 新增信号
     void historyItemClicked(const QString& keyword);
     void historyCleared();
-protected:
+public:
     // 重写键盘事件
     //void keyPressEvent(QKeyEvent* event) override;
 
@@ -104,6 +105,7 @@ private:
     // 私有数据
     class SearchHistoryWidgetPrivate;
     SearchHistoryWidgetPrivate* d;
+
 };
 
 #endif // SEARCHHISTORY_WIDGET_H
