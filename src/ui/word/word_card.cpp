@@ -17,9 +17,9 @@ void WordCard::setupLayout()
     qDebug()<<"WordCard::setupLayout()";
 
     // 设置卡片基本尺寸约束
-    setMinimumWidth(200);   // 最小宽度
-    setMinimumHeight(60);   // 最小高度
-    setMaximumWidth(450);   // 最大宽度，避免在宽屏幕上显示过宽
+    setMinimumWidth(500);   // 最小宽度
+    setMinimumHeight(200);   // 最小高度
+    setMaximumWidth(1000);   // 最大宽度，避免在宽屏幕上显示过宽
 
     // 重新配置主布局的边距和间距
     // BaseWidget 构造函数中已设置默认值，这里根据卡片需求调整

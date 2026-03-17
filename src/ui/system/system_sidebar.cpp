@@ -65,7 +65,7 @@ void SystemSidebar::setUserSession(UserSession* session)
     m_userSession = session;
 
     // 连接新连接
-    if (m_userSession) {
+    if (m_userSession&& m_userSession != UserSession::instance()) {
         connect(m_userSession, &UserSession::userChanged,
                 this, &SystemSidebar::onUserLoggedIn);
         connect(m_userSession, &UserSession::logoutSuccess,
@@ -80,7 +80,6 @@ void SystemSidebar::setUserSession(UserSession* session)
                 this, &SystemSidebar::onUserUnregisterFailed);
         connect(m_userSession, &UserSession::userChanged, this, &SystemSidebar::onUserChanged);
 
-        // updateUserButtonsState();
         // 立即更新当前用户状态
         UserData currentUser = m_userSession->currentUser();
         onUserLoggedIn(currentUser);
@@ -268,7 +267,7 @@ void SystemSidebar::handleThemeButtonClicked()
     // 通过全局ThemeManager切换主题
     ThemeManager::instance()->toggleTheme();
 
-    // 发射主题切换信号（供页面逻辑使用）
+    // 发射主题切换信号
     emit themeToggleRequested();
 
     // 显示操作反馈

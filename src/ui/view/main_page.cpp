@@ -57,7 +57,7 @@ void MainPage::setupLayout()
     // 添加主要内容到布局
     contentLayout->addWidget(m_searchTitleLabel);
     contentLayout->addWidget(m_searchContainer);  // 添加搜索容器
-    contentLayout->addWidget(m_contentScrollArea);
+    contentLayout->addWidget(m_contentScrollArea,1);
     contentLayout->addStretch();
 
     // 设置侧边栏
@@ -128,10 +128,13 @@ void MainPage::setupContentArea()
     m_contentScrollArea->setWidgetResizable(true);
     m_contentScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     m_contentScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    m_contentScrollArea->setMinimumHeight(500);  // 设置最小高度
     m_contentScrollArea->setStyleSheet(QString(
                                            "QScrollArea {"
-                                           "  border: none;"
-                                           "  background-color: %1;"
+                                           "  border: 2px solid %1;"  // 增加边框宽度
+                                           "  border-radius: 8px;"    // 添加圆角
+                                           "  background-color: %2;"  // 背景色
+                                           "  margin: 20px;"          // 外边距
                                            "}"
                                            "QScrollBar:vertical {"
                                            "  background: %2;"
@@ -144,6 +147,7 @@ void MainPage::setupContentArea()
                                            "  min-height: 20px;"
                                            "}"
                                            ).arg(getColor("background"), getColor("surface"), getColor("secondary-light")));
+
 
     // 创建内容区域
     m_contentWidget = new QWidget();
@@ -169,6 +173,7 @@ void MainPage::setupContentArea()
 
     m_contentLayout->addWidget(welcomeLabel);
     m_contentLayout->addStretch();
+
 }
 
 void MainPage::setupSidebar()
@@ -185,8 +190,6 @@ void MainPage::setupSidebar()
     // 连接侧边栏的系统功能信号
     connect(m_sidebar, &SystemSidebar::themeToggleRequested,
             this, &MainPage::onThemeChanged);
-    connect(m_sidebar, &SystemSidebar::logoutRequested,
-            this, &MainPage::navigateToLogin);
     connect(m_sidebar, &SystemSidebar::deleteAccountRequested,
             this, &MainPage::navigateToLogin);
 }
@@ -199,6 +202,11 @@ void MainPage::setupConnections()
             this, &MainPage::onSearchRequested);
     connect(m_searchWidget, &SearchHistoryWidget::historyItemClicked,
             this, &MainPage::onSearchRequested);
+    //登录，注销相关信号
+    connect(m_userSession, &UserSession::logoutSuccess,
+            this, &MainPage::navigateToLogin);
+    connect(m_userSession,&UserSession::unregisterSuccess,
+            this,&MainPage::navigateToLogin);
 }
 
 void MainPage::onSearchRequested(const QString& query)
@@ -270,7 +278,7 @@ void MainPage::setCurrentWordCard(const WordData& wordData)
 
     // 创建新的单词卡片
     m_currentWordCard = new InteractiveWordCard(wordData, this);
-    m_currentWordCard->setFixedWidth(400);
+    m_currentWordCard->setFixedWidth(600);
 
     // 添加到内容布局
     m_contentLayout->insertWidget(0, m_currentWordCard);
@@ -310,8 +318,10 @@ void MainPage::updateWidgetStyles()
     if (m_contentScrollArea) {
         m_contentScrollArea->setStyleSheet(QString(
                                                "QScrollArea {"
-                                               "  border: none;"
-                                               "  background-color: %1;"
+                                               "  border: 2px solid %1;"  // 增加边框宽度
+                                               "  border-radius: 8px;"    // 添加圆角
+                                               "  background-color: %2;"  // 背景色
+                                               "  margin: 20px;"          // 外边距
                                                "}"
                                                "QScrollBar:vertical {"
                                                "  background: %2;"
@@ -325,6 +335,22 @@ void MainPage::updateWidgetStyles()
                                                "}"
                                                ).arg(getColor("background"), getColor("surface"), getColor("secondary-light")));
     }
+
+    // // 更新内容容器边框样式
+    // if (m_contentScrollArea && m_contentScrollArea->widget()) {
+    //     auto* contentContainer = qobject_cast<QWidget*>(m_contentScrollArea->widget());
+    //     if (contentContainer) {
+    //         contentContainer->setStyleSheet(QString(
+    //                                             "QWidget {"
+    //                                             "  background-color: %1;"
+    //                                             "  border: 1px solid %2;"
+    //                                             "  border-radius: 8px;"
+    //                                             "  padding: 20px;"
+    //                                             "  margin: 20px;"
+    //                                             "}"
+    //                                             ).arg(getColor("surface"), getColor("border")));
+    //     }
+    // }
 
     // 更新标题样式
     if (m_searchTitleLabel) {
