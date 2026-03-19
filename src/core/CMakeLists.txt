@@ -34,7 +34,7 @@ add_library(core STATIC
   app_config.h
   utils.h
   utils.cpp
-  word_data.h
+
   #message_dispatcher.h message_dispatcher.cpp
 )
 

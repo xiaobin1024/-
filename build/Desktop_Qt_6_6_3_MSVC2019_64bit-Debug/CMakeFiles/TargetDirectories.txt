@@ -41,3 +41,9 @@ C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-
 C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/dispatcher/CMakeFiles/rebuild_cache.dir
 C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/dispatcher/CMakeFiles/dispatcher_autogen_timestamp_deps.dir
 C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/dispatcher/CMakeFiles/dispatcher_autogen.dir
+C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/word_function/CMakeFiles/word_function.dir
+C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/word_function/CMakeFiles/test.dir
+C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/word_function/CMakeFiles/edit_cache.dir
+C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/word_function/CMakeFiles/rebuild_cache.dir
+C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/word_function/CMakeFiles/word_function_autogen_timestamp_deps.dir
+C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/word_function/CMakeFiles/word_function_autogen.dir

@@ -1,6 +1,6 @@
 C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/ui/ui_autogen/REEYQWTHGX/moc_word_card.cpp: C:/Users/86152/Desktop/network_dictionary/src/ui/word/word_card.h \
-  C:/Users/86152/Desktop/network_dictionary/src/core/word_data.h \
   C:/Users/86152/Desktop/network_dictionary/src/ui/base/base_widget.h \
+  C:/Users/86152/Desktop/network_dictionary/src/word_function/word_data.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/QMap \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/QPointer \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/QString \

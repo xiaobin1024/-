@@ -43,6 +43,7 @@ target_link_libraries(ui PUBLIC
     core
     dispatcher
     user_session
+    word_function
     Qt${QT_VERSION_MAJOR}::Core
     Qt${QT_VERSION_MAJOR}::Widgets
 )

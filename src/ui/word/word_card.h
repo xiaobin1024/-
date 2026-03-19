@@ -68,6 +68,8 @@ public:
      */
     QSize minimumSizeHint() const override;
 
+    QString parseMeaningWithStyle(const QString& meaning) const;
+
 signals:
     /**
      * @brief 点击信号
@@ -117,7 +119,7 @@ private:
 
 
     // 更新词性标签样式
-    void updatePartOfSpeechStyle();
+    //void updatePartOfSpeechStyle();
 private:
     WordData m_data;            // 单词数据
     bool m_expanded{false};     // 是否展开显示例句
@@ -125,7 +127,6 @@ private:
     // UI组件 - 全部使用 BaseWidget 的辅助函数创建
     QLabel* m_wordLabel{nullptr};          // 单词标签
     QLabel* m_phoneticLabel{nullptr};      // 音标标签
-    QLabel* m_partOfSpeechLabel{nullptr};  // 词性标签
     QLabel* m_definitionLabel{nullptr};    // 释义标签
     QLabel* m_exampleLabel{nullptr};       // 例句标签
 };

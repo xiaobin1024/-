@@ -404,6 +404,15 @@ user_session_IS_TOP_LEVEL:STATIC=OFF
 //Value Computed by CMake
 user_session_SOURCE_DIR:STATIC=C:/Users/86152/Desktop/network_dictionary/src/user_session
 
+//Value Computed by CMake
+word_function_BINARY_DIR:STATIC=C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/word_function
+
+//Value Computed by CMake
+word_function_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+word_function_SOURCE_DIR:STATIC=C:/Users/86152/Desktop/network_dictionary/src/word_function
+
 
 ########################
 # INTERNAL cache entries
@@ -519,7 +528,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_MT
 CMAKE_MT-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=8
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=9
 //Platform information initialized
 CMAKE_PLATFORM_INFO_INITIALIZED:INTERNAL=1
 //noop for ranlib

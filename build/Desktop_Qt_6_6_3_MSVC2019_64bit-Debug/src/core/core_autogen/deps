@@ -5,7 +5,6 @@ core_autogen/timestamp: \
 	C:/Users/86152/Desktop/network_dictionary/src/core/message.h \
 	C:/Users/86152/Desktop/network_dictionary/src/core/utils.cpp \
 	C:/Users/86152/Desktop/network_dictionary/src/core/utils.h \
-	C:/Users/86152/Desktop/network_dictionary/src/core/word_data.h \
 	D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/Qt6Config.cmake \
 	D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/Qt6ConfigExtras.cmake \
 	D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/Qt6ConfigVersion.cmake \

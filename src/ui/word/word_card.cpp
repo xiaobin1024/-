@@ -36,13 +36,10 @@ void WordCard::setupLayout()
     // 音标标签 - 使用 caption 样式
     m_phoneticLabel = createLabel("", "caption");
 
-    // 词性标签 - 需要特殊样式，不使用 createLabel
-    m_partOfSpeechLabel = new QLabel(this);
-    m_partOfSpeechLabel->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-
-    // 释义标签 - 使用 normal 样式
     m_definitionLabel = createLabel("", "normal");
-    m_definitionLabel->setWordWrap(true);  // 允许释义换行
+    m_definitionLabel->setWordWrap(true);
+    m_definitionLabel->setOpenExternalLinks(false);
+    m_definitionLabel->setTextFormat(Qt::RichText); // 启用HTML
 
     // 例句标签 - 使用 caption 样式
     m_exampleLabel = createLabel("", "caption");
@@ -56,7 +53,6 @@ void WordCard::setupLayout()
 
     // 将音标和词性添加到水平布局
     middleLayout->addWidget(m_phoneticLabel);
-    middleLayout->addWidget(m_partOfSpeechLabel);
     middleLayout->addStretch();  // 添加弹性空间，使内容左对齐
 
     // 将所有组件添加到主布局
@@ -67,7 +63,7 @@ void WordCard::setupLayout()
 
     // 设置初始样式
     updateCardStyle();
-    updatePartOfSpeechStyle();
+    //updatePartOfSpeechStyle();
 }
 
 void WordCard::setWordData(const WordData& data)
@@ -146,7 +142,7 @@ void WordCard::onThemeChanged()
 
     // 更新卡片特定样式
     updateCardStyle();
-    updatePartOfSpeechStyle();
+    //updatePartOfSpeechStyle();
 }
 
 void WordCard::mousePressEvent(QMouseEvent* event)
@@ -199,7 +195,6 @@ void WordCard::updateContent()
         // 数据无效时显示占位符
         m_wordLabel->setText("No data");
         m_phoneticLabel->setText("");
-        m_partOfSpeechLabel->setText("");
         m_definitionLabel->setText("");
         m_exampleLabel->setText("");
         m_exampleLabel->hide();
@@ -220,28 +215,23 @@ void WordCard::updateContent()
         m_phoneticLabel->hide();
     }
 
-    // 更新词性
-    if (!m_data.partOfSpeech.isEmpty()) {
-        m_partOfSpeechLabel->setText(m_data.partOfSpeech);
-        m_partOfSpeechLabel->setToolTip("词性");
-        m_partOfSpeechLabel->show();
-    }
-    else {
-        m_partOfSpeechLabel->hide();
-    }
+    // 重点修改：解析多个词性释义并添加样式
+    QString styledMeaning = parseMeaningWithStyle(m_data.meaning);
+    m_definitionLabel->setText(styledMeaning);
+    m_definitionLabel->setToolTip(m_data.meaning);
+    m_definitionLabel->setWordWrap(true); // 确保换行
 
-    // 更新释义
-    QString definition = m_data.definition;
-    definition.replace("\\n", "\n");  // 处理转义换行符
+    // // 更新释义
+    // QString definition = m_data.definition;
+    // definition.replace("\\n", "\n");  // 处理转义换行符
+    // // 限制最大显示行数，避免卡片过长
+    // QStringList lines = definition.split("\n");
+    // if (lines.size() > 3) {
+    //     definition = lines.mid(0, 3).join("\n") + "\n...";
+    // }
 
-    // 限制最大显示行数，避免卡片过长
-    QStringList lines = definition.split("\n");
-    if (lines.size() > 3) {
-        definition = lines.mid(0, 3).join("\n") + "\n...";
-    }
-
-    m_definitionLabel->setText(definition);
-    m_definitionLabel->setToolTip(m_data.definition);
+    // m_definitionLabel->setText(definition);
+    // m_definitionLabel->setToolTip(m_data.definition);
 
     // 更新例句
     if (!m_data.example.isEmpty()) {
@@ -259,13 +249,51 @@ void WordCard::updateContent()
     }
 
     // 更新词性标签样式
-    updatePartOfSpeechStyle();
+    //updatePartOfSpeechStyle();
 
     // 通知布局系统尺寸可能已变化
     adjustSize();
     updateGeometry();
 }
 
+QString WordCard::parseMeaningWithStyle(const QString& meaning) const
+{
+    // 使用正则表达式匹配词性（如 n.、adj.）
+    QRegularExpression re("(\\b(?:n\\.|adj\\.|prep\\.|adv\\.|v\\.|pron\\.|art\\.|num\\.|intj\\.|conj\\.|aux\\.|det\\.|mod\\.|part\\.)\\s+)");
+    QRegularExpressionMatchIterator it = re.globalMatch(meaning);
+
+    QString result;
+    int lastPos = 0;
+
+    while (it.hasNext()) {
+        QRegularExpressionMatch match = it.next();
+        int startPos = match.capturedStart();
+        int endPos = match.capturedEnd();
+
+        // 添加前一部分（未匹配到词性前的内容）
+        if (startPos > lastPos) {
+            result += meaning.mid(lastPos, startPos - lastPos);
+        }
+
+        // 添加词性部分（带样式）
+        QString pos = meaning.mid(startPos, endPos - startPos);
+        result += "<span style='color: #0078d7; font-weight: bold;'>" + pos + "</span>";
+
+        // 添加词性后的释义部分（直到下一个词性或结尾）
+        int nextStartPos = (it.hasNext()) ? it.peekNext().capturedStart() : meaning.length();
+        QString definition = meaning.mid(endPos, nextStartPos - endPos);
+        result += definition;
+
+        lastPos = nextStartPos;
+    }
+
+    // 添加剩余部分（如果有的话）
+    if (lastPos < meaning.length()) {
+        result += meaning.mid(lastPos);
+    }
+
+    return result;
+}
 void WordCard::updateCardStyle()
 {
     // 使用 BaseWidget 的 getColor 函数获取主题颜色
@@ -300,22 +328,22 @@ void WordCard::updateCardStyle()
                            hoverBorderColor));
 }
 
-void WordCard::updatePartOfSpeechStyle()
-{
-    // 词性标签需要特殊样式，不使用 BaseWidget 的标签样式
-    // 使用主色调作为背景，白色文字
+// void WordCard::updatePartOfSpeechStyle()
+// {
+//     // 词性标签需要特殊样式，不使用 BaseWidget 的标签样式
+//     // 使用主色调作为背景，白色文字
 
-    QString style = QString(
-                        "background-color: %1;"
-                        "color: white;"
-                        "border-radius: 3px;"
-                        "padding: 1px 6px;"
-                        "font-size: 11px;"
-                        "font-weight: 500;"
-                        "margin: 0;"
-                        ).arg(getColor("primary"));  // 使用主题的主色调
+//     QString style = QString(
+//                         "background-color: %1;"
+//                         "color: white;"
+//                         "border-radius: 3px;"
+//                         "padding: 1px 6px;"
+//                         "font-size: 11px;"
+//                         "font-weight: 500;"
+//                         "margin: 0;"
+//                         ).arg(getColor("primary"));  // 使用主题的主色调
 
-    m_partOfSpeechLabel->setStyleSheet(style);
-}
+//     m_partOfSpeechLabel->setStyleSheet(style);
+// }
 
 

@@ -3,4 +3,3 @@ C:/Users/86152/Desktop/network_dictionary/src/core/utils.cpp
 C:/Users/86152/Desktop/network_dictionary/src/core/app_config.h
 C:/Users/86152/Desktop/network_dictionary/src/core/message.h
 C:/Users/86152/Desktop/network_dictionary/src/core/utils.h
-C:/Users/86152/Desktop/network_dictionary/src/core/word_data.h

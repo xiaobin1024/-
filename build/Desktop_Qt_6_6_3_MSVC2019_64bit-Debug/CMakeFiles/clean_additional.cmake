@@ -21,5 +21,8 @@ if("${CONFIG}" STREQUAL "" OR "${CONFIG}" STREQUAL "Debug")
   "src\\user_session\\CMakeFiles\\user_session_autogen.dir\\AutogenUsed.txt"
   "src\\user_session\\CMakeFiles\\user_session_autogen.dir\\ParseCache.txt"
   "src\\user_session\\user_session_autogen"
+  "src\\word_function\\CMakeFiles\\word_function_autogen.dir\\AutogenUsed.txt"
+  "src\\word_function\\CMakeFiles\\word_function_autogen.dir\\ParseCache.txt"
+  "src\\word_function\\word_function_autogen"
   )
 endif()

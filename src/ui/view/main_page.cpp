@@ -218,10 +218,10 @@ void MainPage::onSearchRequested(const QString& query)
         // 暂时显示一个示例单词卡片
         WordData sampleData;
         sampleData.word = query;
-        sampleData.phonetic = "/ˈsæmpəl/";
-        sampleData.partOfSpeech = "noun";
-        sampleData.definition = "A word used as an example.";
-        sampleData.example = "This is a sample sentence.";
+        sampleData.phonetic = "ˈmaɪnəs";
+        sampleData.meaning = "prep. 减去 adj. 负的，减去的 n. 负数";
+        sampleData.example = "Ten minus three is seven.";
+        sampleData.translation="十减三等于七。";
 
         setCurrentWordCard(sampleData);
     }
@@ -335,22 +335,6 @@ void MainPage::updateWidgetStyles()
                                                "}"
                                                ).arg(getColor("background"), getColor("surface"), getColor("secondary-light")));
     }
-
-    // // 更新内容容器边框样式
-    // if (m_contentScrollArea && m_contentScrollArea->widget()) {
-    //     auto* contentContainer = qobject_cast<QWidget*>(m_contentScrollArea->widget());
-    //     if (contentContainer) {
-    //         contentContainer->setStyleSheet(QString(
-    //                                             "QWidget {"
-    //                                             "  background-color: %1;"
-    //                                             "  border: 1px solid %2;"
-    //                                             "  border-radius: 8px;"
-    //                                             "  padding: 20px;"
-    //                                             "  margin: 20px;"
-    //                                             "}"
-    //                                             ).arg(getColor("surface"), getColor("border")));
-    //     }
-    // }
 
     // 更新标题样式
     if (m_searchTitleLabel) {

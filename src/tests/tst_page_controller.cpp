@@ -492,7 +492,7 @@ TEST_F(PageControllerIntegrationTestFixture, MainPageTest) {
     ASSERT_NE(searchButton, nullptr) << "无法找到搜索按钮";
 
     // 输入搜索词
-    QString searchTerm = "hello";
+    QString searchTerm = "minus";
     searchInput->setText(searchTerm);
     QApplication::processEvents();
     QTest::qWait(500);
