@@ -1,5 +1,6 @@
 #include "message_dispatcher.h"
 #include "user_session.h"
+#include "word_search.h"
 #include <QDebug>
 
 MessageDispatcher::MessageDispatcher(QObject* parent)
@@ -56,6 +57,29 @@ void MessageDispatcher::setUserSession(UserSession* session)
                 this, &MessageDispatcher::onRegisterRequested);
         connect(m_userSession, &UserSession::unregisterRequest,  // 新增
                 this, &MessageDispatcher::onUnregisterRequested);
+
+        qDebug() << "UserSession 已设置到 MessageDispatcher";
+    }
+}
+
+void MessageDispatcher::setWordSearch(WordSearch* wordSearch)
+{
+    if (m_wordSearch == wordSearch) {
+        return;
+    }
+
+    // 断开旧的连接
+    if (m_wordSearch) {
+        disconnect(m_wordSearch, &WordSearch::searchRequested,  // 新增
+                   this, &MessageDispatcher::onSearchRequested);
+    }
+
+    m_wordSearch = wordSearch;
+
+    // 连接新的信号
+    if (m_wordSearch) {
+        connect(m_wordSearch, &WordSearch::searchRequested,  // 新增
+                this, &MessageDispatcher::onSearchRequested);
 
         qDebug() << "UserSession 已设置到 MessageDispatcher";
     }
@@ -321,5 +345,13 @@ void MessageDispatcher::onUnregisterRequested(const QString& username, const QSt
 
     if (!sendMessage(CoreMessage::MsgType::UNREGISTER, username, password)) {
         emit unregisterResponseReceived("ERROR:网络未连接或消息发送失败");
+    }
+}
+void MessageDispatcher::onSearchRequested(const QString &username, const QString& word)
+{
+    qDebug() << "MessageDispatcher: 处理搜索请求,用户名 单词:" <<username<<" "<< word;
+
+    if (!sendMessage(CoreMessage::MsgType::SEARCH, username,word)) {
+        emit searchResponseReceived("ERROR:网络未连接或消息发送失败");
     }
 }

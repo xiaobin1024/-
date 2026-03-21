@@ -21,6 +21,7 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Widgets)
 
 add_library(word_function STATIC
     word_data.h
+    word_search.h word_search.cpp
 )
 
 # 链接依赖库

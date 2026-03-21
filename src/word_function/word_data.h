@@ -10,10 +10,11 @@
 
 struct WordData{
     QString word;           // 单词
-    QString meaning;     // 释义
+    QString meaning;     // 词性与释义
     QString phonetic;       // 音标
     QString example;        // 例句
     QString translation;    // 句意
+    bool isCollected;    //收藏标识
 
     // 默认构造函数
     WordData() = default;

@@ -36,6 +36,7 @@ ui_autogen/timestamp: \
 	C:/Users/86152/Desktop/network_dictionary/src/user_session/user_data.h \
 	C:/Users/86152/Desktop/network_dictionary/src/user_session/user_session.h \
 	C:/Users/86152/Desktop/network_dictionary/src/word_function/word_data.h \
+	C:/Users/86152/Desktop/network_dictionary/src/word_function/word_search.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/QDateTime \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/QDebug \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/QJsonArray \

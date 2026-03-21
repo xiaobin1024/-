@@ -5,6 +5,7 @@
 #include "word/interactive_wordcard.h"
 #include "system/system_sidebar.h"
 #include "search/searchhistory_widget.h"  // 添加搜索历史组件
+#include"word_search.h"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLineEdit>
@@ -39,6 +40,7 @@ signals:
     void navigateToLogin();
     void navigateToRegister();
 
+
 protected:
     void initUI() override;
     void setupLayout() override;
@@ -47,6 +49,11 @@ protected:
 private slots:
     void onSearchRequested(const QString& query);
     void onClearButtonClicked();
+
+    //单词收索结果
+    void onWordSearchSuccess(const WordData& wordData);
+    void onWordSearchFailed(const QString& error);
+
 
 private:
     void setupHeader();
@@ -69,6 +76,7 @@ private:
 
     // 服务对象
     UserSession* m_userSession{nullptr};
+    WordSearch* m_wordSearch{nullptr};
 };
 
 #endif // MAIN_PAGE_H

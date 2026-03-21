@@ -12,6 +12,8 @@
 MainPage::MainPage(QWidget* parent)
     : BaseWidget(parent)
     , m_userSession(UserSession::instance())
+    ,m_wordSearch(WordSearch::instance())
+
 {
     qDebug() << "MainPage 创建";
     initialize();
@@ -207,24 +209,60 @@ void MainPage::setupConnections()
             this, &MainPage::navigateToLogin);
     connect(m_userSession,&UserSession::unregisterSuccess,
             this,&MainPage::navigateToLogin);
+
+    // 连接 WordSearch 信号
+    connect(m_wordSearch, &WordSearch::searchSuccess,
+            this, &MainPage::onWordSearchSuccess);
+    connect(m_wordSearch, &WordSearch::searchFailed,
+            this, &MainPage::onWordSearchFailed);
+
+    // 设置 UserSession 到 WordSearch
+    m_wordSearch->setUserSession(m_userSession);
 }
 
 void MainPage::onSearchRequested(const QString& query)
 {
     if (!query.isEmpty()) {
-        emit searchRequested(query);
+        //emit searchRequested(query);
 
-        // 这里可以调用词典搜索功能
-        // 暂时显示一个示例单词卡片
-        WordData sampleData;
-        sampleData.word = query;
-        sampleData.phonetic = "ˈmaɪnəs";
-        sampleData.meaning = "prep. 减去 adj. 负的，减去的 n. 负数";
-        sampleData.example = "Ten minus three is seven.";
-        sampleData.translation="十减三等于七。";
+        // // 这里可以调用词典搜索功能
+        // // 暂时显示一个示例单词卡片
+        // WordData sampleData;
+        // sampleData.word = query;
+        // sampleData.phonetic = "ˈmaɪnəs";
+        // sampleData.meaning = "prep. 减去 adj. 负的，减去的 n. 负数";
+        // sampleData.example = "Ten minus three is seven.";
+        // sampleData.translation="十减三等于七。";
 
-        setCurrentWordCard(sampleData);
+        // setCurrentWordCard(sampleData);
+
+        m_wordSearch->searchWord(query);
     }
+}
+
+void MainPage::onWordSearchSuccess(const WordData& wordData)
+{
+    setCurrentWordCard(wordData);
+}
+
+void MainPage::onWordSearchFailed(const QString& error)
+{
+    showMessage("搜索失败: " + error, true, 2000);
+
+    // 显示错误信息
+    auto* errorLabel = createLabel("搜索失败: " + error, "normal", "searchErrorLabel");
+    errorLabel->setStyleSheet(QString("QLabel { color: %1; }").arg(getColor("error")));
+
+    // 清除现有内容并显示错误
+    while (m_contentLayout->count() > 1) {
+        QLayoutItem* item = m_contentLayout->takeAt(0);
+        if (item->widget()) {
+            item->widget()->deleteLater();
+        }
+        delete item;
+    }
+
+    m_contentLayout->insertWidget(0, errorLabel);
 }
 
 void MainPage::onClearButtonClicked()

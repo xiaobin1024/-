@@ -46,20 +46,18 @@ void WordCard::setupLayout()
     m_exampleLabel->setWordWrap(true);     // 允许例句换行
     m_exampleLabel->hide();                 // 默认隐藏，双击时显示
 
-    //创建一个水平布局来放置英标和词性标签
-    QHBoxLayout* middleLayout=new QHBoxLayout();
-    middleLayout->setContentsMargins(0,0,0,0);  //取消内边距
-    middleLayout->setSpacing(8);  // 音标和词性之间的间距
+    //翻译标签
+    m_translationLabel=createLabel("","caption");
+    m_translationLabel->setWordWrap(true);
+    m_translationLabel->hide();
 
-    // 将音标和词性添加到水平布局
-    middleLayout->addWidget(m_phoneticLabel);
-    middleLayout->addStretch();  // 添加弹性空间，使内容左对齐
 
     // 将所有组件添加到主布局
     m_mainLayout->addWidget(m_wordLabel);
-    m_mainLayout->addLayout(middleLayout);
+    m_mainLayout->addWidget(m_phoneticLabel);
     m_mainLayout->addWidget(m_definitionLabel);
     m_mainLayout->addWidget(m_exampleLabel);
+    m_mainLayout->addWidget(m_translationLabel);
 
     // 设置初始样式
     updateCardStyle();
@@ -77,12 +75,18 @@ void WordCard::setExpanded(bool expanded)
     if (m_expanded != expanded) {
         m_expanded = expanded;
 
-        // 控制例句的显示/隐藏
+        // 控制例句与翻译的显示/隐藏
         if (m_expanded && !m_data.example.isEmpty()) {
             m_exampleLabel->show();
         }
         else {
             m_exampleLabel->hide();
+        }
+
+        if(m_expanded && !m_data.translation.isEmpty()){
+            m_translationLabel->show();
+        }else{
+            m_translationLabel->hide();
         }
 
         // 通知布局系统尺寸可能已变化
@@ -221,18 +225,6 @@ void WordCard::updateContent()
     m_definitionLabel->setToolTip(m_data.meaning);
     m_definitionLabel->setWordWrap(true); // 确保换行
 
-    // // 更新释义
-    // QString definition = m_data.definition;
-    // definition.replace("\\n", "\n");  // 处理转义换行符
-    // // 限制最大显示行数，避免卡片过长
-    // QStringList lines = definition.split("\n");
-    // if (lines.size() > 3) {
-    //     definition = lines.mid(0, 3).join("\n") + "\n...";
-    // }
-
-    // m_definitionLabel->setText(definition);
-    // m_definitionLabel->setToolTip(m_data.definition);
-
     // 更新例句
     if (!m_data.example.isEmpty()) {
         QString example = "\"" + m_data.example + "\"";
@@ -246,6 +238,21 @@ void WordCard::updateContent()
     }
     else {
         m_exampleLabel->hide();
+    }
+
+    //更新翻译
+    if (!m_data.translation.isEmpty()) {
+        QString translation=m_data.translation;
+        m_translationLabel->setText(translation);
+        m_translationLabel->setToolTip("翻译");
+
+        // 根据展开状态决定是否显示
+        if (m_expanded) {
+            m_translationLabel->show();
+        }
+    }
+    else {
+        m_translationLabel->hide();
     }
 
     // 更新词性标签样式
@@ -328,22 +335,5 @@ void WordCard::updateCardStyle()
                            hoverBorderColor));
 }
 
-// void WordCard::updatePartOfSpeechStyle()
-// {
-//     // 词性标签需要特殊样式，不使用 BaseWidget 的标签样式
-//     // 使用主色调作为背景，白色文字
-
-//     QString style = QString(
-//                         "background-color: %1;"
-//                         "color: white;"
-//                         "border-radius: 3px;"
-//                         "padding: 1px 6px;"
-//                         "font-size: 11px;"
-//                         "font-weight: 500;"
-//                         "margin: 0;"
-//                         ).arg(getColor("primary"));  // 使用主题的主色调
-
-//     m_partOfSpeechLabel->setStyleSheet(style);
-// }
 
 

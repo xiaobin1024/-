@@ -31,6 +31,7 @@ target_link_libraries(dispatcher PUBLIC
     network
     core
     user_session
+    word_function
     Qt${QT_VERSION_MAJOR}::Core
     Qt${QT_VERSION_MAJOR}::Widgets
 )

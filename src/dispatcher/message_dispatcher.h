@@ -5,6 +5,7 @@
 
 // 前向声明
 class UserSession;
+class WordSearch;
 
 // 集中式消息分发器
 class MessageDispatcher : public QObject
@@ -17,6 +18,7 @@ public:
     // 设置各模块
     void setNetworkManager(NetworkManager* manager);
     void setUserSession(UserSession* session);
+    void setWordSearch(WordSearch* wordSearch);
 
     // 启动/停止分发
     void start();
@@ -34,6 +36,8 @@ signals:
     void queryCollectResponseReceived(const QString& responseData);
     void unregisterResponseReceived(const QString& responseData);
 
+
+
     // 通用消息信号
     void messageDispatched(CoreMessage::MsgType type, const QString& data);
 
@@ -49,6 +53,7 @@ private slots:
     void onLogoutRequested();
     void onRegisterRequested(const QString& username, const QString& password);
     void onUnregisterRequested(const QString& username, const QString& password);
+    void onSearchRequested(const QString&username, const QString& word);  // 添加搜索响应处理
 
     // 网络状态处理
     void onNetworkConnected();
@@ -62,13 +67,15 @@ private:
 
 
     // 发送消息辅助函数
-    bool sendMessage(CoreMessage::MsgType type, const QString& name,
+    bool sendMessage(CoreMessage::MsgType type, const QString& name="",
                      const QString& text = "");
 
     NetworkManager* m_networkManager = nullptr;
     UserSession* m_userSession = nullptr;
+    WordSearch* m_wordSearch{nullptr};
     bool m_started = false;
     bool m_networkConnected = false;
+
 };
 
 #endif // MESSAGE_DISPATCHER_H

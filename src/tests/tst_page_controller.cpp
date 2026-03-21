@@ -72,6 +72,9 @@ protected:
         // 获取 UserSession 实例
         userSession = UserSession::instance();
 
+        //获取WordSearch实例
+        wordSearch=WordSearch::instance();
+
         // 关键修复1: 先建立dispatcher连接再初始化
         // 显式断开可能的旧连接（安全防护）
         userSession->setMessageDispatcher(nullptr);
@@ -80,7 +83,9 @@ protected:
         // 设置 MessageDispatcher
         messageDispatcher->setNetworkManager(networkManager);
         messageDispatcher->setUserSession(userSession);
+        messageDispatcher->setWordSearch(wordSearch);
         userSession->setMessageDispatcher(messageDispatcher);
+        wordSearch->setMessageDispatcher(messageDispatcher);
 
         // 关键修复2: 在dispatcher设置完成后才初始化
         userSession->initialize();
@@ -121,6 +126,11 @@ protected:
             window->hide();
             delete window;
             window = nullptr;
+        }
+
+        if(wordSearch){
+             wordSearch->setMessageDispatcher(nullptr);
+
         }
 
         // 关键修复3: 清理时先断开dispatcher关联
@@ -185,6 +195,7 @@ protected:
     NetworkManager* networkManager = nullptr;
     MessageDispatcher* messageDispatcher = nullptr;
     UserSession* userSession = nullptr;
+    WordSearch* wordSearch=nullptr;
     QString testUsername;
     QString testPassword;
     QString testEmail;
@@ -554,14 +565,6 @@ TEST_F(PageControllerIntegrationTestFixture, MainPageTest) {
     qDebug() << "6. 测试注销";
     QPushButton* deleteButton = sidebar->findChild<QPushButton*>("deleteButton");
     if (!deleteButton) {
-        // 如果没找到特定名称的按钮，尝试查找其他可能的按钮
-        // QList<QPushButton*> buttons = sidebar->findChildren<QPushButton*>();
-        // for (auto btn : buttons) {
-        //     if (btn->text().contains("退出") || btn->text().contains("登录")) {
-        //         logoutButton = btn;
-        //         break;
-        //     }
-        // }
         qDebug()<<"没有找到注销按钮";
     }
     ASSERT_NE(deleteButton, nullptr) << "无法找到注销按钮";
