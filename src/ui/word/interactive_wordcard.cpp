@@ -13,10 +13,18 @@ public:
     QMenu* moreActionsMenu{ nullptr };
 };
 
-InteractiveWordCard::InteractiveWordCard(const WordData& data, QWidget* parent)
+InteractiveWordCard::InteractiveWordCard(const WordData& data,
+                                         WordCollect* wordCollector,
+                                         WordVocabulary *wordVocabulary,
+                                         QWidget* parent)
     : WordCard(data, parent)
     , d(new InteractiveWordCardPrivate())
+    , m_wordData(data)
+    ,m_wordCollector(wordCollector)
+    ,m_wordVocabulary(wordVocabulary)
 {
+    m_isFavorite = data.isCollected;
+    m_isAddedToVocabulary=data.isVocabulary;
     initInteractiveUI();
     setupConnections();
 }
@@ -29,33 +37,36 @@ void InteractiveWordCard::initInteractiveUI()
     d->buttonLayout->setContentsMargins(0, 0, 0, 0);
     d->buttonLayout->setSpacing(8);
 
-    // 创建按钮
+    // 创建按钮并设置名称
     m_favoriteButton = new QPushButton(d->buttonContainer);
+    m_favoriteButton->setObjectName("favoriteButton"); // 添加这一行
     m_favoriteButton->setFixedSize(30, 30);
     m_favoriteButton->setFlat(true);
     m_favoriteButton->setToolTip("收藏");
     m_favoriteButton->setCursor(Qt::PointingHandCursor);
 
     m_pronunciationButton = new QPushButton(d->buttonContainer);
+    m_pronunciationButton->setObjectName("pronunciationButton"); // 添加这一行
     m_pronunciationButton->setFixedSize(30, 30);
     m_pronunciationButton->setFlat(true);
     m_pronunciationButton->setToolTip("发音");
     m_pronunciationButton->setCursor(Qt::PointingHandCursor);
 
     m_addToVocabularyButton = new QPushButton(d->buttonContainer);
+    m_addToVocabularyButton->setObjectName("addToVocabularyButton"); // 添加这一行
     m_addToVocabularyButton->setFixedSize(30, 30);
     m_addToVocabularyButton->setFlat(true);
     m_addToVocabularyButton->setToolTip("添加到生词本");
     m_addToVocabularyButton->setCursor(Qt::PointingHandCursor);
 
     m_moreActionsButton = new QPushButton(d->buttonContainer);
+    m_moreActionsButton->setObjectName("moreActionsButton"); // 添加这一行
     m_moreActionsButton->setFixedSize(30, 30);
     m_moreActionsButton->setFlat(true);
     m_moreActionsButton->setToolTip("更多操作");
     m_moreActionsButton->setCursor(Qt::PointingHandCursor);
 
     // 将按钮添加到布局
-
     d->buttonLayout->addWidget(m_favoriteButton);
     d->buttonLayout->addWidget(m_pronunciationButton);
     d->buttonLayout->addWidget(m_addToVocabularyButton);
@@ -96,6 +107,16 @@ void InteractiveWordCard::setupConnections()
 
     connect(m_moreActionsButton, &QPushButton::clicked,
             this, &InteractiveWordCard::onMoreActionsButtonClicked);
+
+    if (m_wordCollector) {
+        connect(m_wordCollector, &WordCollect::collectStatusChanged,
+                this, &InteractiveWordCard::onCollectStatusChanged);
+    }
+
+    if(m_wordVocabulary){
+        connect(m_wordVocabulary,&WordVocabulary::vocabularyStatusChanged,
+                this,&InteractiveWordCard::onVocabularyStatusChanged);
+    }
 }
 
 
@@ -125,19 +146,45 @@ void InteractiveWordCard::setAddedToVocabulary(bool added)
 
 void InteractiveWordCard::onFavoriteButtonClicked()
 {
-    m_isFavorite = !m_isFavorite;
+    qDebug() << "收藏按钮被点击，当前状态：" << m_isFavorite;
+
+    // 发送请求给 WordCollect
+    if (m_wordCollector) {
+        // 将当前 WordData 传递过去，WordCollect 会从中读取 isCollected 状态
+        m_wordCollector->collectWord(m_wordData);
+    }
+}
+
+void InteractiveWordCard::onCollectStatusChanged(bool isCollected)
+{
+    // 收到来自服务器的最终确认，更新本地状态和UI
+    m_isFavorite = isCollected;
+    m_wordData.isCollected = isCollected; // 同步回 WordData
     updateButtonStyles();
 
-    // 发出信号
-    emit favoriteToggled(getWordData().word, m_isFavorite);
+    // 显示最终结果消息
+    showMessage(isCollected ? "收藏成功" : "已取消收藏", false, 1500);
+}
 
-    // 显示反馈
-    if (m_isFavorite) {
-        showMessage("已收藏", false, 1500);
+void InteractiveWordCard::onAddToVocabularyButtonClicked()
+{
+    qDebug() << "生词按钮被点击，当前状态：" << m_isAddedToVocabulary;
+
+    // 发送请求给 WordVocabulary
+    if (m_wordVocabulary) {
+        // 将当前 WordData WordVocabulary 会从中读取 isVocabulary 状态
+        m_wordVocabulary->updateVocabularyStatus(m_wordData);
     }
-    else {
-        showMessage("已取消收藏", false, 1500);
-    }
+}
+
+void InteractiveWordCard::onVocabularyStatusChanged(bool isVocabulary)
+{
+    // 收到来自服务器的最终确认，更新本地状态和UI
+    m_isAddedToVocabulary = isVocabulary;
+    m_wordData.isVocabulary= isVocabulary; // 同步回 WordData
+    updateButtonStyles();
+    // 显示最终结果消息
+    showMessage(isVocabulary ? "添加生单词成功" : "移除生单词", false, 1500);
 }
 
 void InteractiveWordCard::onPronunciationButtonClicked()
@@ -148,22 +195,7 @@ void InteractiveWordCard::onPronunciationButtonClicked()
     }
 }
 
-void InteractiveWordCard::onAddToVocabularyButtonClicked()
-{
-    if (getWordData().isValid()) {
-        if (m_isAddedToVocabulary) {
-            emit removeFromVocabularyRequested(getWordData().word);
-            m_isAddedToVocabulary = false;
-            showMessage("已从生词本移除", false, 1500);
-        }
-        else {
-            emit addToVocabularyRequested(getWordData());
-            m_isAddedToVocabulary = true;
-            showMessage("已添加到生词本", false, 1500);
-        }
-        updateButtonStyles();
-    }
-}
+
 
 void InteractiveWordCard::onMoreActionsButtonClicked()
 {

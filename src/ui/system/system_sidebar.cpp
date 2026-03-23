@@ -560,9 +560,6 @@ SystemSidebar::~SystemSidebar()
                    this, &SystemSidebar::onUserLogoutSuccess);
     }
 
-    // MessageDispatcher 会被 parent-child 关系自动删除（因为设置了 this 作为 parent）
-    // 所以不需要手动删除 m_messageDispatcher
-
     // 修复2: 确保在ThemeManager销毁前注销
     if (ThemeManager* tm = ThemeManager::safeInstance()) {
         tm->unregisterWidget(this);

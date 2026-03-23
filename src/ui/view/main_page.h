@@ -6,6 +6,8 @@
 #include "system/system_sidebar.h"
 #include "search/searchhistory_widget.h"  // 添加搜索历史组件
 #include"word_search.h"
+#include"word_collect.h"
+#include"word_vocabulary.h"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLineEdit>
@@ -77,6 +79,8 @@ private:
     // 服务对象
     UserSession* m_userSession{nullptr};
     WordSearch* m_wordSearch{nullptr};
+    WordCollect* m_wordCollect{nullptr};
+    WordVocabulary* m_wordVocabulary{nullptr};
 };
 
 #endif // MAIN_PAGE_H

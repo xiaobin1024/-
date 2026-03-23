@@ -1,11 +1,20 @@
 C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/ui/ui_autogen/REEYQWTHGX/moc_interactive_wordcard.cpp: C:/Users/86152/Desktop/network_dictionary/src/ui/word/interactive_wordcard.h \
   C:/Users/86152/Desktop/network_dictionary/src/ui/base/base_widget.h \
   C:/Users/86152/Desktop/network_dictionary/src/ui/word/word_card.h \
+  C:/Users/86152/Desktop/network_dictionary/src/user_session/session_storage.h \
+  C:/Users/86152/Desktop/network_dictionary/src/user_session/user_data.h \
+  C:/Users/86152/Desktop/network_dictionary/src/user_session/user_session.h \
+  C:/Users/86152/Desktop/network_dictionary/src/word_function/word_collect.h \
   C:/Users/86152/Desktop/network_dictionary/src/word_function/word_data.h \
+  C:/Users/86152/Desktop/network_dictionary/src/word_function/word_vocabulary.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtCore/QDateTime \
+  D:/qt/6.6.3/msvc2019_64/include/QtCore/QJsonObject \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/QMap \
+  D:/qt/6.6.3/msvc2019_64/include/QtCore/QObject \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/QPointer \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/QString \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/QTimer \
+  D:/qt/6.6.3/msvc2019_64/include/QtCore/QVariant \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/q20functional.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/q20memory.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/q20type_traits.h \
@@ -25,6 +34,9 @@ C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qbytearrayalgorithms.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qbytearraylist.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qbytearrayview.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtCore/qcalendar.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtCore/qcborcommon.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtCore/qcborvalue.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qchar.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qcompare.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qcompare_impl.h \
@@ -37,7 +49,9 @@ C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qcontiguouscache.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qdarwinhelpers.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qdatastream.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtCore/qdatetime.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qdebug.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtCore/qendian.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qexceptionhandling.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qflags.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qfloat16.h \
@@ -53,9 +67,12 @@ C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qiodevicebase.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qiterable.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qiterator.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtCore/qjsonobject.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtCore/qjsonvalue.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qlatin1stringview.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qline.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qlist.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtCore/qlocale.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qlogging.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qmalloc.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qmap.h \
@@ -77,6 +94,7 @@ C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qprocessordetection.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qrect.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qrefcount.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtCore/qregularexpression.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qscopedpointer.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qscopeguard.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qset.h \
@@ -120,6 +138,7 @@ C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qtypes.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qurl.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qutf8stringview.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtCore/quuid.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qvariant.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qvarlengtharray.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qversiontagging.h \

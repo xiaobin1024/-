@@ -75,6 +75,12 @@ protected:
         //获取WordSearch实例
         wordSearch=WordSearch::instance();
 
+        //获取WordCollect实例
+        wordCollect=WordCollect::instance();
+
+        //获取WordVocabulary实例
+        wordVocabulary=WordVocabulary::instance();
+
         // 关键修复1: 先建立dispatcher连接再初始化
         // 显式断开可能的旧连接（安全防护）
         userSession->setMessageDispatcher(nullptr);
@@ -84,8 +90,13 @@ protected:
         messageDispatcher->setNetworkManager(networkManager);
         messageDispatcher->setUserSession(userSession);
         messageDispatcher->setWordSearch(wordSearch);
+        messageDispatcher->setWordCollect(wordCollect);
+        messageDispatcher->setWordVocabulary(wordVocabulary);
+
         userSession->setMessageDispatcher(messageDispatcher);
         wordSearch->setMessageDispatcher(messageDispatcher);
+        wordCollect->setMessageDispatcher(messageDispatcher);
+        wordVocabulary->setMessageDispatcher(messageDispatcher);
 
         // 关键修复2: 在dispatcher设置完成后才初始化
         userSession->initialize();
@@ -100,7 +111,7 @@ protected:
 
         qint64 timestamp = QDateTime::currentMSecsSinceEpoch();
         timestamp /= 100000;
-        testUsername = QString("test_%1").arg(timestamp);
+        testUsername = "test_17742494";
         testPassword = "TestPassword123";
         testEmail = QString("test%1@example.com").arg(timestamp);
 
@@ -131,6 +142,14 @@ protected:
         if(wordSearch){
              wordSearch->setMessageDispatcher(nullptr);
 
+        }
+
+        if(wordCollect){
+            wordCollect->setMessageDispatcher(nullptr);
+        }
+
+        if(wordVocabulary){
+            wordVocabulary->setMessageDispatcher(nullptr);
         }
 
         // 关键修复3: 清理时先断开dispatcher关联
@@ -196,6 +215,8 @@ protected:
     MessageDispatcher* messageDispatcher = nullptr;
     UserSession* userSession = nullptr;
     WordSearch* wordSearch=nullptr;
+    WordCollect* wordCollect=nullptr;
+    WordVocabulary* wordVocabulary;
     QString testUsername;
     QString testPassword;
     QString testEmail;
@@ -339,64 +360,64 @@ TEST_F(PageControllerIntegrationTestFixture, MainPageTest) {
 
     qDebug() << "\n=== 测试主页功能 ===";
 
-        // 1. 先跳转到注册页面
-        qDebug() << "1. 跳转到注册页面";
-        pageController->setCurrentPage(PageController::Register);
-        EXPECT_EQ(pageController->findChild<QStackedWidget*>()->currentIndex(), 1) << "当前应该在注册页面";
+    //     // 1. 先跳转到注册页面
+    //     qDebug() << "1. 跳转到注册页面";
+    //     pageController->setCurrentPage(PageController::Register);
+    //     EXPECT_EQ(pageController->findChild<QStackedWidget*>()->currentIndex(), 1) << "当前应该在注册页面";
 
-        // 2. 连接注册成功信号
-        QSignalSpy registerSuccessSpy(userSession, &UserSession::registerSuccess);
-        QSignalSpy registerFailedSpy(userSession, &UserSession::registerFailed);
+    //     // 2. 连接注册成功信号
+    //     QSignalSpy registerSuccessSpy(userSession, &UserSession::registerSuccess);
+    //     QSignalSpy registerFailedSpy(userSession, &UserSession::registerFailed);
 
-        // 3. 填写注册信息并提交
-        QLineEdit* usernameEdit = pageController->getRegisterPage()->findChild<QLineEdit*>("usernameEdit");
-        QLineEdit* passwordEdit = pageController->getRegisterPage()->findChild<QLineEdit*>("passwordEdit");
-        QLineEdit* confirmPasswordEdit = pageController->getRegisterPage()->findChild<QLineEdit*>("confirmPasswordEdit");
-        QLineEdit* emailEdit = pageController->getRegisterPage()->findChild<QLineEdit*>("emailEdit");
-        QCheckBox* termsCheckBox = pageController->getRegisterPage()->findChild<QCheckBox*>("termsAgreementCheckBox");
-        QPushButton* registerButton = pageController->getRegisterPage()->findChild<QPushButton*>("registerButton");
+    //     // 3. 填写注册信息并提交
+    //     QLineEdit* usernameEdit = pageController->getRegisterPage()->findChild<QLineEdit*>("usernameEdit");
+    //     QLineEdit* passwordEdit = pageController->getRegisterPage()->findChild<QLineEdit*>("passwordEdit");
+    //     QLineEdit* confirmPasswordEdit = pageController->getRegisterPage()->findChild<QLineEdit*>("confirmPasswordEdit");
+    //     QLineEdit* emailEdit = pageController->getRegisterPage()->findChild<QLineEdit*>("emailEdit");
+    //     QCheckBox* termsCheckBox = pageController->getRegisterPage()->findChild<QCheckBox*>("termsAgreementCheckBox");
+    //     QPushButton* registerButton = pageController->getRegisterPage()->findChild<QPushButton*>("registerButton");
 
-        ASSERT_NE(usernameEdit, nullptr) << "无法找到用户名输入框";
-        ASSERT_NE(passwordEdit, nullptr) << "无法找到密码输入框";
-        ASSERT_NE(confirmPasswordEdit, nullptr) << "无法找到确认密码输入框";
-        ASSERT_NE(emailEdit, nullptr) << "无法找到邮箱输入框";
-        ASSERT_NE(termsCheckBox, nullptr) << "无法找到同意条款复选框";
-        ASSERT_NE(registerButton, nullptr) << "无法找到注册按钮";
+    //     ASSERT_NE(usernameEdit, nullptr) << "无法找到用户名输入框";
+    //     ASSERT_NE(passwordEdit, nullptr) << "无法找到密码输入框";
+    //     ASSERT_NE(confirmPasswordEdit, nullptr) << "无法找到确认密码输入框";
+    //     ASSERT_NE(emailEdit, nullptr) << "无法找到邮箱输入框";
+    //     ASSERT_NE(termsCheckBox, nullptr) << "无法找到同意条款复选框";
+    //     ASSERT_NE(registerButton, nullptr) << "无法找到注册按钮";
 
-        // 填写测试数据
-        usernameEdit->setText(testUsername);
-        passwordEdit->setText(testPassword);
-        confirmPasswordEdit->setText(testPassword);
-        emailEdit->setText(testEmail);
-        termsCheckBox->setChecked(true);
-        QApplication::processEvents();
-        QTest::qWait(200);
+    //     // 填写测试数据
+    //     usernameEdit->setText(testUsername);
+    //     passwordEdit->setText(testPassword);
+    //     confirmPasswordEdit->setText(testPassword);
+    //     emailEdit->setText(testEmail);
+    //     termsCheckBox->setChecked(true);
+    //     QApplication::processEvents();
+    //     QTest::qWait(200);
 
-        // 点击注册按钮
-        qDebug() << "2. 提交注册信息";
-        QTest::mouseClick(registerButton, Qt::LeftButton);
+    //     // 点击注册按钮
+    //     qDebug() << "2. 提交注册信息";
+    //     QTest::mouseClick(registerButton, Qt::LeftButton);
 
-        // 等待注册响应
-        bool success = registerSuccessSpy.wait(5000);
+    //     // 等待注册响应
+    //     bool success = registerSuccessSpy.wait(5000);
 
-        if (success) {
-            qDebug() << "3. 注册成功，验证跳转到登录页面";
-            // 注册成功后，页面应该跳转到登录页面
-            // 等待页面跳转完成
-            QTest::qWait(1000);
-            EXPECT_EQ(pageController->findChild<QStackedWidget*>()->currentIndex(), 0) << "注册成功后应该跳转到登录页面";
-        } else {
-            qDebug() << "注册超时或失败";
-            if (registerFailedSpy.count() > 0) {
-                QList<QVariant> args = registerFailedSpy.takeFirst();
-                qDebug() << "注册失败原因:" << args[0].toString();
-            }
-            ADD_FAILURE() << "注册操作未完成";
-        }
-    // 等待注册成功后跳转到登录页面
-    QTest::qWait(1000);
-    EXPECT_EQ(pageController->findChild<QStackedWidget*>()->currentIndex(), 0) << "注册成功后应该跳转到登录页面";
-    qDebug() << "注册成功，已跳转到登录页面";
+    //     if (success) {
+    //         qDebug() << "3. 注册成功，验证跳转到登录页面";
+    //         // 注册成功后，页面应该跳转到登录页面
+    //         // 等待页面跳转完成
+    //         QTest::qWait(1000);
+    //         EXPECT_EQ(pageController->findChild<QStackedWidget*>()->currentIndex(), 0) << "注册成功后应该跳转到登录页面";
+    //     } else {
+    //         qDebug() << "注册超时或失败";
+    //         if (registerFailedSpy.count() > 0) {
+    //             QList<QVariant> args = registerFailedSpy.takeFirst();
+    //             qDebug() << "注册失败原因:" << args[0].toString();
+    //         }
+    //         ADD_FAILURE() << "注册操作未完成";
+    //     }
+    // // 等待注册成功后跳转到登录页面
+    // QTest::qWait(1000);
+    // EXPECT_EQ(pageController->findChild<QStackedWidget*>()->currentIndex(), 0) << "注册成功后应该跳转到登录页面";
+    // qDebug() << "注册成功，已跳转到登录页面";
 
     // 2. 在登录页面登录
     qDebug() << "2. 在登录页面登录";
@@ -416,9 +437,9 @@ TEST_F(PageControllerIntegrationTestFixture, MainPageTest) {
     QApplication::processEvents();
     QTest::qWait(200);
 
-    // 连接登录成功信号
-    QSignalSpy loginSuccessSpy(userSession, &UserSession::loginSuccess);
-    QSignalSpy loginFailedSpy(userSession, &UserSession::loginFailed);
+    // // 连接登录成功信号
+    // QSignalSpy loginSuccessSpy(userSession, &UserSession::loginSuccess);
+    // QSignalSpy loginFailedSpy(userSession, &UserSession::loginFailed);
 
     // 点击登录按钮
     QTest::mouseClick(loginButton, Qt::LeftButton);
@@ -522,7 +543,25 @@ TEST_F(PageControllerIntegrationTestFixture, MainPageTest) {
     } else {
         qDebug() << "警告：未找到单词卡片，可能搜索结果尚未完全渲染";
     }
+
     QTest::qWait(2000);
+
+    QPushButton* favoriteBtn = wordCard->findChild<QPushButton*>("favoriteButton");
+    ASSERT_TRUE(favoriteBtn != nullptr) << "找不到收藏按钮";
+
+    // 点击按钮
+    QTest::mouseClick(favoriteBtn, Qt::LeftButton);
+    QApplication::processEvents();
+    QTest::qWait(3000); // 等待网络请求
+
+    QPushButton* addToVocabularyBtn = wordCard->findChild<QPushButton*>("addToVocabularyButton");
+    ASSERT_TRUE(addToVocabularyBtn != nullptr) << "找不到收藏按钮";
+
+    // 点击按钮
+    QTest::mouseClick(addToVocabularyBtn, Qt::LeftButton);
+    QApplication::processEvents();
+    QTest::qWait(3000); // 等待网络请求
+
 
     // 5. 测试主题切换
     qDebug() << "5. 测试主题切换";

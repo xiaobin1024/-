@@ -1152,8 +1152,10 @@ C:/Users/86152/Desktop/network_dictionary/src/ui/view/main_page.h
  mdp:C:/Users/86152/Desktop/network_dictionary/src/user_session/session_storage.h
  mdp:C:/Users/86152/Desktop/network_dictionary/src/user_session/user_data.h
  mdp:C:/Users/86152/Desktop/network_dictionary/src/user_session/user_session.h
+ mdp:C:/Users/86152/Desktop/network_dictionary/src/word_function/word_collect.h
  mdp:C:/Users/86152/Desktop/network_dictionary/src/word_function/word_data.h
  mdp:C:/Users/86152/Desktop/network_dictionary/src/word_function/word_search.h
+ mdp:C:/Users/86152/Desktop/network_dictionary/src/word_function/word_vocabulary.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QDateTime
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QDebug
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QJsonArray
@@ -1434,8 +1436,10 @@ C:/Users/86152/Desktop/network_dictionary/src/ui/view/page_controller.h
  mdp:C:/Users/86152/Desktop/network_dictionary/src/user_session/session_storage.h
  mdp:C:/Users/86152/Desktop/network_dictionary/src/user_session/user_data.h
  mdp:C:/Users/86152/Desktop/network_dictionary/src/user_session/user_session.h
+ mdp:C:/Users/86152/Desktop/network_dictionary/src/word_function/word_collect.h
  mdp:C:/Users/86152/Desktop/network_dictionary/src/word_function/word_data.h
  mdp:C:/Users/86152/Desktop/network_dictionary/src/word_function/word_search.h
+ mdp:C:/Users/86152/Desktop/network_dictionary/src/word_function/word_vocabulary.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QDateTime
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QDebug
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QJsonArray
@@ -1905,11 +1909,20 @@ C:/Users/86152/Desktop/network_dictionary/src/ui/word/interactive_wordcard.h
  mdp:C:/Users/86152/Desktop/network_dictionary/src/ui/base/base_widget.h
  mdp:C:/Users/86152/Desktop/network_dictionary/src/ui/word/interactive_wordcard.h
  mdp:C:/Users/86152/Desktop/network_dictionary/src/ui/word/word_card.h
+ mdp:C:/Users/86152/Desktop/network_dictionary/src/user_session/session_storage.h
+ mdp:C:/Users/86152/Desktop/network_dictionary/src/user_session/user_data.h
+ mdp:C:/Users/86152/Desktop/network_dictionary/src/user_session/user_session.h
+ mdp:C:/Users/86152/Desktop/network_dictionary/src/word_function/word_collect.h
  mdp:C:/Users/86152/Desktop/network_dictionary/src/word_function/word_data.h
+ mdp:C:/Users/86152/Desktop/network_dictionary/src/word_function/word_vocabulary.h
+ mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QDateTime
+ mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QJsonObject
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QMap
+ mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QObject
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QPointer
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QString
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QTimer
+ mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QVariant
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/q20functional.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/q20memory.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/q20type_traits.h
@@ -1929,6 +1942,9 @@ C:/Users/86152/Desktop/network_dictionary/src/ui/word/interactive_wordcard.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qbytearrayalgorithms.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qbytearraylist.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qbytearrayview.h
+ mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qcalendar.h
+ mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qcborcommon.h
+ mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qcborvalue.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qchar.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qcompare.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qcompare_impl.h
@@ -1941,7 +1957,9 @@ C:/Users/86152/Desktop/network_dictionary/src/ui/word/interactive_wordcard.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qcontiguouscache.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qdarwinhelpers.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qdatastream.h
+ mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qdatetime.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qdebug.h
+ mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qendian.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qexceptionhandling.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qflags.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qfloat16.h
@@ -1957,9 +1975,12 @@ C:/Users/86152/Desktop/network_dictionary/src/ui/word/interactive_wordcard.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qiodevicebase.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qiterable.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qiterator.h
+ mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qjsonobject.h
+ mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qjsonvalue.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qlatin1stringview.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qline.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qlist.h
+ mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qlocale.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qlogging.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qmalloc.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qmap.h
@@ -1981,6 +2002,7 @@ C:/Users/86152/Desktop/network_dictionary/src/ui/word/interactive_wordcard.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qprocessordetection.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qrect.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qrefcount.h
+ mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qregularexpression.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qscopedpointer.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qscopeguard.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qset.h
@@ -2024,6 +2046,7 @@ C:/Users/86152/Desktop/network_dictionary/src/ui/word/interactive_wordcard.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qtypes.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qurl.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qutf8stringview.h
+ mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/quuid.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qvariant.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qvarlengtharray.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qversiontagging.h

@@ -7,6 +7,7 @@
  */
 
 #include<QString>
+#include"QTimer"
 
 struct WordData{
     QString word;           // 单词
@@ -15,34 +16,27 @@ struct WordData{
     QString example;        // 例句
     QString translation;    // 句意
     bool isCollected;    //收藏标识
+    bool isVocabulary;  //生词标识
 
     // 默认构造函数
     WordData() = default;
 
     // 常用构造函数
     WordData(const QString& w, const QString& p, const QString& d,
-              const QString& e = "",const QString& t="")
+              const QString& e = "",const QString& t="",bool c=false,bool v=false)
         : word(w)
         , phonetic(p)
         , meaning(d)
         , example(e)
         ,translation(t)
+        ,isCollected(c)
+        ,isVocabulary(v)
     {}
 
     // 检查数据是否有效
     bool isValid() const {
         return !word.isEmpty() && !meaning.isEmpty();
 
-    }
-    // 获取显示文本（用于调试）
-    QString displayText() const {
-        if (!isValid()) return "Invalid data";
-        return QString("%1 [%2] %3: %4")
-            .arg(word)
-            .arg(meaning.left(30) + (meaning.length() > 30 ? "..." : ""))
-            .arg(phonetic)
-            .arg(example)
-            .arg(translation);
     }
 };
 

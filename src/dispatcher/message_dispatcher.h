@@ -6,6 +6,8 @@
 // 前向声明
 class UserSession;
 class WordSearch;
+class WordCollect;
+class WordVocabulary;
 
 // 集中式消息分发器
 class MessageDispatcher : public QObject
@@ -19,6 +21,8 @@ public:
     void setNetworkManager(NetworkManager* manager);
     void setUserSession(UserSession* session);
     void setWordSearch(WordSearch* wordSearch);
+    void setWordCollect(WordCollect* wordCollect);
+    void setWordVocabulary(WordVocabulary* wordVocabulary);
 
     // 启动/停止分发
     void start();
@@ -33,8 +37,9 @@ signals:
     void searchResponseReceived(const QString& responseData);
     void historyResponseReceived(const QString& responseData);
     void collectResponseReceived(const QString& responseData);
-    void queryCollectResponseReceived(const QString& responseData);
+    void CollectResponseListReceived(const QString& responseData);
     void unregisterResponseReceived(const QString& responseData);
+    void vocabularyResponseReceived(const QString& responseData);
 
 
 
@@ -54,6 +59,9 @@ private slots:
     void onRegisterRequested(const QString& username, const QString& password);
     void onUnregisterRequested(const QString& username, const QString& password);
     void onSearchRequested(const QString&username, const QString& word);  // 添加搜索响应处理
+    void onCollectRequested(const QString& username, const QString& wordData);  // 新增
+    void onCollectListRequested(const QString& username);
+    void onVocabularyRequested(const QString& username, const QString& wordData);
 
     // 网络状态处理
     void onNetworkConnected();
@@ -73,6 +81,8 @@ private:
     NetworkManager* m_networkManager = nullptr;
     UserSession* m_userSession = nullptr;
     WordSearch* m_wordSearch{nullptr};
+    WordCollect* m_wordCollect{nullptr};
+    WordVocabulary* m_wordVocabulary{nullptr};
     bool m_started = false;
     bool m_networkConnected = false;
 

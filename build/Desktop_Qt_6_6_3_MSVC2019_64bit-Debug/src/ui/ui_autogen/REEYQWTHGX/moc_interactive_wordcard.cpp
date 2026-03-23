@@ -54,11 +54,13 @@ constexpr auto qt_meta_stringdata_CLASSInteractiveWordCardENDCLASS = QtMocHelper
     "onFavoriteButtonClicked",
     "onPronunciationButtonClicked",
     "onAddToVocabularyButtonClicked",
-    "onMoreActionsButtonClicked"
+    "onMoreActionsButtonClicked",
+    "onCollectStatusChanged",
+    "isCollected"
 );
 #else  // !QT_MOC_HAS_STRING_DATA
 struct qt_meta_stringdata_CLASSInteractiveWordCardENDCLASS_t {
-    uint offsetsAndSizes[32];
+    uint offsetsAndSizes[36];
     char stringdata0[20];
     char stringdata1[16];
     char stringdata2[1];
@@ -75,6 +77,8 @@ struct qt_meta_stringdata_CLASSInteractiveWordCardENDCLASS_t {
     char stringdata13[29];
     char stringdata14[31];
     char stringdata15[27];
+    char stringdata16[23];
+    char stringdata17[12];
 };
 #define QT_MOC_LITERAL(ofs, len) \
     uint(sizeof(qt_meta_stringdata_CLASSInteractiveWordCardENDCLASS_t::offsetsAndSizes) + ofs), len 
@@ -95,7 +99,9 @@ Q_CONSTINIT static const qt_meta_stringdata_CLASSInteractiveWordCardENDCLASS_t q
         QT_MOC_LITERAL(172, 23),  // "onFavoriteButtonClicked"
         QT_MOC_LITERAL(196, 28),  // "onPronunciationButtonClicked"
         QT_MOC_LITERAL(225, 30),  // "onAddToVocabularyButtonClicked"
-        QT_MOC_LITERAL(256, 26)   // "onMoreActionsButtonClicked"
+        QT_MOC_LITERAL(256, 26),  // "onMoreActionsButtonClicked"
+        QT_MOC_LITERAL(283, 22),  // "onCollectStatusChanged"
+        QT_MOC_LITERAL(306, 11)   // "isCollected"
     },
     "InteractiveWordCard",
     "favoriteToggled",
@@ -112,7 +118,9 @@ Q_CONSTINIT static const qt_meta_stringdata_CLASSInteractiveWordCardENDCLASS_t q
     "onFavoriteButtonClicked",
     "onPronunciationButtonClicked",
     "onAddToVocabularyButtonClicked",
-    "onMoreActionsButtonClicked"
+    "onMoreActionsButtonClicked",
+    "onCollectStatusChanged",
+    "isCollected"
 };
 #undef QT_MOC_LITERAL
 #endif // !QT_MOC_HAS_STRING_DATA
@@ -124,7 +132,7 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSInteractiveWordCardENDCLASS[] = 
       12,       // revision
        0,       // classname
        0,    0, // classinfo
-      10,   14, // methods
+      11,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -132,18 +140,19 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSInteractiveWordCardENDCLASS[] = 
        6,       // signalCount
 
  // signals: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    2,   74,    2, 0x06,    1 /* Public */,
-       5,    1,   79,    2, 0x06,    4 /* Public */,
-       6,    1,   82,    2, 0x06,    6 /* Public */,
-       9,    1,   85,    2, 0x06,    8 /* Public */,
-      10,    1,   88,    2, 0x06,   10 /* Public */,
-      11,    1,   91,    2, 0x06,   12 /* Public */,
+       1,    2,   80,    2, 0x06,    1 /* Public */,
+       5,    1,   85,    2, 0x06,    4 /* Public */,
+       6,    1,   88,    2, 0x06,    6 /* Public */,
+       9,    1,   91,    2, 0x06,    8 /* Public */,
+      10,    1,   94,    2, 0x06,   10 /* Public */,
+      11,    1,   97,    2, 0x06,   12 /* Public */,
 
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
-      12,    0,   94,    2, 0x08,   14 /* Private */,
-      13,    0,   95,    2, 0x08,   15 /* Private */,
-      14,    0,   96,    2, 0x08,   16 /* Private */,
-      15,    0,   97,    2, 0x08,   17 /* Private */,
+      12,    0,  100,    2, 0x08,   14 /* Private */,
+      13,    0,  101,    2, 0x08,   15 /* Private */,
+      14,    0,  102,    2, 0x08,   16 /* Private */,
+      15,    0,  103,    2, 0x08,   17 /* Private */,
+      16,    1,  104,    2, 0x08,   18 /* Private */,
 
  // signals: parameters
     QMetaType::Void, QMetaType::QString, QMetaType::Bool,    3,    4,
@@ -158,6 +167,7 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSInteractiveWordCardENDCLASS[] = 
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
+    QMetaType::Void, QMetaType::Bool,   17,
 
        0        // eod
 };
@@ -197,7 +207,10 @@ Q_CONSTINIT const QMetaObject InteractiveWordCard::staticMetaObject = { {
         // method 'onAddToVocabularyButtonClicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'onMoreActionsButtonClicked'
-        QtPrivate::TypeAndForceComplete<void, std::false_type>
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'onCollectStatusChanged'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        QtPrivate::TypeAndForceComplete<bool, std::false_type>
     >,
     nullptr
 } };
@@ -218,6 +231,7 @@ void InteractiveWordCard::qt_static_metacall(QObject *_o, QMetaObject::Call _c, 
         case 7: _t->onPronunciationButtonClicked(); break;
         case 8: _t->onAddToVocabularyButtonClicked(); break;
         case 9: _t->onMoreActionsButtonClicked(); break;
+        case 10: _t->onCollectStatusChanged((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -286,13 +300,13 @@ int InteractiveWordCard::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 10)
+        if (_id < 11)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 10;
+        _id -= 11;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 10)
+        if (_id < 11)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 10;
+        _id -= 11;
     }
     return _id;
 }

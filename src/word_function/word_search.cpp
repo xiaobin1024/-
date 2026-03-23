@@ -85,7 +85,6 @@ void WordSearch::handleSearchResponse(const QString& responseData)
 }
 
 void WordSearch::processSearchResponse(const QString& response) {
-
     qDebug()<<"WordSearch::processSearchResponse";
     // 检查是否为错误响应
     if (response.startsWith("ERROR:")) {
@@ -101,8 +100,8 @@ void WordSearch::processSearchResponse(const QString& response) {
     // 使用分隔符"|^|"分割字符串
     QStringList parts = response.split("|^|");
 
-    // 确保有足够的字段
-    if (parts.size() < 6) {
+    // 现在需要至少7个字段
+    if (parts.size() < 7) {
         emit searchFailed("响应格式错误，字段数量不足");
         return;
     }
@@ -115,10 +114,15 @@ void WordSearch::processSearchResponse(const QString& response) {
     wordData.example = parts[3];
     wordData.translation = parts[4];
 
-    // 解析收藏状态
-    bool ok;
-    int collectFlag = parts[5].toInt(&ok);
-    wordData.isCollected = ok && (collectFlag == 1);
+    // 解析第6个字段：收藏状态
+    bool ok1;
+    int collectFlag = parts[5].toInt(&ok1);
+    wordData.isCollected = ok1 && (collectFlag == 1);
+
+    // 解析第7个字段：生词本状态
+    bool ok2;
+    int vocabFlag = parts[6].toInt(&ok2);
+    wordData.isVocabulary = ok2 && (vocabFlag == 1);
 
     // 验证数据
     if (!wordData.isValid()) {

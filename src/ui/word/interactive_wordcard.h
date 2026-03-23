@@ -2,6 +2,10 @@
 #define INTERACTIVE_WORDCARD_H
 
 #include "word_card.h"
+#include "word_data.h"
+#include "word_collect.h"
+#include"word_vocabulary.h"
+
 #include<QMenu>
 /**
  * @brief 交互式单词卡片
@@ -20,7 +24,10 @@ class InteractiveWordCard : public WordCard
 {
     Q_OBJECT
 public:
-    explicit InteractiveWordCard(const WordData& data, QWidget* parent = nullptr);
+     explicit InteractiveWordCard(const WordData& data,
+                                 WordCollect* wordCollector,
+                                 WordVocabulary* wordVocabulary,
+                                 QWidget* parent = nullptr);
 
     // 状态获取
     bool isFavorite() const { return m_isFavorite; }
@@ -50,9 +57,11 @@ private slots:
     void onPronunciationButtonClicked();
     void onAddToVocabularyButtonClicked();
     void onMoreActionsButtonClicked();
+    void onCollectStatusChanged(bool isCollected);
+
 
 private:
-    void initInteractiveUI();
+    void initInteractiveUI();void onVocabularyStatusChanged(bool isVocabulary);
     void setupConnections();
     void updateButtonStyles();
     void createMoreActionsMenu();
@@ -70,6 +79,10 @@ private:
     // 布局
     class InteractiveWordCardPrivate;
     InteractiveWordCardPrivate* d;
+
+     WordData m_wordData;
+     WordCollect* m_wordCollector{nullptr}; // 用于发送请求
+     WordVocabulary* m_wordVocabulary{nullptr};
 };
 
 #endif // INTERACTIVE_WORDCARD_H

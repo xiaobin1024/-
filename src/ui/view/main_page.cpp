@@ -13,6 +13,8 @@ MainPage::MainPage(QWidget* parent)
     : BaseWidget(parent)
     , m_userSession(UserSession::instance())
     ,m_wordSearch(WordSearch::instance())
+    ,m_wordCollect(WordCollect::instance())
+    ,m_wordVocabulary(WordVocabulary::instance())
 
 {
     qDebug() << "MainPage 创建";
@@ -218,23 +220,15 @@ void MainPage::setupConnections()
 
     // 设置 UserSession 到 WordSearch
     m_wordSearch->setUserSession(m_userSession);
+    // 设置 UserSession 到 WordCollect
+    m_wordCollect->setUserSession(m_userSession);
+    // 设置 UserSession 到 WordVocabulary
+    m_wordVocabulary->setUserSession(m_userSession);
 }
 
 void MainPage::onSearchRequested(const QString& query)
 {
     if (!query.isEmpty()) {
-        //emit searchRequested(query);
-
-        // // 这里可以调用词典搜索功能
-        // // 暂时显示一个示例单词卡片
-        // WordData sampleData;
-        // sampleData.word = query;
-        // sampleData.phonetic = "ˈmaɪnəs";
-        // sampleData.meaning = "prep. 减去 adj. 负的，减去的 n. 负数";
-        // sampleData.example = "Ten minus three is seven.";
-        // sampleData.translation="十减三等于七。";
-
-        // setCurrentWordCard(sampleData);
 
         m_wordSearch->searchWord(query);
     }
@@ -315,7 +309,7 @@ void MainPage::setCurrentWordCard(const WordData& wordData)
     }
 
     // 创建新的单词卡片
-    m_currentWordCard = new InteractiveWordCard(wordData, this);
+    m_currentWordCard = new InteractiveWordCard(wordData,m_wordCollect,m_wordVocabulary, this);
     m_currentWordCard->setFixedWidth(600);
 
     // 添加到内容布局

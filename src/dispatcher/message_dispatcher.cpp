@@ -1,6 +1,8 @@
 #include "message_dispatcher.h"
 #include "user_session.h"
 #include "word_search.h"
+#include"word_collect.h"
+#include"word_vocabulary.h"
 #include <QDebug>
 
 MessageDispatcher::MessageDispatcher(QObject* parent)
@@ -85,6 +87,55 @@ void MessageDispatcher::setWordSearch(WordSearch* wordSearch)
     }
 }
 
+void MessageDispatcher::setWordCollect(WordCollect* wordCollect)
+{
+    if (m_wordCollect == wordCollect) {
+        return;
+    }
+
+    // 断开旧的连接
+    if (m_wordCollect) {
+        disconnect(m_wordCollect, &WordCollect::collectRequested,
+                   this, &MessageDispatcher::onCollectRequested);
+        disconnect(m_wordCollect, &WordCollect::collectListRequested,
+                   this, &MessageDispatcher::onCollectListRequested);
+    }
+
+    m_wordCollect = wordCollect;
+
+    // 连接新的信号
+    if (m_wordCollect) {
+        connect(m_wordCollect, &WordCollect::collectRequested,
+                this, &MessageDispatcher::onCollectRequested);
+        connect(m_wordCollect, &WordCollect::collectListRequested,
+                   this, &MessageDispatcher::onCollectListRequested);
+
+        qDebug() << "WordCollect 已设置到 MessageDispatcher";
+    }
+}
+
+void MessageDispatcher::setWordVocabulary(WordVocabulary* wordVocabulary)
+{
+    if (m_wordVocabulary == wordVocabulary) {
+        return;
+    }
+
+    // 断开旧的连接
+    if (m_wordVocabulary) {
+        disconnect(m_wordVocabulary, &WordVocabulary::vocabularyStatusRequested,
+                   this, &MessageDispatcher::onVocabularyRequested);
+    }
+
+    m_wordVocabulary = wordVocabulary;
+
+    // 连接新的信号
+    if (m_wordVocabulary) {
+        connect(m_wordVocabulary, &WordVocabulary::vocabularyStatusRequested,
+                this, &MessageDispatcher::onVocabularyRequested);
+        qDebug() << "WordVocabulary 已设置到 MessageDispatcher";
+    }
+}
+
 void MessageDispatcher::start()
 {
     if (m_started) {
@@ -161,6 +212,7 @@ void MessageDispatcher::disconnectNetworkSignals()
     disconnect(m_networkManager, &NetworkManager::networkError,
                this, &MessageDispatcher::onNetworkError);
 }
+
 
 void MessageDispatcher::onNetworkConnected()
 {
@@ -241,8 +293,12 @@ void MessageDispatcher::dispatchMessage(const CoreMessage::Msg& message)
         emit collectResponseReceived(data);
         break;
 
-    case CoreMessage::MsgType::QUERYCOLLECT:
-        emit queryCollectResponseReceived(data);
+    case CoreMessage::MsgType::COLLECTList:
+        emit CollectResponseListReceived(data);
+        break;
+
+    case CoreMessage::MsgType::VOCABULARY:
+        emit vocabularyResponseReceived(data);
         break;
 
     case CoreMessage::MsgType::HEARTBEAT:
@@ -353,5 +409,34 @@ void MessageDispatcher::onSearchRequested(const QString &username, const QString
 
     if (!sendMessage(CoreMessage::MsgType::SEARCH, username,word)) {
         emit searchResponseReceived("ERROR:网络未连接或消息发送失败");
+    }
+}
+
+void MessageDispatcher::onCollectRequested(const QString& username, const QString& wordData)
+{
+    qDebug() << "MessageDispatcher: 处理收藏请求, 用户:" << username
+             << " 数据:" << wordData;
+
+    if (!sendMessage(CoreMessage::MsgType::COLLECT, username, wordData)) {
+        emit collectResponseReceived("ERROR:网络未连接或消息发送失败");
+    }
+}
+
+void MessageDispatcher::onCollectListRequested(const QString& username)
+{
+    qDebug() << "MessageDispatcher: 处理查询收藏列表请求, 用户:" << username;
+
+    if (!sendMessage(CoreMessage::MsgType::COLLECTList, username, "")) {
+        emit CollectResponseListReceived("ERROR:网络未连接或消息发送失败");
+    }
+}
+
+void MessageDispatcher::onVocabularyRequested(const QString& username, const QString& wordData)
+{
+    qDebug() << "MessageDispatcher: 处理生词请求, 用户:" << username
+             << " 数据:" << wordData;
+
+    if (!sendMessage(CoreMessage::MsgType::VOCABULARY, username, wordData)) {
+        emit vocabularyResponseReceived("ERROR:网络未连接或消息发送失败");
     }
 }
