@@ -4,6 +4,7 @@
 #include <QAction>
 
 
+
 // 私有数据类
 class InteractiveWordCard::InteractiveWordCardPrivate
 {
@@ -25,6 +26,12 @@ InteractiveWordCard::InteractiveWordCard(const WordData& data,
 {
     m_isFavorite = data.isCollected;
     m_isAddedToVocabulary=data.isVocabulary;
+
+    //初始化语音引擎
+    speech = new QTextToSpeech(this);
+    //设置语音为英语
+    speech->setLocale(QLocale(QLocale::English,QLocale::UnitedStates));
+
     initInteractiveUI();
     setupConnections();
 }
@@ -189,10 +196,19 @@ void InteractiveWordCard::onVocabularyStatusChanged(bool isVocabulary)
 
 void InteractiveWordCard::onPronunciationButtonClicked()
 {
-    if (!getWordData().word.isEmpty()) {
-        emit pronunciationRequested(getWordData().word);
-        showMessage("播放发音", false, 1000);
+    // if (!getWordData().word.isEmpty()) {
+    //     emit pronunciationRequested(getWordData().word);
+    //     showMessage("播放发音", false, 1000);
+    // }
+
+    qDebug()<<"InteractiveWordCard::onPronunciationButtonClicked()";
+    if(m_wordData.isValid()){
+        qDebug()<<"m_wordData.word: "<<m_wordData.word;
+        //播放单词发音
+        speech->say(m_wordData.word);
+
     }
+
 }
 
 
@@ -278,7 +294,7 @@ void InteractiveWordCard::updateButtonStyles()
     if (m_isAddedToVocabulary) {
         QIcon colVocabIcon(":/icons/col_vocabulary.png");
         if (colVocabIcon.isNull()) {
-            m_addToVocabularyButton->setText("−");
+             m_addToVocabularyButton->setText("⭐");
             m_addToVocabularyButton->setIcon(QIcon());
         } else {
             m_addToVocabularyButton->setIcon(colVocabIcon);
@@ -288,7 +304,7 @@ void InteractiveWordCard::updateButtonStyles()
     } else {
         QIcon vocabIcon(":/icons/vocabulary.png");
         if (vocabIcon.isNull()) {
-            m_addToVocabularyButton->setText("+");
+            m_addToVocabularyButton->setText("☆");
             m_addToVocabularyButton->setIcon(QIcon());
         } else {
             m_addToVocabularyButton->setIcon(vocabIcon);

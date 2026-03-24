@@ -14,8 +14,8 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 # 如果ui需要Widgets模块，添加它
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Widgets)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Widgets TextToSpeech)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Widgets TextToSpeech)
 
 # 修改为静态库
 add_library(ui STATIC
@@ -46,6 +46,7 @@ target_link_libraries(ui PUBLIC
     word_function
     Qt${QT_VERSION_MAJOR}::Core
     Qt${QT_VERSION_MAJOR}::Widgets
+     Qt${QT_VERSION_MAJOR}::TextToSpeech
 )
 
 # 设置包含目录

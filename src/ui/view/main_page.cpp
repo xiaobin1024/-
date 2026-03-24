@@ -58,6 +58,10 @@ void MainPage::setupLayout()
     // 设置内容区域
     setupContentArea();
 
+    m_searchContainer->setStyleSheet("#m_searchContainer { background: transparent; border: none; }");
+
+    m_searchContainer->layout()->setContentsMargins(0, 0, 0, 0);
+
     // 添加主要内容到布局
     contentLayout->addWidget(m_searchTitleLabel);
     contentLayout->addWidget(m_searchContainer);  // 添加搜索容器
@@ -68,7 +72,7 @@ void MainPage::setupLayout()
     setupSidebar();
 
     // 将内容区域和侧边栏添加到主布局
-    mainLayout->addWidget(contentArea);
+    mainLayout->addWidget(contentArea,1);
     mainLayout->addWidget(m_sidebar);
 
     // 将主布局设置到页面
@@ -97,7 +101,8 @@ void MainPage::setupSearchSection()
     m_searchWidget = new SearchHistoryWidget(this);  // 使用 this 作为父对象
     m_searchWidget->setObjectName("searchWidget");
     m_searchWidget->setMinimumHeight(50);
-    m_searchWidget->setMaximumWidth(500);
+    //m_searchWidget->setMaximumWidth(500);
+    m_searchWidget->setMinimumWidth(200);
     m_searchWidget->setPlaceholder("请输入要搜索的单词...");
 
     // 设置输入验证器（可选）
@@ -108,21 +113,24 @@ void MainPage::setupSearchSection()
     // 创建搜索组件的容器
     m_searchContainer = new QWidget(this);
     QHBoxLayout* searchContainerLayout = new QHBoxLayout(m_searchContainer);
-    searchContainerLayout->setContentsMargins(20, 10, 20, 10);
+    searchContainerLayout->setContentsMargins(20,0,20,0);
     searchContainerLayout->setSpacing(0);
 
     // 添加搜索组件到容器
     searchContainerLayout->addWidget(m_searchWidget);
 
     // 设置容器样式
+    // 修改 m_searchContainer 的样式表
     m_searchContainer->setStyleSheet(QString(
                                          "QWidget {"
-                                         "  background-color: %1;"
-                                         "  border: 1px solid %2;"
+                                         "  background-color: transparent;"  // 关键：设为透明
+                                         "  border: none;"                   // 关键：移除边框
                                          "  border-radius: 8px;"
-                                         "  padding: 5px;"
+                                         "  padding: 0px;"
                                          "}"
                                          ).arg(getColor("surface"), getColor("border")));
+    // 确保容器本身的大小策略允许它扩展
+    m_searchContainer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 }
 
 void MainPage::setupContentArea()
@@ -186,7 +194,7 @@ void MainPage::setupSidebar()
     m_sidebar = new SystemSidebar(this);
 
     // 设置侧边栏宽度
-    m_sidebar->setFixedWidth(200);
+    m_sidebar->setFixedWidth(50);
 
     // 设置用户会话
     m_sidebar->setUserSession(UserSession::instance());

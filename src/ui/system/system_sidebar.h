@@ -111,9 +111,6 @@ protected:
     void onPageShow() override;
     void onPageHide() override;
 
-    // 重写绘制事件，实现圆角和阴影
-    void paintEvent(QPaintEvent* event) override;
-
     // 重写尺寸事件，调整按钮容器大小
     void resizeEvent(QResizeEvent* event) override;
 

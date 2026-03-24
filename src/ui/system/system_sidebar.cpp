@@ -170,6 +170,7 @@ void SystemSidebar::setupLayout()
     // 11. 应用初始样式
     updateSidebarStyle();
 
+
     qDebug() << "SystemSidebar 布局设置完成";
 }
 
@@ -403,29 +404,6 @@ void SystemSidebar::onPageHide()
     qDebug() << "SystemSidebar 页面隐藏";
 }
 
-void SystemSidebar::paintEvent(QPaintEvent* event)
-{
-    // 调用基类绘制
-    BaseWidget::paintEvent(event);
-
-    QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing);
-
-    // 使用m_expanded标志位来判断是否展开，而不是依赖当前宽度
-    if (m_expanded && width() > 1) { // 只在展开状态下绘制分割线
-        QPen pen;
-        if (uiTheme() == UITheme::Light) {
-            pen.setColor(QColor("#d0d0d0")); // 亮色主题的分割线
-        } else {
-            pen.setColor(QColor("#555555")); // 暗色主题的分割线
-        }
-        pen.setWidth(2);
-        painter.setPen(pen);
-
-        // 在侧边栏右边绘制分割线
-        painter.drawLine(width()-2, 0, width()-2, height());
-    }
-}
 
 void SystemSidebar::updateSidebarStyle()
 {

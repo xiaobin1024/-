@@ -174,6 +174,10 @@ C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-
   D:/qt/6.6.3/msvc2019_64/include/QtGui/qtransform.h \
   D:/qt/6.6.3/msvc2019_64/include/QtGui/qwindowdefs.h \
   D:/qt/6.6.3/msvc2019_64/include/QtGui/qwindowdefs_win.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtTextToSpeech/QTextToSpeech \
+  D:/qt/6.6.3/msvc2019_64/include/QtTextToSpeech/qtexttospeech.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtTextToSpeech/qtexttospeech_global.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtTextToSpeech/qvoice.h \
   D:/qt/6.6.3/msvc2019_64/include/QtWidgets/QFormLayout \
   D:/qt/6.6.3/msvc2019_64/include/QtWidgets/QGroupBox \
   D:/qt/6.6.3/msvc2019_64/include/QtWidgets/QLabel \

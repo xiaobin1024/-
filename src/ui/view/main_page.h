@@ -14,6 +14,7 @@
 #include <QScrollArea>
 #include <QLabel>
 
+
 class MainPage : public BaseWidget
 {
     Q_OBJECT
@@ -72,6 +73,9 @@ private:
     QWidget* m_contentWidget{nullptr};
     QVBoxLayout* m_contentLayout{nullptr};
     SystemSidebar* m_sidebar{nullptr};
+    QWidget *m_contentWrapper; // 用于统一控制搜索区和内容区宽度的包裹器
+
+
 
     // 当前显示的单词卡片
     InteractiveWordCard* m_currentWordCard{nullptr};

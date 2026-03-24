@@ -5,7 +5,7 @@
 #include "word_data.h"
 #include "word_collect.h"
 #include"word_vocabulary.h"
-
+#include<QTextToSpeech>     //文字转语音
 #include<QMenu>
 /**
  * @brief 交互式单词卡片
@@ -83,6 +83,10 @@ private:
      WordData m_wordData;
      WordCollect* m_wordCollector{nullptr}; // 用于发送请求
      WordVocabulary* m_wordVocabulary{nullptr};
+
+     //文本转语音对象
+     QTextToSpeech *speech;
+
 };
 
 #endif // INTERACTIVE_WORDCARD_H

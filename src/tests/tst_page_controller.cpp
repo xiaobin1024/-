@@ -562,6 +562,14 @@ TEST_F(PageControllerIntegrationTestFixture, MainPageTest) {
     QApplication::processEvents();
     QTest::qWait(3000); // 等待网络请求
 
+    QPushButton* pronunciationBtn = wordCard->findChild<QPushButton*>("pronunciationButton");
+    ASSERT_TRUE(pronunciationBtn != nullptr) << "找不到收藏按钮";
+
+    // 点击按钮
+    QTest::mouseClick(pronunciationBtn, Qt::LeftButton);
+    QApplication::processEvents();
+    QTest::qWait(3000); // 等待网络请求
+
 
     // 5. 测试主题切换
     qDebug() << "5. 测试主题切换";

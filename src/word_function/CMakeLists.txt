@@ -15,8 +15,8 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 # 如果需要Widgets模块，添加它
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Widgets)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Widgets TextToSpeech)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Widgets TextToSpeech)
 
 
 add_library(word_function STATIC
@@ -35,6 +35,7 @@ target_link_libraries(word_function PUBLIC
     dispatcher
     Qt${QT_VERSION_MAJOR}::Core
     Qt${QT_VERSION_MAJOR}::Widgets
+    Qt${QT_VERSION_MAJOR}::TextToSpeech
 )
 
 # 设置包含目录

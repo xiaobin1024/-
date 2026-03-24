@@ -42,7 +42,7 @@ void SearchBase::setupLayout()
 
     // 3. 创建水平布局（不设置给 this，而是给 container）
     QHBoxLayout* hLayout = new QHBoxLayout(container);
-    hLayout->setContentsMargins(0, 0, 0, 0);
+    hLayout->setContentsMargins(10, 5, 10, 5);
     hLayout->setSpacing(8);
 
     // 4. 创建输入框
