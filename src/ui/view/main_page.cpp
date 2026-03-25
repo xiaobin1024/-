@@ -110,6 +110,7 @@ void MainPage::setupSearchSection()
     auto* validator = new QRegularExpressionValidator(regex, this);
     m_searchWidget->inputField()->setValidator(validator);
 
+
     // 创建搜索组件的容器
     m_searchContainer = new QWidget(this);
     QHBoxLayout* searchContainerLayout = new QHBoxLayout(m_searchContainer);
@@ -210,10 +211,15 @@ void MainPage::setupConnections()
 {
     qDebug()<<"MainPage::setupConnections()";
     // 连接搜索相关的信号
+
+    connect(m_searchWidget, &SearchHistoryWidget::keywordChanged,
+            this, &MainPage::onKeywordChanged);
+
     connect(m_searchWidget, &SearchHistoryWidget::searchRequested,
             this, &MainPage::onSearchRequested);
     connect(m_searchWidget, &SearchHistoryWidget::historyItemClicked,
             this, &MainPage::onSearchRequested);
+
     //登录，注销相关信号
     connect(m_userSession, &UserSession::logoutSuccess,
             this, &MainPage::navigateToLogin);
@@ -323,19 +329,6 @@ void MainPage::setCurrentWordCard(const WordData& wordData)
     // 添加到内容布局
     m_contentLayout->insertWidget(0, m_currentWordCard);
 
-    // 连接卡片信号
-    connect(m_currentWordCard, &InteractiveWordCard::favoriteToggled,
-            this, [](const QString& word, bool favorite) {
-                qDebug() << "单词收藏状态变化:" << word << "收藏:" << favorite;
-            });
-    connect(m_currentWordCard, &InteractiveWordCard::pronunciationRequested,
-            this, [](const QString& word) {
-                qDebug() << "请求发音:" << word;
-            });
-    connect(m_currentWordCard, &InteractiveWordCard::addToVocabularyRequested,
-            this, [](const WordData& data) {
-                qDebug() << "添加到生词本:" << data.word;
-            });
 }
 
 void MainPage::updateWidgetStyles()
@@ -387,5 +380,22 @@ void MainPage::updateWidgetStyles()
                                               "  padding: 10px;"
                                               "}"
                                               ).arg(getColor("text-primary")));
+    }
+}
+
+void MainPage::onKeywordChanged(const QString& keyword)
+{
+    // 只有当关键词变为空字符串时（即点击了清理按钮），才删除当前卡片
+    if (keyword.isEmpty()) {
+        if (m_currentWordCard) {
+            // 1. 从布局中移除
+            if (m_contentLayout) {
+                m_contentLayout->removeWidget(m_currentWordCard);
+            }
+
+            // 2. 安排删除 (使用 deleteLater 保证安全)
+            m_currentWordCard->deleteLater();
+            m_currentWordCard = nullptr;
+        }
     }
 }

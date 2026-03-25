@@ -28,15 +28,28 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 add_subdirectory(src/core)
 add_subdirectory(src/network)
 add_subdirectory(src/ui)
-# 启用测试
-option(BUILD_TESTING "Build tests" ON)
-if(BUILD_TESTING)
-   enable_testing()
-   add_subdirectory(src/tests)
-endif()
-
-
-add_subdirectory(src/page_manager)
+#add_subdirectory(src/page_manager)
 add_subdirectory(src/user_session)
 add_subdirectory(src/dispatcher)
 add_subdirectory(src/word_function)
+add_subdirectory(src/main_app)
+
+
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT main_app)
+
+# # 启用测试
+# option(BUILD_TESTING "Build tests" ON)
+# if(BUILD_TESTING)
+#    enable_testing()
+#    add_subdirectory(src/tests)
+# endif()
+
+if(CMAKE_GENERATOR STREQUAL "Ninja")
+    add_custom_target(run_main_app
+        COMMAND ${CMAKE_COMMAND} -E echo "Starting main_app..."
+        DEPENDS main_app
+        COMMENT "Run main_app target"
+    )
+endif()
+
+

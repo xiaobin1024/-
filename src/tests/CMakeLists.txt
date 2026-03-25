@@ -39,7 +39,7 @@ include_directories("${GTEST_INCLUDE_DIR}")
 link_directories("${GTEST_LIB_DIR}" "${GTEST_MAIN_LIB_DIR}") # 同时包含lib和manual-link
 
 
-# 包含路径 - 让测试能找到core模块的头文件
+# 包含路径 - 让测试能找到头文件
 include_directories(
     ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_SOURCE_DIR}/src

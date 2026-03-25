@@ -57,6 +57,9 @@ private slots:
     void onWordSearchSuccess(const WordData& wordData);
     void onWordSearchFailed(const QString& error);
 
+    //处理关键词变化的槽函数
+    void onKeywordChanged(const QString& keyword);
+
 
 private:
     void setupHeader();
@@ -85,6 +88,7 @@ private:
     WordSearch* m_wordSearch{nullptr};
     WordCollect* m_wordCollect{nullptr};
     WordVocabulary* m_wordVocabulary{nullptr};
+
 };
 
 #endif // MAIN_PAGE_H
