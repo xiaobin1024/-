@@ -401,3 +401,8 @@ void InteractiveWordCard::updateCardStyle()
     // 更新按钮样式
     updateButtonStyles();
 }
+
+void InteractiveWordCard::cardThemeChanged()
+{
+    InteractiveWordCard::onThemeChanged();
+}

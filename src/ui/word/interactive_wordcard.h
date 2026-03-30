@@ -37,6 +37,9 @@ public:
     void setFavorite(bool favorite);
     void setAddedToVocabulary(bool added);
 
+    //主题设置
+    void cardThemeChanged();
+
 signals:
     // 操作信号
     void favoriteToggled(const QString& word, bool favorite);

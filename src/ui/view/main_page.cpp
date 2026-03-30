@@ -1,5 +1,6 @@
 #include "main_page.h"
 #include "user_session.h"
+
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLineEdit>
@@ -15,7 +16,6 @@ MainPage::MainPage(QWidget* parent)
     ,m_wordSearch(WordSearch::instance())
     ,m_wordCollect(WordCollect::instance())
     ,m_wordVocabulary(WordVocabulary::instance())
-
 {
     qDebug() << "MainPage 创建";
     initialize();
@@ -232,12 +232,17 @@ void MainPage::setupConnections()
     connect(m_wordSearch, &WordSearch::searchFailed,
             this, &MainPage::onWordSearchFailed);
 
+    // //单词卡片主题切换的相关信号
+    // connect(m_themeManager, &ThemeManager::themeChanged,
+    //         this, &MainPage::onThemeChangedxxx);
+
     // 设置 UserSession 到 WordSearch
     m_wordSearch->setUserSession(m_userSession);
     // 设置 UserSession 到 WordCollect
     m_wordCollect->setUserSession(m_userSession);
     // 设置 UserSession 到 WordVocabulary
     m_wordVocabulary->setUserSession(m_userSession);
+
 }
 
 void MainPage::onSearchRequested(const QString& query)
@@ -257,20 +262,20 @@ void MainPage::onWordSearchFailed(const QString& error)
 {
     showMessage("搜索失败: " + error, true, 2000);
 
-    // 显示错误信息
-    auto* errorLabel = createLabel("搜索失败: " + error, "normal", "searchErrorLabel");
-    errorLabel->setStyleSheet(QString("QLabel { color: %1; }").arg(getColor("error")));
+    // // 显示错误信息
+    // auto* errorLabel = createLabel("搜索失败: " + error, "normal", "searchErrorLabel");
+    // errorLabel->setStyleSheet(QString("QLabel { color: %1; }").arg(getColor("error")));
 
-    // 清除现有内容并显示错误
-    while (m_contentLayout->count() > 1) {
-        QLayoutItem* item = m_contentLayout->takeAt(0);
-        if (item->widget()) {
-            item->widget()->deleteLater();
-        }
-        delete item;
-    }
+    // // 清除现有内容并显示错误
+    // while (m_contentLayout->count() > 1) {
+    //     QLayoutItem* item = m_contentLayout->takeAt(0);
+    //     if (item->widget()) {
+    //         item->widget()->deleteLater();
+    //     }
+    //     delete item;
+    // }
 
-    m_contentLayout->insertWidget(0, errorLabel);
+    // m_contentLayout->insertWidget(0, errorLabel);
 }
 
 void MainPage::onClearButtonClicked()
@@ -324,6 +329,12 @@ void MainPage::setCurrentWordCard(const WordData& wordData)
 
     // 创建新的单词卡片
     m_currentWordCard = new InteractiveWordCard(wordData,m_wordCollect,m_wordVocabulary, this);
+
+    // 直接获取当前主题并应用
+    int currentTheme = ThemeManager::instance()->currentThemeInt();
+    UITheme uiTheme = (currentTheme == 0) ? UITheme::Light : UITheme::Dark;
+    m_currentWordCard->setUITheme(uiTheme);
+
     m_currentWordCard->setFixedWidth(600);
 
     // 添加到内容布局
@@ -399,3 +410,15 @@ void MainPage::onKeywordChanged(const QString& keyword)
         }
     }
 }
+
+// void MainPage::onThemeChangedxxx(int newTheme)
+// {
+//     qDebug()<<"MainPage::onThemeChangedxxx(int newTheme)";
+//     // 直接使用传入的主题值
+//     UITheme uiTheme = (newTheme == 0) ? UITheme::Light : UITheme::Dark;
+
+//     // 更新当前显示的单词卡片主题
+//     if (m_currentWordCard) {
+//         m_currentWordCard->setUITheme(uiTheme);
+//     }
+// }

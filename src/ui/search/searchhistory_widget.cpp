@@ -47,8 +47,12 @@ SearchHistoryWidget::SearchHistoryWidget(QWidget* parent)
 
 SearchHistoryWidget::~SearchHistoryWidget()
 {
+    qDebug()<<"m_historyCleared= "<<m_historyCleared;
     // 保存历史记录
-    saveHistory();
+    if(!m_historyCleared && !m_historyItems.isEmpty()){
+        saveHistory();
+
+    }
 
     // 清理弹出窗口
     if (m_historyContainer) {
@@ -56,6 +60,7 @@ SearchHistoryWidget::~SearchHistoryWidget()
     }
 
     delete d;
+    qDebug()<<"SearchHistoryWidget 析构完成";
 }
 
 void SearchHistoryWidget::initHistoryUI()
@@ -365,7 +370,6 @@ void SearchHistoryWidget::adjustHistoryPosition()
     m_historyContainer->setGeometry(x, y, containerWidth, containerHeight);
 }
 
-// ... 其余函数保持不变（addHistory, clearHistory, onHistoryItemClicked等）
 
 void SearchHistoryWidget::addHistory(const QString& keyword)
 {
@@ -409,10 +413,32 @@ void SearchHistoryWidget::addHistory(const QString& keyword)
 
 void SearchHistoryWidget::clearHistory()
 {
+    // 1. 清空内存中的历史记录
     m_historyItems.clear();
+
+    // 2. 清空UI中的历史记录
     m_historyList->clear();
+
+    // 3. **关键：删除本地存储的历史记录**
+    QSettings settings;
+    QString key = QString("SearchHistory/%1").arg("default");  // 确保与loadHistory()中使用的键完全一致
+    settings.remove(key);
+    settings.sync();  // 立即同步到磁盘
+
+    // 4. **添加双重验证**
+    if (settings.contains(key)) {
+        qDebug() << "警告：历史记录键仍然存在，尝试强制删除";
+        settings.setValue(key, "");  // 设置为空值
+        settings.sync();
+    }
+
+    // 5. 发出历史记录已清除的信号
     emit historyCleared();
-    saveHistory();
+
+    // 6. **添加验证日志**
+    qDebug() << "=== clearHistory 完成 ===";
+    qDebug() << "本地存储历史记录是否已删除:" << !settings.contains(key);
+    qDebug() << "=========================";
 }
 
 int SearchHistoryWidget::historyCount() const
@@ -602,9 +628,9 @@ void SearchHistoryWidget::onClearHistoryClicked()
 {
     clearHistory();
     hideHistory();
-
+    m_historyCleared = true;  // 设置清除标志
     // 显示消息
-    showMessage("已清除搜索历史", false, 1500);
+    //showMessage("已清除搜索历史", false, 1500);
 }
 
 void SearchHistoryWidget::updateHistoryList()

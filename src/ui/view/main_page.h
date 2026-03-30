@@ -5,6 +5,7 @@
 #include "word/interactive_wordcard.h"
 #include "system/system_sidebar.h"
 #include "search/searchhistory_widget.h"  // 添加搜索历史组件
+#include"system/theme_manager.h"
 #include"word_search.h"
 #include"word_collect.h"
 #include"word_vocabulary.h"
@@ -60,6 +61,9 @@ private slots:
     //处理关键词变化的槽函数
     void onKeywordChanged(const QString& keyword);
 
+    // //处理卡片主题变化
+    // void onThemeChangedxxx(int newTheme);
+
 
 private:
     void setupHeader();
@@ -88,6 +92,7 @@ private:
     WordSearch* m_wordSearch{nullptr};
     WordCollect* m_wordCollect{nullptr};
     WordVocabulary* m_wordVocabulary{nullptr};
+    ThemeManager* m_themeManager{nullptr};
 
 };
 

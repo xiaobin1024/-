@@ -98,6 +98,7 @@ private:
     bool m_historyVisible{false};       // 历史列表是否可见
     bool m_autoShowHistory{true};       // 是否自动显示历史记录
     bool m_autoHideHistory{true};       // 是否自动隐藏历史记录
+    bool m_historyCleared{false};             // 是否清除历史记录
 
     // 定时器
     QTimer* m_hideTimer{nullptr};
