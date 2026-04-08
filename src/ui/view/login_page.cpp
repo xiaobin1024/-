@@ -17,6 +17,7 @@ LoginPage::LoginPage(QWidget* parent)
     : BaseWidget(parent)
     , m_userSession(UserSession::instance())
     , m_layoutSetupDone(false)
+    ,logoutFlage(false)
 {
     qDebug() << "LoginPage 创建";
     initialize();
@@ -216,14 +217,16 @@ void LoginPage::connectSignals() {
                               this, &LoginPage::onLoginSuccess);
     bool connected2 = connect(m_userSession, &UserSession::loginFailed,
                               this, &LoginPage::onLoginFailed);
-    bool connected3 = connect(m_userSession, &UserSession::userChanged,
-                              this, &LoginPage::onUserChanged);
+    // bool connected3 = connect(m_userSession, &UserSession::userChanged,
+    //                           this, &LoginPage::onUserChanged);
+    bool connected3 = connect(m_userSession,&UserSession::logoutChange,
+                              this,&LoginPage::onLogoutSuccess);
      m_signalsConnected = true;
 
     qDebug() << "LoginPage 信号连接状态:"
              << "loginSuccess:" << connected1
-             << "loginFailed:" << connected2
-             << "userChanged:" << connected3;
+              << "loginFailed:" << connected2
+              << "logoutChange:" << connected3;
 }
 
 void LoginPage::onLoginButtonClicked()
@@ -272,6 +275,8 @@ void LoginPage::onLoginSuccess(const UserData& user) {
 
     showMessage(QString("登录成功！欢迎回来，%1").arg(user.username()), false, 1500);
 
+    qDebug()<<"user.id = "<<user.userId();
+
     emit loginSuccess(user);
     qDebug() << "LoginPage 发射 loginSuccess 信号";
 
@@ -292,15 +297,15 @@ void LoginPage::onLoginFailed(const QString& error)
     m_passwordEdit->setFocus();
 }
 
-void LoginPage::onUserChanged(const UserData& user)
-{
-    if (user.isLoggedIn()) {
-        onLoginSuccess(user);
-    } else if (!user.isValid()) {
-        // 用户登出或注销
-        // 可以在这里做一些清理工作
-    }
-}
+// void LoginPage::onUserChanged(const UserData& user)
+// {
+//     if (user.isLoggedIn()) {
+//         onLoginSuccess(user);
+//     } else if (!user.isValid()) {
+//         // 用户登出或注销
+//         // 可以在这里做一些清理工作
+//     }
+// }
 
 void LoginPage::validateInput()
 {
@@ -418,13 +423,15 @@ void LoginPage::onPageShow()
         // 检查内存中的登录状态（比如从其他页面返回）
         UserData user = m_userSession->currentUser();
         emit loginSuccess(user);
-    } else if (m_userSession->autoLoginFromSavedSession()) {
+    } else if (logoutFlage==false) {
         // 尝试从本地文件恢复登录状态（比如程序重启后）
-        UserData user = m_userSession->currentUser();
-        emit loginSuccess(user);
-    } else {
-        // 没有登录状态，设置焦点到输入框
-        m_usernameEdit->setFocus();
+        if( m_userSession->autoLoginFromSavedSession()){
+            UserData user = m_userSession->currentUser();
+            emit loginSuccess(user);
+        }else{
+            // 没有登录状态，设置焦点到输入框
+            m_usernameEdit->setFocus();
+        }
     }
 }
 
@@ -432,4 +439,9 @@ void LoginPage::onPageHide()
 {
     BaseWidget::onPageHide();
     qDebug() << "LoginPage 页面隐藏";
+}
+
+void LoginPage::onLogoutSuccess(bool flage)
+{
+    logoutFlage=flage;
 }

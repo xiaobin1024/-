@@ -13,9 +13,10 @@ public:
         // 可以添加更多私有数据
 };
 
-SearchHistoryWidget::SearchHistoryWidget(QWidget* parent)
+SearchHistoryWidget::SearchHistoryWidget(QWidget* parent,UserSession* userSession)
     : SearchBase(parent)
     , d(new SearchHistoryWidgetPrivate())
+    ,m_userSession(userSession)
 {
     qDebug() << "=== SearchHistoryWidget 构造函数开始 ===";
 
@@ -25,8 +26,10 @@ SearchHistoryWidget::SearchHistoryWidget(QWidget* parent)
     setupHistoryConnections();
     qDebug() << "setupHistoryConnections() 完成";
 
-    loadHistory();
-    qDebug() << "loadHistory() 完成";
+    // loadHistory();
+    // qDebug() << "loadHistory() 完成";
+
+
 
     // 创建隐藏定时器
     qDebug() << "创建隐藏定时器";
@@ -47,12 +50,13 @@ SearchHistoryWidget::SearchHistoryWidget(QWidget* parent)
 
 SearchHistoryWidget::~SearchHistoryWidget()
 {
-    qDebug()<<"m_historyCleared= "<<m_historyCleared;
-    // 保存历史记录
-    if(!m_historyCleared && !m_historyItems.isEmpty()){
-        saveHistory();
+    // qDebug()<<"m_historyCleared= "<<m_historyCleared;
+    // qDebug()<<"m_historyItems= "<<m_historyItems.size();
+    // // 保存历史记录
+    // if(!m_historyCleared){
+    //     saveHistory();
 
-    }
+    // }
 
     // 清理弹出窗口
     if (m_historyContainer) {
@@ -141,6 +145,9 @@ void SearchHistoryWidget::setupHistoryConnections()
     // 清除历史按钮
     connect(m_clearHistoryButton, &QPushButton::clicked,
             this, &SearchHistoryWidget::onClearHistoryClicked);
+
+    connect(m_userSession, &UserSession::loginSuccess,
+            this, &SearchHistoryWidget::onLoginSuccess);
 
     // 监听输入框文本变化
     connect(inputField(), &QLineEdit::textChanged, this, [this](const QString& text) {
@@ -306,6 +313,9 @@ void SearchHistoryWidget::showHistory()
         return;
     }
 
+    // 确保历史记录是最新的
+    //fetchHistoryFromSession();
+
     if (!m_historyVisible) {
         // 调整位置
         adjustHistoryPosition();
@@ -370,12 +380,30 @@ void SearchHistoryWidget::adjustHistoryPosition()
     m_historyContainer->setGeometry(x, y, containerWidth, containerHeight);
 }
 
-
 void SearchHistoryWidget::addHistory(const QString& keyword)
 {
+    qDebug() << "SearchHistoryWidget::addHistory(const QString& keyword) - 开始执行";
+    qDebug() << "keyword = " << keyword.trimmed();
+
     if (keyword.trimmed().isEmpty()) {
+        qDebug() << "搜索关键词为空，终止添加历史记录";
         return;
     }
+
+    // 更新本地历史记录列表（UI层）
+    updateLocalHistory(keyword);
+
+    // 更新UI显示
+    qDebug() << "更新UI显示历史记录";
+    updateHistoryList();
+
+
+    qDebug() << "SearchHistoryWidget::addHistory(const QString& keyword) - 执行完成";
+}
+
+void SearchHistoryWidget::updateLocalHistory(const QString& keyword)
+{
+    qDebug() << "SearchHistoryWidget::updateLocalHistory - 开始执行";
 
     // 查找是否已存在相同关键词
     auto it = std::find_if(m_historyItems.begin(), m_historyItems.end(),
@@ -384,61 +412,87 @@ void SearchHistoryWidget::addHistory(const QString& keyword)
                            });
 
     if (it != m_historyItems.end()) {
+        qDebug() << "找到匹配的关键词，更新现有记录";
+        qDebug() << "更新前 - keyword: " << it->keyword
+                 << ", timestamp: " << it->timestamp.toString(Qt::ISODate)
+                 << ", searchCount: " << it->searchCount;
+
         // 已存在，更新次数和时间戳
         it->searchCount++;
         it->timestamp = QDateTime::currentDateTime();
+
+        qDebug() << "更新后 - keyword: " << it->keyword
+                 << ", timestamp: " << it->timestamp.toString(Qt::ISODate)
+                 << ", searchCount: " << it->searchCount;
     } else {
+        qDebug() << "未找到匹配关键词，创建新记录";
         // 新记录
         HistoryItem newItem;
         newItem.keyword = keyword;
         newItem.timestamp = QDateTime::currentDateTime();
         newItem.searchCount = 1;
         m_historyItems.append(newItem);
+
+        qDebug() << "新记录已添加 - keyword: " << newItem.keyword
+                 << ", timestamp: " << newItem.timestamp.toString(Qt::ISODate)
+                 << ", searchCount: " << newItem.searchCount;
     }
 
     // 确保顺序（按时间倒序）
+    qDebug() << "确保历史记录顺序（按时间倒序）";
     ensureHistoryOrder();
 
     // 限制数量
+    qDebug() << "当前历史记录数量: " << m_historyItems.size()
+             << ", 最大限制: " << m_maxHistoryCount;
     if (m_historyItems.size() > m_maxHistoryCount) {
+        qDebug() << "历史记录数量超过限制，进行截断";
         m_historyItems = m_historyItems.mid(0, m_maxHistoryCount);
     }
 
-    // 更新UI
-    updateHistoryList();
-
-    // 保存到设置
-    saveHistory();
+    qDebug() << "SearchHistoryWidget::updateLocalHistory - 执行完成";
 }
 
-void SearchHistoryWidget::clearHistory()
-{
-    // 1. 清空内存中的历史记录
-    m_historyItems.clear();
+// void SearchHistoryWidget::clearHistory()
+// {
+//     // 1. 清空内存中的历史记录
+//     m_historyItems.clear();
 
-    // 2. 清空UI中的历史记录
+//     // 2. 清空UI中的历史记录
+//     m_historyList->clear();
+
+//     // 3. **关键：删除本地存储的历史记录**
+//     QSettings settings;
+//     QString key = QString("SearchHistory/%1").arg("default");  // 确保与loadHistory()中使用的键完全一致
+//     settings.remove(key);
+//     settings.sync();  // 立即同步到磁盘
+
+//     // 4. **添加双重验证**
+//     if (settings.contains(key)) {
+//         qDebug() << "警告：历史记录键仍然存在，尝试强制删除";
+//         settings.setValue(key, "");  // 设置为空值
+//         settings.sync();
+//     }
+
+//     // 5. 发出历史记录已清除的信号
+//     emit historyCleared();
+
+//     // 6. **添加验证日志**
+//     qDebug() << "=== clearHistory 完成 ===";
+//     qDebug() << "本地存储历史记录是否已删除:" << !settings.contains(key);
+//     qDebug() << "=========================";
+// }
+
+void SearchHistoryWidget::clearHistory() {
+    m_historyItems.clear();
     m_historyList->clear();
 
-    // 3. **关键：删除本地存储的历史记录**
-    QSettings settings;
-    QString key = QString("SearchHistory/%1").arg("default");  // 确保与loadHistory()中使用的键完全一致
-    settings.remove(key);
-    settings.sync();  // 立即同步到磁盘
-
-    // 4. **添加双重验证**
-    if (settings.contains(key)) {
-        qDebug() << "警告：历史记录键仍然存在，尝试强制删除";
-        settings.setValue(key, "");  // 设置为空值
-        settings.sync();
+    if (m_userSession->isLoggedIn()) {
+       m_userSession->clearSearchHistory();
     }
 
-    // 5. 发出历史记录已清除的信号
+    m_historyCleared = true;
     emit historyCleared();
-
-    // 6. **添加验证日志**
-    qDebug() << "=== clearHistory 完成 ===";
-    qDebug() << "本地存储历史记录是否已删除:" << !settings.contains(key);
-    qDebug() << "=========================";
 }
 
 int SearchHistoryWidget::historyCount() const
@@ -471,130 +525,169 @@ int SearchHistoryWidget::maxHistoryCount() const
     return m_maxHistoryCount;
 }
 
-void SearchHistoryWidget::saveHistory(const QString& storageKey)
-{
-    qDebug() << "=== saveHistory 开始 ===";
-    qDebug() << "存储键:" << storageKey;
-    qDebug() << "历史记录数量:" << m_historyItems.size();
+// void SearchHistoryWidget::saveHistory(const QString& storageKey)
+// {
+//     qDebug() << "=== saveHistory 开始 ===";
+//     qDebug() << "存储键:" << storageKey;
+//     qDebug() << "历史记录数量:" << m_historyItems.size();
 
-    if (m_historyItems.isEmpty()) {
-        qDebug() << "历史记录为空，不保存";
-        return;
-    }
+//     if (m_historyItems.isEmpty()) {
+//         qDebug() << "历史记录为空，不保存";
+//         return;
+//     }
 
-    QSettings settings;
-    qDebug() << "QSettings 组织名:" << settings.organizationName();
-    qDebug() << "QSettings 应用名:" << settings.applicationName();
-    qDebug() << "QSettings 格式:" << settings.format();
-    qDebug() << "QSettings 文件名:" << settings.fileName();
+//     QSettings settings;
+//     qDebug() << "QSettings 组织名:" << settings.organizationName();
+//     qDebug() << "QSettings 应用名:" << settings.applicationName();
+//     qDebug() << "QSettings 格式:" << settings.format();
+//     qDebug() << "QSettings 文件名:" << settings.fileName();
 
-    QJsonArray historyArray;
-    for (int i = 0; i < m_historyItems.size(); ++i) {
-        const auto& item = m_historyItems[i];
-        qDebug() << "处理历史记录" << i << ":";
-        qDebug() << "  关键词:" << item.keyword;
-        qDebug() << "  时间戳:" << item.timestamp.toString(Qt::ISODate);
-        qDebug() << "  搜索次数:" << item.searchCount;
+//     QJsonArray historyArray;
+//     for (int i = 0; i < m_historyItems.size(); ++i) {
+//         const auto& item = m_historyItems[i];
+//         qDebug() << "处理历史记录" << i << ":";
+//         qDebug() << "  关键词:" << item.keyword;
+//         qDebug() << "  时间戳:" << item.timestamp.toString(Qt::ISODate);
+//         qDebug() << "  搜索次数:" << item.searchCount;
 
-        QJsonObject obj;
-        obj["keyword"] = item.keyword;
-        obj["timestamp"] = item.timestamp.toString(Qt::ISODate);
-        obj["count"] = item.searchCount;
-        historyArray.append(obj);
-    }
+//         QJsonObject obj;
+//         obj["keyword"] = item.keyword;
+//         obj["timestamp"] = item.timestamp.toString(Qt::ISODate);
+//         obj["count"] = item.searchCount;
+//         historyArray.append(obj);
+//     }
 
-    QJsonDocument doc(historyArray);
-    QString jsonString = doc.toJson(QJsonDocument::Compact);
+//     QJsonDocument doc(historyArray);
+//     QString jsonString = doc.toJson(QJsonDocument::Compact);
 
-    qDebug() << "生成的JSON字符串:" << jsonString;
-    qDebug() << "JSON字符串长度:" << jsonString.length();
+//     qDebug() << "生成的JSON字符串:" << jsonString;
+//     qDebug() << "JSON字符串长度:" << jsonString.length();
 
-    QString key = QString("SearchHistory/%1").arg(storageKey);
-    qDebug() << "保存键:" << key;
+//     QString key = QString("SearchHistory/%1").arg(storageKey);
+//     qDebug() << "保存键:" << key;
 
-    settings.setValue(key, jsonString);
-    settings.sync();  // 立即同步到磁盘
+//     settings.setValue(key, jsonString);
+//     settings.sync();  // 立即同步到磁盘
 
-    qDebug() << "设置值后立即检查:";
-    bool contains = settings.contains(key);
-    qDebug() << "设置中是否包含键" << key << ":" << contains;
+//     qDebug() << "设置值后立即检查:";
+//     bool contains = settings.contains(key);
+//     qDebug() << "设置中是否包含键" << key << ":" << contains;
 
-    if (contains) {
-        QString savedValue = settings.value(key).toString();
-        qDebug() << "保存的值:" << savedValue.left(100) << "...";
-    }
+//     if (contains) {
+//         QString savedValue = settings.value(key).toString();
+//         qDebug() << "保存的值:" << savedValue.left(100) << "...";
+//     }
 
-    qDebug() << "=== saveHistory 完成 ===";
+//     qDebug() << "=== saveHistory 完成 ===";
+// }
+
+void SearchHistoryWidget::saveHistory() {
+    qDebug() << "SearchHistoryWidget::saveHistory() - 开始执行";
+
+    // if (m_userSession->isLoggedIn() && !m_historyCleared) {
+    //     qDebug() << "用户已登录，更新会话历史记录";
+
+    //     // 直接获取已更新的用户数据（历史记录已通过addSearchHistoryItem添加）
+    //     UserData currentUser = m_userSession->currentUser();
+
+    //     // 直接调用会话层更新用户数据
+    //     m_userSession->updateUserData(currentUser);
+
+    // } else {
+    //     qDebug() << "用户未登录或历史记录已清除，无需保存";
+    // }
+
+    qDebug() << "SearchHistoryWidget::saveHistory() - 执行完成";
 }
 
-void SearchHistoryWidget::loadHistory(const QString& storageKey)
-{
-    qDebug() << "=== loadHistory 开始 ===";
-    qDebug() << "存储键:" << storageKey;
+// void SearchHistoryWidget::loadHistory(const QString& storageKey)
+// {
+//     qDebug() << "=== loadHistory 开始 ===";
+//     qDebug() << "存储键:" << storageKey;
 
-    QSettings settings;
-    qDebug() << "QSettings 组织名:" << settings.organizationName();
-    qDebug() << "QSettings 应用名:" << settings.applicationName();
-    qDebug() << "QSettings 文件名:" << settings.fileName();
+//     QSettings settings;
+//     qDebug() << "QSettings 组织名:" << settings.organizationName();
+//     qDebug() << "QSettings 应用名:" << settings.applicationName();
+//     qDebug() << "QSettings 文件名:" << settings.fileName();
 
-    QString key = QString("SearchHistory/%1").arg(storageKey);
-    qDebug() << "加载键:" << key;
+//     QString key = QString("SearchHistory/%1").arg(storageKey);
+//     qDebug() << "加载键:" << key;
 
-    if (!settings.contains(key)) {
-        qDebug() << "设置中不包含键" << key;
-        qDebug() << "所有可用键:";
-        QStringList allKeys = settings.allKeys();
-        for (const QString& k : allKeys) {
-            qDebug() << "  " << k;
-        }
-        return;
-    }
+//     if (!settings.contains(key)) {
+//         qDebug() << "设置中不包含键" << key;
+//         qDebug() << "所有可用键:";
+//         QStringList allKeys = settings.allKeys();
+//         for (const QString& k : allKeys) {
+//             qDebug() << "  " << k;
+//         }
+//         return;
+//     }
 
-    QString jsonString = settings.value(key).toString();
-    qDebug() << "加载的JSON字符串:" << jsonString;
-    qDebug() << "JSON字符串长度:" << jsonString.length();
+//     QString jsonString = settings.value(key).toString();
+//     qDebug() << "加载的JSON字符串:" << jsonString;
+//     qDebug() << "JSON字符串长度:" << jsonString.length();
 
-    QJsonDocument doc = QJsonDocument::fromJson(jsonString.toUtf8());
+//     QJsonDocument doc = QJsonDocument::fromJson(jsonString.toUtf8());
 
-    if (doc.isNull() || !doc.isArray()) {
-        qDebug() << "JSON解析失败或不是数组";
-        return;
-    }
+//     if (doc.isNull() || !doc.isArray()) {
+//         qDebug() << "JSON解析失败或不是数组";
+//         return;
+//     }
 
-    m_historyItems.clear();
-    QJsonArray array = doc.array();
-    qDebug() << "JSON数组大小:" << array.size();
+//     m_historyItems.clear();
+//     QJsonArray array = doc.array();
+//     qDebug() << "JSON数组大小:" << array.size();
 
-    for (int i = 0; i < array.size(); ++i) {
-        QJsonValue value = array.at(i);
-        if (value.isObject()) {
-            QJsonObject obj = value.toObject();
+//     for (int i = 0; i < array.size(); ++i) {
+//         QJsonValue value = array.at(i);
+//         if (value.isObject()) {
+//             QJsonObject obj = value.toObject();
 
+//             HistoryItem item;
+//             item.keyword = obj["keyword"].toString();
+//             item.timestamp = QDateTime::fromString(obj["timestamp"].toString(), Qt::ISODate);
+//             item.searchCount = obj["count"].toInt();
+
+//             qDebug() << "解析历史记录" << i << ":";
+//             qDebug() << "  关键词:" << item.keyword;
+//             qDebug() << "  时间戳:" << item.timestamp.toString(Qt::ISODate);
+//             qDebug() << "  时间戳是否有效:" << item.timestamp.isValid();
+//             qDebug() << "  搜索次数:" << item.searchCount;
+
+//             if (!item.keyword.isEmpty() && item.timestamp.isValid()) {
+//                 m_historyItems.append(item);
+//                 qDebug() << "  添加成功";
+//             } else {
+//                 qDebug() << "  记录无效，跳过";
+//             }
+//         }
+//     }
+
+//     ensureHistoryOrder();
+//     updateHistoryList();
+
+//     qDebug() << "加载后历史记录数量:" << m_historyItems.size();
+//     qDebug() << "=== loadHistory 完成 ===";
+// }
+
+void SearchHistoryWidget::loadHistory() {
+    if (m_userSession->isLoggedIn()) {
+        UserData currentUser = m_userSession->currentUser();
+        QJsonArray history = currentUser.searchHistory();
+
+        m_historyItems.clear();
+        for (int i = 0; i < history.size(); ++i) {
+            QJsonObject obj = history[i].toObject();
             HistoryItem item;
             item.keyword = obj["keyword"].toString();
             item.timestamp = QDateTime::fromString(obj["timestamp"].toString(), Qt::ISODate);
-            item.searchCount = obj["count"].toInt();
-
-            qDebug() << "解析历史记录" << i << ":";
-            qDebug() << "  关键词:" << item.keyword;
-            qDebug() << "  时间戳:" << item.timestamp.toString(Qt::ISODate);
-            qDebug() << "  时间戳是否有效:" << item.timestamp.isValid();
-            qDebug() << "  搜索次数:" << item.searchCount;
-
-            if (!item.keyword.isEmpty() && item.timestamp.isValid()) {
-                m_historyItems.append(item);
-                qDebug() << "  添加成功";
-            } else {
-                qDebug() << "  记录无效，跳过";
-            }
+            item.searchCount = obj["searchCount"].toInt();
+            m_historyItems.append(item);
         }
+
+        // 更新UI
+        updateHistoryList();
     }
-
-    ensureHistoryOrder();
-    updateHistoryList();
-
-    qDebug() << "加载后历史记录数量:" << m_historyItems.size();
-    qDebug() << "=== loadHistory 完成 ===";
 }
 
 bool SearchHistoryWidget::isHistoryVisible() const
@@ -618,9 +711,17 @@ void SearchHistoryWidget::onHistoryItemClicked(QListWidgetItem* item)
 
 void SearchHistoryWidget::onSearchPerformed()
 {
+    qDebug() << "SearchHistoryWidget::onSearchPerformed()";
     QString keyword = this->keyword();
+
     if (!keyword.trimmed().isEmpty()) {
+        // 仅更新UI层历史记录
         addHistory(keyword);
+
+        // 通知数据层更新（异步操作，不等待结果）
+        if (m_userSession->isLoggedIn()) {
+            m_userSession->addSearchHistory(keyword);
+        }
     }
 }
 
@@ -662,4 +763,79 @@ void SearchHistoryWidget::ensureHistoryOrder()
               [](const HistoryItem& a, const HistoryItem& b) {
                   return a.timestamp > b.timestamp;
               });
+}
+
+void SearchHistoryWidget::fetchHistoryFromSession()
+{
+    // 检查用户会话是否有效
+    if (!m_userSession) {
+        qDebug() << "错误：用户会话对象为空，无法获取历史记录";
+        return;
+    }
+
+    if (!m_userSession->isLoggedIn()) {
+        qDebug() << "警告：用户未登录，无法获取历史记录";
+        return;
+    }
+
+    qDebug() << "开始从用户会话获取搜索历史记录...";
+
+    // 从用户会话中获取历史记录（JSON格式）
+    QJsonArray history = m_userSession->currentSearchHistory();
+
+    // 输出获取到的历史记录数量
+    qDebug() << "成功获取到" << history.size() << "条历史记录";
+
+    // 转换JSON数据为HistoryItem结构体列表
+    m_historyItems = convertJsonToHistoryItems(history);
+
+    // 输出转换后的数据量
+    qDebug() << "JSON数据已转换为" << m_historyItems.size() << "个HistoryItem对象";
+
+    // 更新UI显示
+    updateHistoryList();
+
+    qDebug() << "历史记录列表UI已更新";
+}
+QList<HistoryItem> SearchHistoryWidget::convertJsonToHistoryItems(const QJsonArray& jsonArray)
+{
+    QList<HistoryItem> items;
+    for (const QJsonValue& value : jsonArray) {
+        if (value.isObject()) {
+            QJsonObject obj = value.toObject();
+
+            // 验证必要字段是否存在
+            if (!obj.contains("keyword") || !obj.contains("timestamp")) {
+                qWarning() << "Invalid history item JSON, missing required fields";
+                continue;
+            }
+
+            HistoryItem item;
+            item.keyword = obj["keyword"].toString();
+
+            // 验证时间戳格式
+            QString timestampStr = obj["timestamp"].toString();
+            item.timestamp = QDateTime::fromString(timestampStr, Qt::ISODate);
+            if (!item.timestamp.isValid()) {
+                qWarning() << "Invalid timestamp format:" << timestampStr;
+                item.timestamp = QDateTime::currentDateTime();
+            }
+
+            // 处理searchCount可能不存在的情况
+            item.searchCount = obj.contains("searchCount") ? obj["searchCount"].toInt(0) : 1;
+
+            items.append(item);
+        }
+    }
+    return items;
+}
+
+void SearchHistoryWidget::onLoginSuccess(const UserData& user)
+{
+    qDebug() << "SearchHistoryWidget收到登录成功信号，开始获取历史记录";
+    if(user.isLoggedIn())
+    {
+        fetchHistoryFromSession();
+    }
+
 }

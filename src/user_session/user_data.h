@@ -4,6 +4,7 @@
 #include <QString>
 #include <QDateTime>
 #include <QJsonObject>
+#include<QJsonArray>
 
 // 用户角色
 enum class UserRole {
@@ -47,13 +48,21 @@ public:
     // 验证
     bool isValid() const;
 
+    // 添加搜索历史记录相关方法
+    QJsonArray searchHistory() const;
+    void setSearchHistory(const QJsonArray& history);
+    void addSearchHistoryItem(const QString& keyword);
+    void clearSearchHistory();
+
 private:
     QString m_userId;
     QString m_username;
+    QString m_password;
     UserRole m_role = UserRole::Guest;
     QDateTime m_loginTime;
     QDateTime m_lastActiveTime;
     bool m_loggedIn = false;
+    QJsonObject m_userData;  // 存储所有用户数据，包括历史记录
 };
 
 #endif // USER_DATA_H

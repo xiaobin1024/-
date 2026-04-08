@@ -45,7 +45,8 @@ private slots:
     // UserSession 信号处理
     void onLoginSuccess(const UserData& user);
     void onLoginFailed(const QString& error);
-    void onUserChanged(const UserData& user);
+    //void onUserChanged(const UserData& user);
+    void onLogoutSuccess(const bool flage);
 
 private:
     void setupLoginForm();
@@ -80,6 +81,8 @@ private:
     UserData m_lastLoggedInUser;  // 记录最后登录的用户
     bool m_processingLogin{false};
     bool m_signalsConnected{false};  //标记信号是否已连接
+
+    bool logoutFlage{false};    //标记是否已经退出
 };
 
 #endif // LOGIN_PAGE_H

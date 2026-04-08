@@ -315,20 +315,20 @@ void MessageDispatcher::dispatchMessage(const CoreMessage::Msg& message)
 bool MessageDispatcher::sendMessage(CoreMessage::MsgType type, const QString& name,
                                     const QString& text)
 {
-    if (!m_started) {
-        emit errorOccurred("消息分发器未启动");
-        return false;
-    }
+    // if (!m_started) {
+    //     emit errorOccurred("消息分发器未启动");
+    //     return false;
+    // }
 
-    if (!m_networkManager) {
-        emit errorOccurred("网络管理器未设置");
-        return false;
-    }
+    // if (!m_networkManager) {
+    //     emit errorOccurred("网络管理器未设置");
+    //     return false;
+    // }
 
-    if (!m_networkConnected) {
-        emit errorOccurred("网络未连接");
-        return false;
-    }
+    // if (!m_networkConnected) {
+    //     emit errorOccurred("网络未连接");
+    //     return false;
+    // }
 
     CoreMessage::Msg msg;
     msg.type = type;

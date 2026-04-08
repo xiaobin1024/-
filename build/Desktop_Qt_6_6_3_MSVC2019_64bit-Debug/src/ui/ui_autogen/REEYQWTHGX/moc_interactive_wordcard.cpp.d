@@ -8,6 +8,7 @@ C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-
   C:/Users/86152/Desktop/network_dictionary/src/word_function/word_data.h \
   C:/Users/86152/Desktop/network_dictionary/src/word_function/word_vocabulary.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/QDateTime \
+  D:/qt/6.6.3/msvc2019_64/include/QtCore/QJsonArray \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/QJsonObject \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/QMap \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/QObject \
@@ -67,6 +68,7 @@ C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qiodevicebase.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qiterable.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qiterator.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtCore/qjsonarray.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qjsonobject.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qjsonvalue.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qlatin1stringview.h \

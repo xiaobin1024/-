@@ -12,6 +12,7 @@
  * 5. 历史记录持久化存储
  */
 #include "search_base.h"
+#include"user_session.h"
 #include<QListWidget>
 #include <QTimer>
 #include<QDateTime>
@@ -20,17 +21,24 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
+// 历史记录数据结构
+struct HistoryItem {
+    QString keyword;
+    QDateTime timestamp;
+    int searchCount{0};
+};
+
 class SearchHistoryWidget:public SearchBase
 {
     Q_OBJECT
 public:
-    explicit SearchHistoryWidget(QWidget* parent = nullptr);
+    explicit SearchHistoryWidget(QWidget* parent = nullptr,UserSession* userSession=nullptr);
     ~SearchHistoryWidget();
 
 
     // 历史记录管理
     void addHistory(const QString& keyword);
-    void clearHistory();
+    //void clearHistory();
     int historyCount() const;
     QStringList getHistory() const;
 
@@ -39,8 +47,8 @@ public:
     int maxHistoryCount() const;
 
     // 持久化
-    void saveHistory(const QString& storageKey = "search_history");
-    void loadHistory(const QString& storageKey = "search_history");
+    //void saveHistory(const QString& storageKey = "search_history");
+    //void loadHistory(const QString& storageKey = "search_history");
 
     // 控制历史列表显示
     void showHistory();
@@ -51,7 +59,11 @@ public:
     QListWidget* getHistoryList() const { return m_historyList; }
     QWidget* getHistoryContainer() const { return m_historyContainer; }
 
+    void loadHistory();
+    void saveHistory();
+    void clearHistory();
 
+    QList<HistoryItem>convertJsonToHistoryItems(const QJsonArray& jsonArray);
 signals:
     // 新增信号
     void historyItemClicked(const QString& keyword);
@@ -69,6 +81,8 @@ private slots:
     void onInputLostFocus();   // 输入框失去焦点
     void onSearchPerformed();  // 搜索完成
     void onClearHistoryClicked();  // 清除历史记录
+
+    void onLoginSuccess(const UserData& user);
 private:
     void initHistoryUI();
     void setupHistoryConnections();
@@ -77,12 +91,12 @@ private:
     void adjustHistoryPosition();
     void ensureHistoryOrder();
 
-    // 历史记录数据结构
-    struct HistoryItem {
-        QString keyword;
-        QDateTime timestamp;
-        int searchCount{0};
-    };
+
+    void fetchHistoryFromSession();
+
+    void updateLocalHistory(const QString& keyword);
+
+
 
     // UI组件
     QListWidget* m_historyList{nullptr};
@@ -91,14 +105,14 @@ private:
     QPushButton* m_clearHistoryButton{nullptr};
 
     // 历史记录存储
-    QList<HistoryItem> m_historyItems;
+    //QList<HistoryItem> m_historyItems;
 
     // 配置
     int m_maxHistoryCount{5};           // 最大历史记录数
     bool m_historyVisible{false};       // 历史列表是否可见
     bool m_autoShowHistory{true};       // 是否自动显示历史记录
     bool m_autoHideHistory{true};       // 是否自动隐藏历史记录
-    bool m_historyCleared{false};             // 是否清除历史记录
+    //bool m_historyCleared{false};             // 是否清除历史记录
 
     // 定时器
     QTimer* m_hideTimer{nullptr};
@@ -107,6 +121,9 @@ private:
     class SearchHistoryWidgetPrivate;
     SearchHistoryWidgetPrivate* d;
 
+    UserSession* m_userSession{nullptr};
+    QList<HistoryItem> m_historyItems;
+    bool m_historyCleared = false;
 };
 
 #endif // SEARCHHISTORY_WIDGET_H

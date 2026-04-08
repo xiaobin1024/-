@@ -98,7 +98,7 @@ void MainPage::setupHeader()
 void MainPage::setupSearchSection()
 {
     // 创建搜索组件
-    m_searchWidget = new SearchHistoryWidget(this);  // 使用 this 作为父对象
+    m_searchWidget = new SearchHistoryWidget(this,m_userSession);  // 使用 this 作为父对象
     m_searchWidget->setObjectName("searchWidget");
     m_searchWidget->setMinimumHeight(50);
     //m_searchWidget->setMaximumWidth(500);

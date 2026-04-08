@@ -64,7 +64,14 @@ public:
     static UserData deserializeUserData(const QString& data);
 
     // 重置
-    void reset(bool clearSessionFile = true);
+    void reset();
+
+    // 添加更新用户数据的方法
+    void updateUserData(const UserData& userData);
+
+    void addSearchHistory(const QString& keyword);
+    QJsonArray currentSearchHistory() const;
+    void clearSearchHistory();
 
 signals:
     // 状态变化
@@ -72,6 +79,7 @@ signals:
     void loginSuccess(const UserData& user);
     void loginFailed(const QString& error);
     void logoutSuccess();
+    void logoutChange(const bool flage);
     void userChanged(const UserData& user);
     void registerSuccess(const QString& username);
     void registerFailed(const QString& error);
@@ -102,5 +110,8 @@ private:
     UserData m_currentUser;
     QJsonObject m_userData;
     bool m_initialized = false;
+    bool logoutFlage=false;
+
+    QString m_name,m_password;
 };
 #endif
