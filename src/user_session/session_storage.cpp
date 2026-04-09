@@ -31,13 +31,6 @@ void SessionStorage::setUserId(const QString& userId)
     }
 }
 
-// void SessionStorage::setFileName(const QString& name)
-// {
-//     if (m_fileName != name) {
-//         m_fileName = name;
-//     }
-// }
-
 QString SessionStorage::storagePath() const
 {
     return m_storagePath;
@@ -47,84 +40,6 @@ QString SessionStorage::userId() const
 {
     return m_userId;
 }
-
-// QString SessionStorage::fileName() const
-// {
-//     return m_fileName;
-// }
-
-// bool SessionStorage::saveSession(const UserData& userData)
-// {
-//     if (!userData.isValid()) {
-//         emit error("无法保存会话: 用户数据无效");
-//         return false;
-//     }
-
-//     QString filePath = getSessionFilePath();
-//     QJsonObject json = userData.toJson();
-
-//     if (writeJsonFile(filePath, json)) {
-//         emit sessionSaved(userData.userId());
-//         qDebug() << "会话已保存:" << filePath;
-//         return true;
-//     } else {
-//         emit error("保存会话失败: " + filePath);
-//         return false;
-//     }
-// }
-
-// UserData SessionStorage::loadSession()
-// {
-//     QString filePath = getSessionFilePath();
-//     QJsonObject json = readJsonFile(filePath);
-
-//     if (json.isEmpty()) {
-//         return UserData();  // 返回空的UserData
-//     }
-
-//     UserData userData = UserData::fromJson(json);
-
-//     if (userData.isValid()) {
-//         emit sessionLoaded(userData);
-//         qDebug() << "会话已加载:" << userData.username();
-//     }
-
-//     return userData;
-// }
-
-// bool SessionStorage::clearSession()
-// {
-//     QString filePath = getSessionFilePath();
-//     QFile file(filePath);
-
-//     if (file.exists()) {
-//         if (file.remove()) {
-//             emit sessionCleared();
-//             qDebug() << "会话已清除:" << filePath;
-//             return true;
-//         } else {
-//             emit error("清除会话失败: " + file.errorString());
-//             return false;
-//         }
-//     }
-
-//     return true; // 文件不存在也算清除成功
-// }
-
-// bool SessionStorage::hasStoredSession() const
-// {
-//     QString filePath = getSessionFilePath();
-//     QFile file(filePath);
-
-//     if (!file.exists()) {
-//         return false;
-//     }
-
-//     // 检查文件是否有有效内容
-//     QJsonObject json = readJsonFile(filePath);
-//     UserData userData = UserData::fromJson(json);
-//     return userData.isValid();
-// }
 
 
 bool SessionStorage::saveUserData(const QJsonObject& userData)
@@ -162,10 +77,6 @@ QJsonObject SessionStorage::loadUserData() const
 }
 
 
-QString SessionStorage::getSessionFilePath() const
-{
-    return m_storagePath + "/" + m_fileName;
-}
 
 QString SessionStorage::getUserDataFilePath() const
 {
@@ -297,11 +208,6 @@ bool SessionStorage::deleteUserData()
     return true; // 文件不存在也算清除成功
 }
 
-// bool SessionStorage::hasStoredUserData() const
-// {
-//    return !findLastModifiedUserFile().isEmpty();
-// }
-
 QString SessionStorage::findLastModifiedUserFile() const
 {
     QDir dir(m_storagePath);
@@ -341,4 +247,54 @@ bool SessionStorage::hasAnyStoredUserData() const
     dir.setNameFilters(filters);
 
     return !dir.entryList().isEmpty();
+}
+
+bool SessionStorage::saveUserAvatar(const QString& imagePath)
+{
+    if (m_userId.isEmpty()) {
+        emit error("无法保存头像: 用户ID为空");
+        return false;
+    }
+
+    if (imagePath.isEmpty() || !QFile::exists(imagePath)) {
+        emit error("无法保存头像: 源文件不存在");
+        return false;
+    }
+
+    // 1. 确保用户数据目录存在
+    QString userDir = m_storagePath + "/" + m_userId;
+    if (!ensureDirectoryExists(userDir)) {
+        return false;
+    }
+
+    // 2. 生成目标文件名 (例如: avatar.jpg)
+    QString fileExtension = QFileInfo(imagePath).suffix();
+    QString targetFileName = "avatar." + fileExtension;
+    QString targetFilePath = userDir + "/" + targetFileName;
+
+    // 3. 复制文件到目标位置
+    if (QFile::exists(targetFilePath)) {
+        QFile::remove(targetFilePath); // 如果已存在则覆盖
+    }
+    if (!QFile::copy(imagePath, targetFilePath)) {
+        emit error("无法保存头像: 复制文件失败");
+        return false;
+    }
+
+    // 4. 更新 JSON 数据中的 avatar 字段
+    // 先加载现有数据
+    QJsonObject userData = loadUserData();
+    if (userData.isEmpty()) {
+        // 如果没有旧数据，创建一个新的
+        userData["userId"] = m_userId;
+        userData["loggedIn"] = false;
+    }
+
+    // 相对路径存储建议： "users/user_123/avatar.jpg"
+    // 这里我们存储相对于 data 目录的路径，方便后续加载
+    QString relativePath = "data/" + m_userId + "/" + targetFileName;
+    userData["avatar"] = relativePath;
+
+    // 5. 保存回 JSON 文件
+    return saveUserData(userData);
 }

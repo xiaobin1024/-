@@ -73,6 +73,8 @@ public:
     QJsonArray currentSearchHistory() const;
     void clearSearchHistory();
 
+    bool saveUserAvatar(const QString& imagePath); // 供 RegisterPage 调用
+
 signals:
     // 状态变化
     void initialized();

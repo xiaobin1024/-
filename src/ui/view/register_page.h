@@ -12,6 +12,7 @@
 #include <QCheckBox>
 #include <QGroupBox>
 #include <QFrame>
+#include <QFileDialog>
 
 class RegisterPage : public BaseWidget
 {
@@ -47,6 +48,8 @@ private slots:
     void onRegisterFailed(const QString& error);
     void onUserChanged(const UserData& user);
 
+    void onAvatarSelected(); // 处理头像选择
+
 private:
     void setupRegisterForm();
     void setupButtons();
@@ -80,6 +83,10 @@ private:
     bool m_layoutSetupDone{false};
     bool m_signalsConnected{false};
     bool m_processingRegistration{false};
+
+    QString m_avatarPath; // 用于临时存储用户选择的头像路径
+    QLabel* m_avatarLabel; // 用于显示头像的控件
+    QPushButton* m_avatarButton; // 选择头像的按钮
 };
 
 #endif // REGISTER_PAGE_H

@@ -381,8 +381,12 @@ void UserSession::processRegisterResponse(const QString& responseData)
         if (parts.size() >= 2) {
             QString username = parts[0];
             QString password = parts[1];
+            QString userId = parts[2];
             qDebug() << "解析出的用户名:" << username;
             qDebug() << "解析出的密码:" << password;
+            qDebug() << "解析出的用户ID:" << userId;
+
+             m_storage->setUserId(userId);
 
             qDebug() << "发出 registerSuccess 信号...";
             emit registerSuccess(username);
@@ -678,4 +682,15 @@ void UserSession::clearSearchHistory() {
         // 必须通过 updateUserData 才会触发 SessionStorage 的 saveUserData
         updateUserData(m_currentUser);
     }
+}
+
+
+bool UserSession::saveUserAvatar(const QString& imagePath)
+{
+    if (!m_initialized || !m_storage) {
+        qWarning() << "UserSession 未初始化，无法保存头像";
+        return false;
+    }
+    // 直接委托给 Storage
+    return m_storage->saveUserAvatar(imagePath);
 }

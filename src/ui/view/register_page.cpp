@@ -98,6 +98,26 @@ void RegisterPage::setupLayout()
 
 void RegisterPage::setupRegisterForm()
 {
+
+    // 头像选择区域
+    auto* avatarLayout = new QHBoxLayout();
+    avatarLayout->setAlignment(Qt::AlignLeft);
+
+    m_avatarLabel = new QLabel(this);
+    m_avatarLabel->setFixedSize(60, 60); // 设置头像显示大小
+    m_avatarLabel->setStyleSheet("QLabel { background-color: #f0f0f0; border: 1px dashed #aaa; }");
+    m_avatarLabel->setAlignment(Qt::AlignCenter);
+    m_avatarLabel->setText("头像");
+
+    m_avatarButton = createSecondaryButton("选择图片", "avatarButton");
+    connect(m_avatarButton, &QPushButton::clicked, this, &RegisterPage::onAvatarSelected);
+
+    avatarLayout->addWidget(m_avatarLabel);
+    avatarLayout->addWidget(m_avatarButton);
+    avatarLayout->addStretch();
+
+    m_formLayout->addRow("头像:", avatarLayout); // 将头像添加到表单
+
     // 用户名输入
     m_usernameEdit = createLineEdit("请输入用户名", "usernameEdit");
     m_usernameEdit->setObjectName("usernameEdit");
@@ -320,12 +340,6 @@ void RegisterPage::onTermsAgreedChanged()
 
 void RegisterPage::onRegisterSuccess(const QString& username)
 {
-    if (m_processingRegistration) {
-        qDebug() << "RegisterPage::onRegisterSuccess - 正在处理注册，忽略重复调用";
-        return;
-    }
-
-    m_processingRegistration = true;
 
     qDebug() << "RegisterPage::onRegisterSuccess 被调用，用户名:" << username;
 
@@ -339,7 +353,14 @@ void RegisterPage::onRegisterSuccess(const QString& username)
     emit registerSuccess(user);
     qDebug() << "RegisterPage 发射 registerSuccess 信号";
 
-    m_processingRegistration = false;
+    // 在跳转前，如果用户选择了头像，尝试保存
+    if (!m_avatarPath.isEmpty()) {
+        bool avatarSaved = m_userSession->saveUserAvatar(m_avatarPath);
+        if (!avatarSaved) {
+            // 非阻塞性提示
+            QMessageBox::warning(this, "提示", "头像保存失败，请在个人中心重试");
+        }
+    }
 
     // 注册成功后跳转到登录页面
     emit navigateToLogin();
@@ -509,4 +530,16 @@ void RegisterPage::onPageHide()
 {
     BaseWidget::onPageHide();
     qDebug() << "RegisterPage 页面隐藏";
+}
+
+void RegisterPage::onAvatarSelected()
+{
+    QString filePath = QFileDialog::getOpenFileName(this, "选择头像", "", "Image Files (*.png *.jpg *.bmp)");
+    if (!filePath.isEmpty()) {
+        m_avatarPath = filePath;
+
+        // 简单预览
+        QPixmap pixmap(filePath);
+        m_avatarLabel->setPixmap(pixmap.scaled(m_avatarLabel->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    }
 }
