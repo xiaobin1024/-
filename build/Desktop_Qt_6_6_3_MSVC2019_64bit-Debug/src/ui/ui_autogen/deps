@@ -56,6 +56,7 @@ ui_autogen/timestamp: \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/QRegularExpression \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/QSize \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/QSizeF \
+	D:/qt/6.6.3/msvc2019_64/include/QtCore/QStandardPaths \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/QString \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/QTimer \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/QVariant \
@@ -168,6 +169,7 @@ ui_autogen/timestamp: \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qsharedpointer.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qsharedpointer_impl.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qsize.h \
+	D:/qt/6.6.3/msvc2019_64/include/QtCore/qstandardpaths.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qstring.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qstringalgorithms.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qstringbuilder.h \

@@ -13,6 +13,7 @@ C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-
   D:/qt/6.6.3/msvc2019_64/include/QtCore/QMap \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/QObject \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/QPointer \
+  D:/qt/6.6.3/msvc2019_64/include/QtCore/QStandardPaths \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/QString \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/QTimer \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/QVariant \
@@ -105,6 +106,7 @@ C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qsharedpointer.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qsharedpointer_impl.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qsize.h \
+  D:/qt/6.6.3/msvc2019_64/include/QtCore/qstandardpaths.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qstring.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qstringalgorithms.h \
   D:/qt/6.6.3/msvc2019_64/include/QtCore/qstringbuilder.h \

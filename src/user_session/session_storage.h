@@ -24,12 +24,16 @@ public:
     // 保存完整的用户数据
     bool saveUserData(const QJsonObject& userData);
 
-    //bool hasStoredUserData() const;
+    bool saveUserAvatar(const QString& imagePath); // 新增：保存头像
 
-    QString findLastModifiedUserFile() const;
-    bool hasAnyStoredUserData() const; // 检测是否存在任何用户数据
+    // 扫描所有用户目录，返回修改时间最新的那个目录路径
+    QString findLatestUserDirectory() const;
 
-     bool saveUserAvatar(const QString& imagePath); // 新增：保存头像
+    // 查找指定用户目录下的头像路径
+    // 如果找到返回绝对路径，否则返回空字符串
+    QString findUserAvatarPath(const QString& userId) const;
+
+    QString getUserId(){return m_userId;}
 
 signals:
     void userDataSaved();

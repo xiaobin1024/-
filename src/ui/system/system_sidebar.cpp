@@ -13,12 +13,12 @@
 #include<QInputDialog>
 
 
-SystemSidebar::SystemSidebar(QWidget* parent)
+SystemSidebar::SystemSidebar(QWidget* parent,UserSession* userSession)
     : BaseWidget(parent)
     , m_widthAnimation(new QPropertyAnimation(this, "currentWidth"))
     , m_opacityAnimation(new QPropertyAnimation(this, "windowOpacity"))
     , m_messageDispatcher(nullptr)
-    , m_userSession(nullptr)
+    , m_userSession(userSession)
 {
     // 设置对象名，方便样式定制
     setObjectName("SystemSidebar");
@@ -31,60 +31,38 @@ SystemSidebar::SystemSidebar(QWidget* parent)
     m_currentWidth = COLLAPSED_WIDTH;
 
     initialize();
-
+    setupConnections();
 
     // 初始化动画
     setupAnimations();
 
     qDebug() << "SystemSidebar 初始化完成，初始状态：收起";
 }
-
-void SystemSidebar::setUserSession(UserSession* session)
+ void SystemSidebar::setupConnections()
 {
-    if (m_userSession == session) {
-        return;
-    }
+     connect(m_userSession,&UserSession::loginSuccess,
+             this,&SystemSidebar::updateUserInfo);
 
-    // 断开旧连接
-    if (m_userSession) {
-        disconnect(m_userSession, &UserSession::userChanged,
-                   this, &SystemSidebar::onUserLoggedIn);
-        disconnect(m_userSession, &UserSession::logoutSuccess,
-                   this, &SystemSidebar::onUserLoggedOut);
-        disconnect(m_userSession, &UserSession::loginFailed,
-                   this, &SystemSidebar::onUserLoginFailed);
-        disconnect(m_userSession, &UserSession::logoutSuccess,
-                   this, &SystemSidebar::onUserLogoutSuccess);
-        disconnect(m_userSession, &UserSession::unregisterSuccess,  // 新增
-                   this, &SystemSidebar::onUserUnregisterSuccess);
-        disconnect(m_userSession, &UserSession::unregisterFailed,  // 新增
-                   this, &SystemSidebar::onUserUnregisterFailed);
-        disconnect(m_userSession, &UserSession::userChanged, this, &SystemSidebar::onUserChanged);
-    }
 
-    m_userSession = session;
+    // connect(m_userSession, &UserSession::userChanged,
+    //         this, &SystemSidebar::onUserLoggedIn);
+    connect(m_userSession, &UserSession::logoutSuccess,
+            this, &SystemSidebar::onUserLogoutSuccess);
+    connect(m_userSession, &UserSession::loginFailed,
+            this, &SystemSidebar::onUserLoginFailed);
+    connect(m_userSession, &UserSession::unregisterSuccess,  // 新增
+            this, &SystemSidebar::onUserUnregisterSuccess);
+    connect(m_userSession, &UserSession::unregisterFailed,  // 新增
+            this, &SystemSidebar::onUserUnregisterFailed);
+    // connect(m_userSession, &UserSession::userChanged,
+    //         this, &SystemSidebar::onUserChanged);
 
-    // 连接新连接
-    if (m_userSession&& m_userSession != UserSession::instance()) {
-        connect(m_userSession, &UserSession::userChanged,
-                this, &SystemSidebar::onUserLoggedIn);
-        connect(m_userSession, &UserSession::logoutSuccess,
-                this, &SystemSidebar::onUserLoggedOut);
-        connect(m_userSession, &UserSession::loginFailed,
-                this, &SystemSidebar::onUserLoginFailed);
-        connect(m_userSession, &UserSession::logoutSuccess,
-                this, &SystemSidebar::onUserLogoutSuccess);
-        connect(m_userSession, &UserSession::unregisterSuccess,  // 新增
-                this, &SystemSidebar::onUserUnregisterSuccess);
-        connect(m_userSession, &UserSession::unregisterFailed,  // 新增
-                this, &SystemSidebar::onUserUnregisterFailed);
-        connect(m_userSession, &UserSession::userChanged, this, &SystemSidebar::onUserChanged);
-
-        // 立即更新当前用户状态
-        UserData currentUser = m_userSession->currentUser();
-        onUserLoggedIn(currentUser);
-    }
+    // // 立即更新当前用户状态
+    // UserData currentUser = m_userSession->currentUser();
+    // onUserLoggedIn(currentUser);
 }
+
+
 void SystemSidebar::onUserChanged(const UserData& user)
 {
     if (!m_logoutButton || !m_deleteButton) {
@@ -103,25 +81,18 @@ void SystemSidebar::onUserChanged(const UserData& user)
 
     updateUserButtonsState();
 }
-void SystemSidebar::setMessageDispatcher(MessageDispatcher* dispatcher)
-{
-    m_messageDispatcher = dispatcher;
-    if (m_userSession && m_messageDispatcher) {
-        m_messageDispatcher->setUserSession(m_userSession);
-        m_userSession->setMessageDispatcher(m_messageDispatcher);
-    }
-}
+
 
 void SystemSidebar::setupLayout()
 {
-    qDebug()<<"SystemSidebar::setupLayout()";
-    // 1. 确保主布局已存在（由 BaseWidget 创建）
+    qDebug() << "SystemSidebar::setupLayout()";
+
+    // 1. 确保主布局已存在
     if (!m_mainLayout) {
-        qWarning() << "主布局未创建";
-        return;
+        m_mainLayout = new QVBoxLayout(this);
+        m_mainLayout->setContentsMargins(0, 0, 0, 0);
+        m_mainLayout->setSpacing(0);
     }
-    m_mainLayout->setContentsMargins(0, 0, 0, 0);
-    m_mainLayout->setSpacing(0);
 
     // 2. 创建主按钮容器
     m_buttonContainer = new QWidget(this);
@@ -131,17 +102,45 @@ void SystemSidebar::setupLayout()
     // 3. 创建主按钮布局（垂直布局）
     m_buttonLayout = new QVBoxLayout(m_buttonContainer);
     m_buttonLayout->setContentsMargins(8, 12, 8, 12);
-    m_buttonLayout->setSpacing(10);  // 增加按钮间距
+    m_buttonLayout->setSpacing(10);
 
-    // 4. 创建顶部功能按钮容器 - 修复：作为成员变量或确保生命周期
-    m_topButtons = new QWidget(m_buttonContainer);  // 作为成员变量
+    // ---UI 组件：头像和用户名容器 ---
+    // 创建垂直布局来放置头像和文字，头像在上，用户名在下
+    QWidget* headerWidget = new QWidget(m_buttonContainer);
+    QVBoxLayout* headerLayout = new QVBoxLayout(headerWidget);
+    headerLayout->setContentsMargins(0, 15, 0, 15);
+    headerLayout->setSpacing(8); // 减小间距，使布局更紧凑
+
+     avatarSize = 70;
+
+    // 初始化头像 Label (成员变量 m_avatarLabel 需已在头文件声明)
+    m_avatarLabel = new QLabel(headerWidget);
+    m_avatarLabel->setFixedSize(avatarSize, avatarSize); // 增大头像大小
+    m_avatarLabel->setStyleSheet(QString("QLabel { border-radius: %1px; background-color: #e0e0e0; }").arg(avatarSize / 2));
+    m_avatarLabel->setAlignment(Qt::AlignCenter);
+    m_avatarLabel->setVisible(false);
+
+    // 使用BaseWidget提供的createLabel方法创建用户名Label
+    m_usernameLabel = createLabel("未登录", "username", "usernameLabel");
+    m_usernameLabel->setAlignment(Qt::AlignCenter);
+    //m_usernameLabel->setStyleSheet("QLabel { color: palette(window-text); font-weight: bold; font-size: 16px; }");
+    m_usernameLabel->setVisible(false); // 默认隐藏，等登录后再显示
+
+    // 将控件加入 Header 布局，头像在上，用户名在下
+    headerLayout->addWidget(m_avatarLabel, 0, Qt::AlignHCenter);
+    headerLayout->addWidget(m_usernameLabel, 0, Qt::AlignHCenter);
+    // 不需要addStretch()，因为是垂直布局，头像和用户名自然在顶部
+    // --- End 新增 UI ---
+
+    // 4. 创建顶部功能按钮容器
+    m_topButtons = new QWidget(m_buttonContainer);
     m_topLayout = new QVBoxLayout(m_topButtons);
     m_topLayout->setContentsMargins(0, 0, 0, 0);
     m_topLayout->setSpacing(10);
     m_topLayout->setAlignment(Qt::AlignTop);
 
-    // 5. 创建底部收起按钮容器 - 修复：作为成员变量
-    m_bottomContainer = new QWidget(m_buttonContainer);  // 作为成员变量
+    // 5. 创建底部收起按钮容器
+    m_bottomContainer = new QWidget(m_buttonContainer);
     m_bottomLayout = new QVBoxLayout(m_bottomContainer);
     m_bottomLayout->setContentsMargins(0, 0, 0, 0);
     m_bottomLayout->setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
@@ -149,27 +148,29 @@ void SystemSidebar::setupLayout()
     // 6. 创建中间弹性空间
     m_spacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-    // 7. 创建所有按钮
+    // 7. 创建所有按钮 (这会填充 m_themeButton, m_logoutButton 等)
     createButtons();
 
-    // 8. 将按钮添加到相应容器
+    // 8. 将按钮添加到顶部容器
     m_topLayout->addWidget(m_themeButton);
     m_topLayout->addWidget(m_logoutButton);
     m_topLayout->addWidget(m_deleteButton);
 
+    // 9. 将底部按钮添加到容器
     m_bottomLayout->addWidget(m_toggleButton);
 
-    // 9. 将容器添加到主布局
-    m_buttonLayout->addWidget(m_topButtons);
-    m_buttonLayout->addSpacerItem(m_spacer);
+    // 10. 关键布局：按顺序将组件添加到主布局
+    // 顺序是：1.顶部Header 2.功能按钮组(m_topButtons) 3.中间弹簧 4.底部按钮
+    m_buttonLayout->addWidget(headerWidget, 0, Qt::AlignHCenter);    // 最顶部显示头像和名字
+    m_buttonLayout->addWidget(m_topButtons);      // 紧接着是主题/退出等按钮
+    m_buttonLayout->addSpacerItem(m_spacer);      // 弹簧将底部按钮挤下去
     m_buttonLayout->addWidget(m_bottomContainer);
 
-    // 10. 将按钮容器添加到主布局
+    // 11. 将按钮容器添加到主布局
     m_mainLayout->addWidget(m_buttonContainer);
 
-    // 11. 应用初始样式
+    // 12. 应用初始样式
     updateSidebarStyle();
-
 
     qDebug() << "SystemSidebar 布局设置完成";
 }
@@ -455,6 +456,8 @@ void SystemSidebar::updateSidebarStyle()
         m_logoutButton->setVisible(true);
         m_deleteButton->setVisible(true);
         m_toggleButton->setVisible(true);
+        m_usernameLabel->setVisible(true); // 默认隐藏，等登录后再显示
+        m_avatarLabel->setVisible(true);
     } else {
         // 收起状态：只显示切换按钮
         m_themeButton->setText("");
@@ -473,6 +476,9 @@ void SystemSidebar::updateSidebarStyle()
         m_logoutButton->setVisible(false);
         m_deleteButton->setVisible(false);
         m_toggleButton->setVisible(true); // 只显示切换按钮
+        m_usernameLabel->setVisible(false); // 默认隐藏，等登录后再显示
+         m_avatarLabel->setVisible(false);
+
     }
 
     // 构建侧边栏样式，不包含边框（边框在paintEvent中绘制）
@@ -500,7 +506,7 @@ void SystemSidebar::updateSidebarStyle()
     // 强制重绘以确保分割线正确显示
     update();
 
-    qDebug() << "SystemSidebar 样式更新完成，展开状态：" << isExpandedState;
+   // qDebug() << "SystemSidebar 样式更新完成，展开状态：" << isExpandedState;
 }
 void SystemSidebar::resizeEvent(QResizeEvent* event)
 {
@@ -531,7 +537,7 @@ SystemSidebar::~SystemSidebar()
         disconnect(m_userSession, &UserSession::userChanged,
                    this, &SystemSidebar::onUserLoggedIn);
         disconnect(m_userSession, &UserSession::logoutSuccess,
-                   this, &SystemSidebar::onUserLoggedOut);
+                   this, &SystemSidebar::onUserLogoutSuccess);
         disconnect(m_userSession, &UserSession::loginFailed,
                    this, &SystemSidebar::onUserLoginFailed);
         disconnect(m_userSession, &UserSession::logoutSuccess,
@@ -552,16 +558,9 @@ void SystemSidebar::onUserLoggedIn(const UserData& user)
         //showMessage(QString("欢迎回来，%1!").arg(user.username()), false, 1500);
         qDebug() << "用户登录：" << user.username();
     }
-
     updateUserButtonsState();
 }
-void SystemSidebar::onUserLoggedOut()
-{
-    showMessage("已退出登录", false, 1500);
-    qDebug() << "用户已登出";
 
-    updateUserButtonsState();
-}
 void SystemSidebar::onUserLoginFailed(const QString& error)
 {
     showMessage("登录失败：" + error, true, 2000);
@@ -593,8 +592,11 @@ void SystemSidebar::updateUserButtonsState()
     if (isExpandedState) {
         if (loggedIn && !username.isEmpty()) {
             m_logoutButton->setText(QString("🚪 退出").arg(username));
+            m_usernameLabel->setText(username);
+
         } else {
             m_logoutButton->setText("🚪 未登录");
+             m_usernameLabel->setText("未登录");
         }
         m_deleteButton->setText(loggedIn ? "🗑️ 注销账号" : "🗑️ 请登录");
     } else {
@@ -605,4 +607,55 @@ void SystemSidebar::updateUserButtonsState()
 
     // 更新按钮样式
     updateWidgetStyles();
+}
+
+void SystemSidebar::updateUserInfo(const UserData& user)
+{
+    qDebug() << "SystemSidebar::updateUserInfo() - 函数被调用";
+
+    // 获取当前用户名
+    QString username=user.username();
+        qDebug() << "SystemSidebar::updateUserInfo() - 当前用户名:" << username;
+
+    // 检查用户是否已登录
+    if (user.isLoggedIn()) {
+        qDebug() << "SystemSidebar::updateUserInfo() - 用户已登录，开始加载用户信息";
+
+        // 获取头像路径
+        QString avatarPath = m_userSession->getUserAvatarPath();
+        qDebug() << "SystemSidebar::updateUserInfo() - 头像路径:" << avatarPath;
+
+        // 尝试加载图片
+        QPixmap pixmap(avatarPath);
+        qDebug() << "SystemSidebar::updateUserInfo() - 尝试加载图片";
+
+        // 检查图片是否成功加载
+        if (!pixmap.isNull()) {
+            qDebug() << "SystemSidebar::updateUserInfo() - **成功获取到图片** - 尺寸:"
+                     << pixmap.width() << "x" << pixmap.height();
+
+            // 进行圆形裁剪处理
+             QPixmap roundedPixmap(avatarSize, avatarSize);
+            roundedPixmap.fill(Qt::transparent);
+            QPainter painter(&roundedPixmap);
+            painter.setRenderHint(QPainter::Antialiasing);
+            QPainterPath path;
+            //圆角半径应该是宽的一半
+            path.addRoundedRect(0, 0, avatarSize, avatarSize, avatarSize / 2, avatarSize / 2);
+            painter.setClipPath(path);
+            painter.drawPixmap(0, 0, pixmap.scaled(avatarSize, avatarSize, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation));
+            m_avatarLabel->setPixmap(roundedPixmap);
+        } else {
+            qDebug() << "SystemSidebar::updateUserInfo() - **未能获取到图片** - 使用用户名首字母替代";
+            m_avatarLabel->setText(username.left(1).toUpper());
+            m_avatarLabel->setStyleSheet(QString("QLabel { border-radius: %1px; background-color: #757575; color: white; font-weight: bold; }").arg(avatarSize / 2));
+        }
+    } else {
+        qDebug() << "SystemSidebar::updateUserInfo() - 用户未登录，重置用户信息显示";
+        m_usernameLabel->clear();
+        m_usernameLabel->setVisible(false);
+        m_avatarLabel->clear();
+        m_avatarLabel->setText("");
+        m_avatarLabel->setStyleSheet(QString("QLabel { border-radius: %1px; background-color: #e0e0e0; }").arg(avatarSize / 2));
+    }
 }

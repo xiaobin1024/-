@@ -27,12 +27,12 @@ class SystemSidebar : public BaseWidget
     Q_PROPERTY(int currentWidth READ currentWidth WRITE setCurrentWidth)
 
 public:
-    explicit SystemSidebar(QWidget* parent = nullptr);
+    explicit SystemSidebar(QWidget* parent = nullptr,UserSession* userSession=nullptr);
     ~SystemSidebar();
 
-    // 新增：设置外部模块
-    void setUserSession(UserSession* session);
-    void setMessageDispatcher(MessageDispatcher* dispatcher);
+    // // 新增：设置外部模块
+    // void setUserSession(UserSession* session);
+    // void setMessageDispatcher(MessageDispatcher* dispatcher);
 
 
     // ==================== 状态控制 ====================
@@ -114,9 +114,9 @@ protected:
     // 重写尺寸事件，调整按钮容器大小
     void resizeEvent(QResizeEvent* event) override;
 
+    void setupConnections();
 public slots:
     void onUserLoggedIn(const UserData& user);
-    void onUserLoggedOut();
     void onUserLoginFailed(const QString& error);
     void onUserLogoutSuccess();
     void onUserUnregisterSuccess(const QString& username, int userId);
@@ -135,6 +135,9 @@ private slots:
     // 样式更新
     void updateSidebarStyle();
 
+    void updateUserInfo(const UserData& user);
+
+
 private:
     // 初始化UI组件
     void createButtons();
@@ -148,6 +151,7 @@ private:
 
 
     void updateUserButtonsState();
+
 
     // 状态变量
     bool m_expanded{true};           // 当前展开状态
@@ -177,6 +181,12 @@ private:
 
     // 样式缓存
     QString m_currentStyleSheet;
+
+    //用于显示头像和用户名的标签
+    QLabel* m_avatarLabel;
+    QLabel* m_usernameLabel;
+
+    int avatarSize; //头像大小
 };
 
 #endif // SYSTEM_SIDEBAR_H

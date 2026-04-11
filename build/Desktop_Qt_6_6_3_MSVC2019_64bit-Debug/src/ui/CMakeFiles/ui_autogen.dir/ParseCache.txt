@@ -205,6 +205,7 @@ C:/Users/86152/Desktop/network_dictionary/src/ui/system/system_sidebar.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QPropertyAnimation
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QQueue
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QRegularExpression
+ mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QStandardPaths
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QString
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QTimer
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QVariant
@@ -307,6 +308,7 @@ C:/Users/86152/Desktop/network_dictionary/src/ui/system/system_sidebar.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qsharedpointer.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qsharedpointer_impl.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qsize.h
+ mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qstandardpaths.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qstring.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qstringalgorithms.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qstringbuilder.h
@@ -714,6 +716,7 @@ C:/Users/86152/Desktop/network_dictionary/src/ui/view/login_page.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QMap
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QObject
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QPointer
+ mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QStandardPaths
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QString
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QTimer
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QVariant
@@ -806,6 +809,7 @@ C:/Users/86152/Desktop/network_dictionary/src/ui/view/login_page.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qsharedpointer.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qsharedpointer_impl.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qsize.h
+ mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qstandardpaths.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qstring.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qstringalgorithms.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qstringbuilder.h
@@ -924,6 +928,7 @@ C:/Users/86152/Desktop/network_dictionary/src/ui/search/searchhistory_widget.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QRect
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QSize
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QSizeF
+ mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QStandardPaths
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QString
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QTimer
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QVariant
@@ -1021,6 +1026,7 @@ C:/Users/86152/Desktop/network_dictionary/src/ui/search/searchhistory_widget.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qsharedpointer.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qsharedpointer_impl.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qsize.h
+ mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qstandardpaths.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qstring.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qstringalgorithms.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qstringbuilder.h
@@ -1182,6 +1188,7 @@ C:/Users/86152/Desktop/network_dictionary/src/ui/view/main_page.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QRegularExpression
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QSize
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QSizeF
+ mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QStandardPaths
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QString
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QTimer
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QVariant
@@ -1290,6 +1297,7 @@ C:/Users/86152/Desktop/network_dictionary/src/ui/view/main_page.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qsharedpointer.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qsharedpointer_impl.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qsize.h
+ mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qstandardpaths.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qstring.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qstringalgorithms.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qstringbuilder.h
@@ -1473,6 +1481,7 @@ C:/Users/86152/Desktop/network_dictionary/src/ui/view/page_controller.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QRegularExpression
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QSize
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QSizeF
+ mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QStandardPaths
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QString
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QTimer
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QVariant
@@ -1585,6 +1594,7 @@ C:/Users/86152/Desktop/network_dictionary/src/ui/view/page_controller.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qsharedpointer.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qsharedpointer_impl.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qsize.h
+ mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qstandardpaths.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qstring.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qstringalgorithms.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qstringbuilder.h
@@ -1745,6 +1755,7 @@ C:/Users/86152/Desktop/network_dictionary/src/ui/view/register_page.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QMap
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QObject
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QPointer
+ mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QStandardPaths
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QString
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QTimer
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QVariant
@@ -1841,6 +1852,7 @@ C:/Users/86152/Desktop/network_dictionary/src/ui/view/register_page.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qsharedpointer.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qsharedpointer_impl.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qsize.h
+ mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qstandardpaths.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qstring.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qstringalgorithms.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qstringbuilder.h
@@ -1961,6 +1973,7 @@ C:/Users/86152/Desktop/network_dictionary/src/ui/word/interactive_wordcard.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QMap
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QObject
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QPointer
+ mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QStandardPaths
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QString
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QTimer
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/QVariant
@@ -2053,6 +2066,7 @@ C:/Users/86152/Desktop/network_dictionary/src/ui/word/interactive_wordcard.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qsharedpointer.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qsharedpointer_impl.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qsize.h
+ mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qstandardpaths.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qstring.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qstringalgorithms.h
  mdp:D:/qt/6.6.3/msvc2019_64/include/QtCore/qstringbuilder.h

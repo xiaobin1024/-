@@ -6,6 +6,7 @@
 #include <QObject>
 #include <QJsonObject>
 #include <QVariant>
+#include <QStandardPaths>
 
 // 前向声明，不要包含头文件
 class MessageDispatcher;
@@ -74,6 +75,9 @@ public:
     void clearSearchHistory();
 
     bool saveUserAvatar(const QString& imagePath); // 供 RegisterPage 调用
+
+    // 获取当前用户的头像路径
+    QString getUserAvatarPath() const;
 
 signals:
     // 状态变化

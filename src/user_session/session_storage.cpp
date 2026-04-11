@@ -86,10 +86,17 @@ QString SessionStorage::getUserDataFilePath() const
         return "";
     }
 
-    // 正常情况下的路径生成
-    QString safeUserId = m_userId;
-    safeUserId.replace("/", "_").replace("\\", "_").replace(":", "_");
-    return m_storagePath + "/user_" + safeUserId + ".json";
+    //构建用户专属目录路径
+    QString userDirPath=m_storagePath+"/"+m_userId;
+    //确保目录存在（如果不存在，创建它）
+    QDir dir;
+    if(!dir.exists(userDirPath)){
+        qWarning()<<"无法创建用户目录："<<userDirPath;
+        return "";
+    }
+
+    //返回目录下的user.json路径
+    return userDirPath+"/user.json";
 }
 
 bool SessionStorage::ensureDirectoryExists(const QString& path) const
@@ -208,47 +215,6 @@ bool SessionStorage::deleteUserData()
     return true; // 文件不存在也算清除成功
 }
 
-QString SessionStorage::findLastModifiedUserFile() const
-{
-    QDir dir(m_storagePath);
-    if (!dir.exists()) {
-        return "";
-    }
-
-    // 查找所有以"user_"开头的JSON文件
-    QStringList filters;
-    filters << "user_*.json";
-    dir.setNameFilters(filters);
-
-    // 按修改时间排序，获取最新文件
-    QFileInfoList files = dir.entryInfoList();
-    if (files.isEmpty()) {
-        return "";
-    }
-
-    // 排序文件，获取最新修改的
-    std::sort(files.begin(), files.end(), [](const QFileInfo& a, const QFileInfo& b) {
-        return a.lastModified() > b.lastModified();
-    });
-
-    return files.first().absoluteFilePath();
-}
-
-bool SessionStorage::hasAnyStoredUserData() const
-{
-    QDir dir(m_storagePath);
-    if (!dir.exists()) {
-        return false;
-    }
-
-    // 查找所有以"user_"开头的JSON文件
-    QStringList filters;
-    filters << "user_*.json";
-    dir.setNameFilters(filters);
-
-    return !dir.entryList().isEmpty();
-}
-
 bool SessionStorage::saveUserAvatar(const QString& imagePath)
 {
     if (m_userId.isEmpty()) {
@@ -297,4 +263,75 @@ bool SessionStorage::saveUserAvatar(const QString& imagePath)
 
     // 5. 保存回 JSON 文件
     return saveUserData(userData);
+}
+
+QString SessionStorage::findLatestUserDirectory() const
+{
+    QDir dir(m_storagePath);
+    if (!dir.exists()) {
+        return "";
+    }
+
+    // 1. 只查找目录，不查找文件
+    // 如果你想限制文件夹名为纯数字，可以使用 setNameFilters({"[0-9]*"})，但通常 Qt 不支持正则过滤，这里简单查找所有目录
+    QFileInfoList folders = dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
+
+    if (folders.isEmpty()) {
+        return "";
+    }
+
+    // 2. 遍历目录，检查里面是否有 user.json，并找出最新的一个
+    QFileInfo latestFolderInfo;
+    QDateTime latestTime;
+
+    for (const QFileInfo& folderInfo : folders) {
+        QString folderPath = folderInfo.absoluteFilePath();
+        QString jsonPath = folderPath + "/user.json";
+
+        // 检查该目录下是否存在 user.json
+        if (QFile::exists(jsonPath)) {
+            QFileInfo jsonFileInfo(jsonPath);
+            // 比较修改时间
+            if (jsonFileInfo.lastModified() > latestTime) {
+                latestTime = jsonFileInfo.lastModified();
+                latestFolderInfo = folderInfo;
+            }
+        }
+    }
+
+    if (latestFolderInfo.isDir()) {
+        return latestFolderInfo.absoluteFilePath(); // 返回类似 ".../data/18" 的路径
+    }
+
+    return "";
+}
+
+QString SessionStorage::findUserAvatarPath(const QString& userId) const
+{
+    if (userId.isEmpty()) {
+        return "";
+    }
+
+    // 1. 构建用户目录路径
+    QString userDirPath = m_storagePath + "/" + userId;
+    QDir userDir(userDirPath);
+
+    if (!userDir.exists()) {
+        return "";
+    }
+
+    // 2. 定义支持的头像格式
+    QStringList nameFilters;
+    nameFilters << "avatar.png" << "avatar.jpg" << "avatar.jpeg" << "avatar.bmp";
+
+    // 3. 查找文件
+    QFileInfoList fileList = userDir.entryInfoList(nameFilters, QDir::Files);
+
+    if (!fileList.isEmpty()) {
+        // 返回找到的第一个头像文件的绝对路径
+        return fileList.first().absoluteFilePath();
+    }
+
+    // 没找到则返回空
+    return "";
 }

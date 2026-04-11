@@ -192,13 +192,13 @@ void MainPage::setupContentArea()
 void MainPage::setupSidebar()
 {
     // 创建侧边栏
-    m_sidebar = new SystemSidebar(this);
+    m_sidebar = new SystemSidebar(this,m_userSession);
 
     // 设置侧边栏宽度
     m_sidebar->setFixedWidth(50);
 
-    // 设置用户会话
-    m_sidebar->setUserSession(UserSession::instance());
+    // // 设置用户会话
+    // m_sidebar->setUserSession(UserSession::instance());
 
     // 连接侧边栏的系统功能信号
     connect(m_sidebar, &SystemSidebar::themeToggleRequested,
@@ -262,20 +262,6 @@ void MainPage::onWordSearchFailed(const QString& error)
 {
     showMessage("搜索失败: " + error, true, 2000);
 
-    // // 显示错误信息
-    // auto* errorLabel = createLabel("搜索失败: " + error, "normal", "searchErrorLabel");
-    // errorLabel->setStyleSheet(QString("QLabel { color: %1; }").arg(getColor("error")));
-
-    // // 清除现有内容并显示错误
-    // while (m_contentLayout->count() > 1) {
-    //     QLayoutItem* item = m_contentLayout->takeAt(0);
-    //     if (item->widget()) {
-    //         item->widget()->deleteLater();
-    //     }
-    //     delete item;
-    // }
-
-    // m_contentLayout->insertWidget(0, errorLabel);
 }
 
 void MainPage::onClearButtonClicked()

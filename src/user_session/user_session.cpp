@@ -522,48 +522,50 @@ bool UserSession::autoLoginFromSavedSession()
         return true;
     }
 
-    // **关键修复**：使用独立方法检测是否存在用户数据
-    if (m_storage->hasAnyStoredUserData()) {
-        // **关键修复**：直接获取最新用户数据文件路径
-        QString filePath = m_storage->findLastModifiedUserFile();
-        if (filePath.isEmpty()) {
-            qDebug() << "未找到有效的用户数据文件";
-            return false;
-        }
+    // 1. 查找最新的用户目录 (例如: ".../data/18")
+    QString userDirPath = m_storage->findLatestUserDirectory();
 
+    if (userDirPath.isEmpty()) {
+        qDebug() << "未找到包含 user.json 的用户目录";
+        return false;
+    }
 
-        QFileInfo fileInfo(filePath);
-         qDebug() << "开始读取autoLoginFromSavedSession的filePath:" << filePath;
-        QString fileName = fileInfo.fileName();
-        QString userId = fileName.mid(5, fileName.length() - 10); // 移除"user_"和".json"
-        qDebug() << "开始读取autoLoginFromSavedSession的userId:" << userId;
-        // 设置用户ID并加载数据
-        m_storage->setUserId(userId);
-        QJsonObject userData = m_storage->loadUserData();
+    qDebug() << "找到最新的用户目录:" << userDirPath;
 
-        if (!userData.isEmpty()) {
-            // 检查用户是否已登录
-            if (userData.contains("loggedIn") && userData["loggedIn"].toBool()) {
-                QString username = userData["username"].toString();
-                QString password = userData["password"].toString();
+    // 2. 从路径中提取 userId
+    // 路径格式为 ".../data/{userId}"，所以我们需要最后一个斜杠后的部分
+    QFileInfo dirInfo(userDirPath);
+    QString userId = dirInfo.fileName(); // 直接获取文件夹名作为 ID
 
-                if (!username.isEmpty() && !password.isEmpty()) {
-                    // 发送登录请求
-                    emit loginRequest(username, password);
-                    m_name = username;
-                    m_password = password;
+    if (userId.isEmpty()) {
+        qWarning() << "无法从路径解析用户ID:" << userDirPath;
+        return false;
+    }
 
-                    qDebug() << "已发送自动登录请求: 用户" << username << "用户ID:" << userId;
-                    return true;
-                } else {
-                    qWarning() << "自动登录失败: 用户名或密码为空";
-                    return false;
-                }
+    // 3. 设置 Storage 的上下文到这个用户
+    m_storage->setUserId(userId);
+
+    // 4. 加载数据 (此时 SessionStorage 会去读取 userDirPath + "/user.json")
+    QJsonObject userData = m_storage->loadUserData();
+
+    if (!userData.isEmpty()) {
+        // 检查登录状态
+        if (userData.contains("loggedIn") && userData["loggedIn"].toBool()) {
+            QString username = userData["username"].toString();
+            QString password = userData["password"].toString();
+
+            if (!username.isEmpty() && !password.isEmpty()) {
+                emit loginRequest(username, password);
+                m_name = username;
+                m_password = password;
+
+                qDebug() << "已发送自动登录请求: 用户" << username << "ID:" << userId;
+                return true;
             }
         }
     }
 
-    qDebug() << "没有有效的保存用户数据，自动登录失败";
+    qDebug() << "自动登录失败: 用户数据无效或未登录";
     return false;
 }
 
@@ -693,4 +695,28 @@ bool UserSession::saveUserAvatar(const QString& imagePath)
     }
     // 直接委托给 Storage
     return m_storage->saveUserAvatar(imagePath);
+}
+
+QString UserSession::getUserAvatarPath() const
+{
+    // 1. 基础检查：未初始化或存储对象为空
+    if (!m_initialized || !m_storage) {
+        return ":/images/default_avatar.png";
+    }
+
+    // 2. 获取当前用户ID
+    QString currentUserId = m_storage->getUserId();
+    if (currentUserId.isEmpty()) {
+        return ":/images/default_avatar.png";
+    }
+
+    // 3. 委托给 SessionStorage 进行实际的文件查找
+    QString foundPath = m_storage->findUserAvatarPath(currentUserId);
+
+    // 4. 如果找到了文件路径则返回，否则返回默认资源路径
+    if (!foundPath.isEmpty()) {
+        return foundPath;
+    }
+
+    return ":/images/default_avatar.png";
 }
