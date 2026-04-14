@@ -205,6 +205,8 @@ void MainPage::setupSidebar()
             this, &MainPage::onThemeChanged);
     connect(m_sidebar, &SystemSidebar::deleteAccountRequested,
             this, &MainPage::navigateToLogin);
+     connect(m_sidebar, &SystemSidebar::showCollectPageRequested,
+            this, &MainPage::showCollectPageRequested);
 }
 
 void MainPage::setupConnections()
@@ -397,14 +399,3 @@ void MainPage::onKeywordChanged(const QString& keyword)
     }
 }
 
-// void MainPage::onThemeChangedxxx(int newTheme)
-// {
-//     qDebug()<<"MainPage::onThemeChangedxxx(int newTheme)";
-//     // 直接使用传入的主题值
-//     UITheme uiTheme = (newTheme == 0) ? UITheme::Light : UITheme::Dark;
-
-//     // 更新当前显示的单词卡片主题
-//     if (m_currentWordCard) {
-//         m_currentWordCard->setUITheme(uiTheme);
-//     }
-// }

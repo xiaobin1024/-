@@ -13,7 +13,7 @@ public:
 };
 
 SearchBase::SearchBase(QWidget* parent)
-    : BaseWidget(parent)
+    : BaseWidget(parent,false)
     , d(new SearchBasePrivate())
 {
     initialize();

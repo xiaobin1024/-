@@ -183,6 +183,12 @@
 			null
 		],
 		[
+			"C:/Users/86152/Desktop/network_dictionary/src/ui/view/collecte_page.h",
+			"MU",
+			"OTUN7GXZT4/moc_collecte_page.cpp",
+			null
+		],
+		[
 			"C:/Users/86152/Desktop/network_dictionary/src/ui/view/login_page.h",
 			"MU",
 			"OTUN7GXZT4/moc_login_page.cpp",
@@ -308,6 +314,11 @@
 		],
 		[
 			"C:/Users/86152/Desktop/network_dictionary/src/ui/system/theme_manager.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/86152/Desktop/network_dictionary/src/ui/view/collecte_page.cpp",
 			"MU",
 			null
 		],

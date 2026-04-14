@@ -52,7 +52,7 @@ class BaseWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit BaseWidget(QWidget* parent = nullptr);
+    explicit BaseWidget(QWidget* parent = nullptr, bool autoRegister = true);
     virtual ~BaseWidget();
     void initialize();
 

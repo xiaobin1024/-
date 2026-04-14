@@ -20,6 +20,8 @@ ui_autogen/timestamp: \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/system/system_sidebar.h \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/system/theme_manager.cpp \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/system/theme_manager.h \
+	C:/Users/86152/Desktop/network_dictionary/src/ui/view/collecte_page.cpp \
+	C:/Users/86152/Desktop/network_dictionary/src/ui/view/collecte_page.h \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/view/login_page.cpp \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/view/login_page.h \
 	C:/Users/86152/Desktop/network_dictionary/src/ui/view/main_page.cpp \

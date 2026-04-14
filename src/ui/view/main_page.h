@@ -44,6 +44,8 @@ signals:
     void navigateToLogin();
     void navigateToRegister();
 
+    void showCollectPageRequested();
+
 
 protected:
     void initUI() override;
@@ -63,6 +65,8 @@ private slots:
 
     // //处理卡片主题变化
     // void onThemeChangedxxx(int newTheme);
+
+
 
 
 private:
@@ -93,6 +97,8 @@ private:
     WordCollect* m_wordCollect{nullptr};
     WordVocabulary* m_wordVocabulary{nullptr};
     ThemeManager* m_themeManager{nullptr};
+
+
 
 };
 

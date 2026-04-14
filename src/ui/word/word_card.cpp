@@ -5,7 +5,7 @@
 
 
 WordCard::WordCard(const WordData& data, QWidget* parent)
-    : BaseWidget(parent)  // 调用 BaseWidget 构造函数
+    : BaseWidget(parent,false)  // 调用 BaseWidget 构造函数
     , m_data(data)        // 初始化单词数据
 {
     initialize();

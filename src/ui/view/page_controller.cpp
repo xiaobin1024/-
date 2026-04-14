@@ -39,12 +39,14 @@ void PageController::setupPages()
     // 创建页面
     m_loginPage = new LoginPage(this);
     m_registerPage = new RegisterPage(this);
-     m_mainPage = new MainPage(this);
+    m_mainPage = new MainPage(this);
+    m_collectPage = new CollectePage(this);
 
     // 添加到堆栈控件
     m_stackedWidget->addWidget(m_loginPage);
     m_stackedWidget->addWidget(m_registerPage);
     m_stackedWidget->addWidget(m_mainPage);
+    m_stackedWidget->addWidget(m_collectPage);
 }
 
 void PageController::connectPageSignals()
@@ -77,6 +79,9 @@ void PageController::connectPageSignals()
             this, &PageController::handleNavigateToLogin);
     connect(m_mainPage, &MainPage::navigateToRegister,
             this, &PageController::handleNavigateToRegister);
+
+    connect(m_mainPage, &MainPage::showCollectPageRequested,
+            this, &PageController::handleNavigateToCollect);
 }
 
 void PageController::setCurrentPage(PageType pageType)
@@ -94,7 +99,11 @@ void PageController::setCurrentPage(PageType pageType)
     case Main:
         if (m_mainPage) m_mainPage->showPage();
         break;
+    case Collect:
+        m_collectPage->showPage();
+        break;
     }
+
 }
 
 void PageController::handleLoginSuccess(const UserData& user)
@@ -128,4 +137,11 @@ void PageController::handleNavigateToMain()
     if (currentUser.isLoggedIn()) {
         emit loginSuccess(currentUser);
     }
+}
+
+void PageController::handleNavigateToCollect()
+{
+    qDebug()<<"PageController::handleNavigateToCollect()";
+    qDebug()<<"准备跳转收藏页面";
+    setCurrentPage(Collect);
 }

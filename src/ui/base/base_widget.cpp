@@ -10,7 +10,7 @@
 #include <QDebug>
 #include"system/theme_manager.h"
 
-BaseWidget::BaseWidget(QWidget* parent)
+BaseWidget::BaseWidget(QWidget* parent, bool autoRegister)
     : QWidget(parent)
     , m_messageTimer(new QTimer(this))
 {
@@ -19,8 +19,9 @@ BaseWidget::BaseWidget(QWidget* parent)
     connect(m_messageTimer, &QTimer::timeout, this, &BaseWidget::clearMessage);
 
     // ==== 新增：向全局主题管理器注册 ====
-    ThemeManager::instance()->registerWidget(this);
-
+    if (autoRegister) {
+        ThemeManager::instance()->registerWidget(this);
+    }
     // 加载颜色配置
     loadColors();
 }
@@ -68,7 +69,9 @@ void BaseWidget::initUI()
     qDebug() << "BASEWIDGET::INITUI() 调用 #" << ++callCount;
 
     // 创建主布局
+    qDebug() << "创建主布局前";
     m_mainLayout = new QVBoxLayout(this);
+    qDebug() << "创建主布局后，地址：" << m_mainLayout;
     m_mainLayout->setContentsMargins(0, 0, 0, 0);
     m_mainLayout->setSpacing(12);
 

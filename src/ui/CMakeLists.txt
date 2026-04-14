@@ -34,6 +34,7 @@ add_library(ui STATIC
   view/register_page.h view/register_page.cpp
   view/page_controller.h view/page_controller.cpp
   view/main_page.h view/main_page.cpp
+  view/collecte_page.h view/collecte_page.cpp
 )
 
 # 链接依赖库

@@ -4,6 +4,7 @@
 #include "O2QWORDHJD/moc_searchhistory_widget.cpp"
 #include "M757I3AIOJ/moc_system_sidebar.cpp"
 #include "M757I3AIOJ/moc_theme_manager.cpp"
+#include "OTUN7GXZT4/moc_collecte_page.cpp"
 #include "OTUN7GXZT4/moc_login_page.cpp"
 #include "OTUN7GXZT4/moc_main_page.cpp"
 #include "OTUN7GXZT4/moc_page_controller.cpp"

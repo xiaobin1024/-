@@ -97,8 +97,7 @@ signals:
 
     void registerRequested(const QString& username, const QString& password);
 
-
-    // 注意：themeToggleRequested信号已从BaseWidget继承
+    void showCollectPageRequested(); // 请求显示收藏页面的信号
 
 protected:
     // 重写BaseWidget的初始化方法
@@ -137,6 +136,8 @@ private slots:
 
     void updateUserInfo(const UserData& user);
 
+    void handleCollectButtonClicked(); // 处理收藏按钮点击
+
 
 private:
     // 初始化UI组件
@@ -166,6 +167,7 @@ private:
     QPushButton* m_logoutButton{nullptr};     // 退出登录按钮
     QPushButton* m_deleteButton{nullptr};     // 注销账号按钮
     QPushButton* m_toggleButton{nullptr};     // 展开/收起按钮
+    QPushButton* m_collectButton{nullptr};    // 收藏单词按钮
 
     // 动画
     QPropertyAnimation* m_widthAnimation{nullptr};  // 宽度动画

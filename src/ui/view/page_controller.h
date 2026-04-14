@@ -5,6 +5,7 @@
 #include "login_page.h"
 #include "register_page.h"
 #include "main_page.h"
+#include "collecte_page.h"
 #include <QStackedWidget>
 
 class PageController : public BaseWidget
@@ -18,7 +19,8 @@ public:
     enum PageType {
         Login = 0,
         Register = 1,
-         Main = 2
+         Main = 2,
+        Collect=3
     };
 
     void setCurrentPage(PageType pageType);
@@ -39,6 +41,7 @@ private slots:
     void handleNavigateToRegister();
     void handleNavigateToLogin();
     void handleNavigateToMain();
+    void handleNavigateToCollect();
 
 private:
     void setupPages();
@@ -48,6 +51,7 @@ private:
     LoginPage* m_loginPage{nullptr};
     RegisterPage* m_registerPage{nullptr};
     MainPage* m_mainPage{nullptr};
+    CollectePage* m_collectPage{nullptr};
 };
 
 #endif // PAGE_CONTROLLER_H

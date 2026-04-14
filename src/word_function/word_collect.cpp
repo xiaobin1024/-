@@ -191,30 +191,35 @@ void WordCollect::processCollectListResponse(const QString& response)
         emit collectListSuccess(m_collectList);
         return;
     }
-
-    // 清空当前列表
+    if(response=="**OVER**"){
+        emit collectListFailed(response);
+        return;
+    }
     m_collectList.clear();
 
-    // 假设响应是多行数据，每行是一个收藏记录
-    // 格式: 单词|^|释义|^|音标|^|例句|^|翻译|^|时间
+    // 后端格式：单词|^|释义|^|音标|^|例句|^|翻译
     QStringList lines = response.split('\n', Qt::SkipEmptyParts);
 
     for (const QString& line : lines) {
         QStringList parts = line.split("|^|");
 
-        if (parts.size() >= 6) {
+        // 检查是否有 5 个字段
+        if (parts.size() >= 5) {
             WordData wordData;
+
+            // 按顺序赋值
             wordData.word = parts[0];
             wordData.meaning = parts[1];
             wordData.phonetic = parts[2];
             wordData.example = parts[3];
             wordData.translation = parts[4];
-            //wordData.time = parts[5];  // 假设WordData有time字段
-            wordData.isCollected = true;  // 从收藏列表查询的都是已收藏的
+            wordData.isCollected = true;
 
             if (wordData.isValid()) {
                 m_collectList.append(wordData);
             }
+        } else {
+            qDebug() << "数据格式错误，字段不足:" << line;
         }
     }
 
