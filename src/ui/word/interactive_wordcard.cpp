@@ -162,15 +162,16 @@ void InteractiveWordCard::onFavoriteButtonClicked()
     }
 }
 
-void InteractiveWordCard::onCollectStatusChanged(bool isCollected)
+void InteractiveWordCard::onCollectStatusChanged( QString &word,bool isCollected)
 {
     // 收到来自服务器的最终确认，更新本地状态和UI
-    m_isFavorite = isCollected;
-    m_wordData.isCollected = isCollected; // 同步回 WordData
-    updateButtonStyles();
-
-    // 显示最终结果消息
-    showMessage(isCollected ? "收藏成功" : "已取消收藏", false, 1500);
+    if(word==m_wordData.word){
+        m_isFavorite = isCollected;
+        m_wordData.isCollected = isCollected; // 同步回 WordData
+        updateButtonStyles();
+        // 显示最终结果消息
+        showMessage(isCollected ? "收藏成功" : "已取消收藏", false, 1500);
+    }
 }
 
 void InteractiveWordCard::onAddToVocabularyButtonClicked()
@@ -184,22 +185,20 @@ void InteractiveWordCard::onAddToVocabularyButtonClicked()
     }
 }
 
-void InteractiveWordCard::onVocabularyStatusChanged(bool isVocabulary)
+void InteractiveWordCard::onVocabularyStatusChanged(const QString& word,bool isVocabulary)
 {
-    // 收到来自服务器的最终确认，更新本地状态和UI
-    m_isAddedToVocabulary = isVocabulary;
-    m_wordData.isVocabulary= isVocabulary; // 同步回 WordData
-    updateButtonStyles();
-    // 显示最终结果消息
-    showMessage(isVocabulary ? "添加生单词成功" : "移除生单词", false, 1500);
+    if(word==m_wordData.word){
+        // 收到来自服务器的最终确认，更新本地状态和UI
+        m_isAddedToVocabulary = isVocabulary;
+        m_wordData.isVocabulary= isVocabulary; // 同步回 WordData
+        updateButtonStyles();
+        // 显示最终结果消息
+        showMessage(isVocabulary ? "添加生单词成功" : "移除生单词", false, 1500);
+    }
 }
 
 void InteractiveWordCard::onPronunciationButtonClicked()
 {
-    // if (!getWordData().word.isEmpty()) {
-    //     emit pronunciationRequested(getWordData().word);
-    //     showMessage("播放发音", false, 1000);
-    // }
 
     qDebug()<<"InteractiveWordCard::onPronunciationButtonClicked()";
     if(m_wordData.isValid()){

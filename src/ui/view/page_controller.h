@@ -6,6 +6,7 @@
 #include "register_page.h"
 #include "main_page.h"
 #include "collecte_page.h"
+#include "export_manager.h"
 #include <QStackedWidget>
 
 class PageController : public BaseWidget
@@ -42,6 +43,7 @@ private slots:
     void handleNavigateToLogin();
     void handleNavigateToMain();
     void handleNavigateToCollect();
+    void handleCollectToMain();
 
 private:
     void setupPages();

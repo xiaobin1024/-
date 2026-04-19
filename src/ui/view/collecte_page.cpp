@@ -7,14 +7,15 @@
 CollectePage::CollectePage(QWidget *parent)
     : BaseWidget(parent),
     m_wordCollect(WordCollect::instance()),
-    m_wordVocabulary(WordVocabulary::instance())
+    m_wordVocabulary(WordVocabulary::instance()),
+    m_exportManager(ExportManager::instance())
 {
     qDebug() << "CollectePage 创建";
     initialize();
 
     // 连接 WordCollect 的信号到槽函数
-    connect(WordCollect::instance(), &WordCollect::collectListSuccess, this, &CollectePage::onCollectListSuccess);
-    connect(WordCollect::instance(), &WordCollect::collectListFailed, this, &CollectePage::onCollectListFailed);
+    connect(m_wordCollect, &WordCollect::collectListSuccess, this, &CollectePage::onCollectListSuccess);
+    connect(m_wordCollect, &WordCollect::collectListFailed, this, &CollectePage::onCollectListFailed);
 }
 
 
@@ -26,91 +27,94 @@ CollectePage::~CollectePage()
 void CollectePage::initUI()
 {
     qDebug() << "CollectePage::initUI()开始";
-    BaseWidget::initUI();
+    BaseWidget::initUI(); // 这里 BaseWidget 应该已经初始化了 m_mainLayout (QVBoxLayout)
     setObjectName("CollectePage");
     setWindowTitle("我的收藏");
 
 
-
-    // 初始化占位符标签
-    m_placeholderLabel = new QLabel("暂无收藏记录", this);
-    m_placeholderLabel->setAlignment(Qt::AlignCenter);
-    m_placeholderLabel->setStyleSheet("QLabel { font-size: 18px; color: gray; }");
-     qDebug() << "CollectePage::initUI() - 结束";
+    qDebug() << "CollectePage::initUI() - 结束";
 }
-
 void CollectePage::setupLayout()
 {
     qDebug() << "CollectePage::setupLayout() 开始";
-
 
     if (!m_mainLayout) {
         qCritical() << "主布局未初始化";
         return;
     }
 
-    // 1. 创建滚动区域
+    // 我们创建一个横向布局来管理顶部的两个按钮
+    QWidget *topWidget = new QWidget(this);
+    QHBoxLayout *topLayout = new QHBoxLayout(topWidget);
+    topLayout->setContentsMargins(0, 0, 0, 0); // 紧凑布局
+
+    // 1. 初始化/确保按钮存在
+    // 注意：m_backButton 和 m_refreshButton 应该在 initUI 或构造函数中 new 过
+    if (!m_backButton) {
+        m_backButton =  createSecondaryButton("","backButton");
+        m_backButton->setText("⬅️");
+        m_backButton->setFixedSize(30, 30);
+    }
+    if (!m_refreshButton) {
+        m_refreshButton = createSecondaryButton("","refreshButton");
+        m_refreshButton->setText("🔄");
+        m_refreshButton->setFixedSize(30, 30);
+    }
+
+    // 2. 将按钮加入横向布局
+    topLayout->addWidget(m_backButton);      // 左边
+    topLayout->addStretch(1);                // 中间：加一个弹簧，把左右两边的控件撑开
+    topLayout->addWidget(m_refreshButton);   // 右边
+
+
+    // --- 中间区域：滚动列表 ---
+    // 创建滚动区域
     m_scrollArea = new QScrollArea(this);
     m_scrollArea->setWidgetResizable(true);
-    m_scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    m_scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff); // 通常收藏列表不需要横向滚动
     m_scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-    m_scrollArea->setStyleSheet(QString(
-                                    "QScrollArea { border: none; background: transparent; }"
-                                    "QScrollBar:vertical { background: %1; width: 12px; border-radius: 6px; }"
-                                    "QScrollBar::handle:vertical { background: %2; border-radius: 6px; min-height: 20px; }"
-                                    ).arg(getColor("surface"), getColor("secondary-light")));
 
-    // 2. 创建内容 Widget 和 Layout
     m_contentWidget = new QWidget();
     m_contentLayout = new QVBoxLayout(m_contentWidget);
     m_contentLayout->setContentsMargins(50, 50, 50, 50);
     m_contentLayout->setSpacing(20);
-    m_contentWidget->setStyleSheet("background: transparent;");
 
-    // 默认添加占位符
-    m_contentLayout->addWidget(m_placeholderLabel);
-    m_contentLayout->addStretch();
 
-    // 3. 设置滚动区域内容
     m_scrollArea->setWidget(m_contentWidget);
 
-    // 4. 设置主布局
-    m_mainLayout->addWidget(m_scrollArea);
+    // 底部导出按钮
+    QWidget* exportWidget = new QWidget(this);
+    QHBoxLayout* exportLayout = new QHBoxLayout(exportWidget);
+    exportLayout->setContentsMargins(0, 0, 0, 0);
 
-    // === 添加刷新按钮 ===
-    m_refreshButton = new QPushButton("刷新", this);
-    m_refreshButton->setFixedHeight(40);
-    m_refreshButton->setStyleSheet(QString(
-                                       "QPushButton {"
-                                       "  background-color: %1;"
-                                       "  color: %2;"
-                                       "  border: 1px solid %3;"
-                                       "  border-radius: 6px;"
-                                       "  padding: 0 15px;"
-                                       "  font-size: 14px;"
-                                       "  font-weight: 500;"
-                                       "}"
-                                       "QPushButton:hover {"
-                                       "  background-color: %4;"
-                                       "}"
-                                       "QPushButton:pressed {"
-                                       "  background-color: %5;"
-                                       "}"
-                                       ).arg(
-                                           getColor("primary"),        // 背景颜色
-                                           getColor("text-primary"),   // 文字颜色
-                                           getColor("border"),         // 边框颜色
-                                           getColor("primary-light"),  // 悬停颜色
-                                           getColor("primary-dark")    // 按下颜色
-                                           ));
+    //m_exportExcelButton = new QPushButton("📊 导出Excel", this);
+    m_exportExcelButton=createSecondaryButton("","exportExcelButton");
+    m_exportExcelButton->setText("📊 导出Excel");
 
-    // 将按钮添加到主布局底部
-    m_mainLayout->addSpacing(10);
-    m_mainLayout->addWidget(m_refreshButton, 0, Qt::AlignBottom);
-    m_mainLayout->addSpacing(20);
+    //m_exportPdfButton = new QPushButton("📄 导出PDF", this);
+    m_exportPdfButton=createSecondaryButton("","exportPdfButton");
+    m_exportPdfButton->setText("📄 导出PDF");
 
-    // 连接按钮点击信号到查询函数
+    m_exportExcelButton->setFixedHeight(36);
+    m_exportPdfButton->setFixedHeight(36);
+
+    exportLayout->addStretch();
+    exportLayout->addWidget(m_exportExcelButton);
+    exportLayout->addWidget(m_exportPdfButton);
+    exportLayout->addStretch();
+
+    // 1. 添加顶部工具栏
+    m_mainLayout->addWidget(topWidget);
+    m_mainLayout->addWidget(m_scrollArea, 1);
+    m_mainLayout->addWidget(exportWidget);
+
+    // --- 信号连接 ---
     connect(m_refreshButton, &QPushButton::clicked, this, &CollectePage::requestQueryCollectList);
+    connect(m_backButton, &QPushButton::clicked, this, &CollectePage::onBackButtonClicked);
+    connect(m_exportExcelButton, &QPushButton::clicked, this, &CollectePage::onExportExcelClicked);
+    connect(m_exportPdfButton, &QPushButton::clicked, this, &CollectePage::onExportPdfClicked);
+
+    updateWidgetStyles();
     qDebug() << "CollectePage::setupLayout() 结束";
 
 }
@@ -118,120 +122,151 @@ void CollectePage::setupLayout()
 void CollectePage::requestQueryCollectList()
 {
     // 调用 WordCollect 的查询函数
-    WordCollect::instance()->queryCollectList();
-
-    // 显示加载状态
-    m_placeholderLabel->setText("正在加载收藏列表...");
-    m_placeholderLabel->setVisible(true);
+     m_currentWordList.clear();
+    m_wordCollect->queryCollectList();
 }
+
 
 void CollectePage::onCollectListSuccess(const QList<WordData>& wordList)
 {
-    // 清除旧内容（除了占位符和 Stretch）
-    // QLayoutItem* item;
-    // while ((item = m_contentLayout->takeAt(0)) != nullptr) {
-    //     if (item->widget()) {
-    //         item->widget()->deleteLater();
-    //     }
-    //     delete item;
-    // }
+    m_currentWordList = wordList;
+    // 1. 无条件清理旧卡片
+    QList<InteractiveWordCard*> oldCards = m_contentWidget->findChildren<InteractiveWordCard*>();
+    for (InteractiveWordCard* card : oldCards) {
+        m_contentLayout->removeWidget(card);
+        delete card;
+    }
+    while (m_contentLayout->count() > 0) {
+        delete m_contentLayout->takeAt(0);
+    }
 
+    // 2. 空列表提示
     if (wordList.isEmpty()) {
-        m_contentLayout->addWidget(m_placeholderLabel);
-        m_contentLayout->addStretch();
-        m_placeholderLabel->setText("暂无收藏记录");
+        showMessage("没有收藏记录或者单词已经显示完成", false, 2000);
         return;
     }
 
-    // 遍历数据，创建单词卡片
+    // 3. 加载新卡片
     for (const WordData& wordData : wordList) {
-        InteractiveWordCard* card = new InteractiveWordCard(wordData, m_wordCollect, m_wordVocabulary, this);
-
-        // 【关键】应用当前主题
+        InteractiveWordCard* card = new InteractiveWordCard(
+            wordData, m_wordCollect, m_wordVocabulary, m_contentWidget
+            );
         int currentTheme = ThemeManager::instance()->currentThemeInt();
-        UITheme uiTheme = (currentTheme == 0) ? UITheme::Light : UITheme::Dark;
+        UITheme uiTheme =(currentTheme==0)?UITheme::Light : UITheme::Dark;
         card->setUITheme(uiTheme);
-
-        card->setFixedWidth(400); // 限制卡片宽度
+        card->setFixedWidth(400);
         m_contentLayout->addWidget(card);
     }
+
     m_contentLayout->addStretch();
+    m_contentWidget->adjustSize();
+}
+
+void CollectePage::onExportExcelClicked()
+{
+    if (m_currentWordList.isEmpty()) {
+        showMessage("当前没有可导出的收藏单词", false, 2000);
+        return;
+    }
+    emit exportRequested(ExportFormat::Excel, m_currentWordList);
+}
+
+void CollectePage::onExportPdfClicked()
+{
+    if (m_currentWordList.isEmpty()) {
+        showMessage("当前没有可导出的收藏单词", false, 2000);
+        return;
+    }
+    emit exportRequested(ExportFormat::PDF, m_currentWordList);
 }
 
 void CollectePage::updateWidgetStyles()
 {
     BaseWidget::updateWidgetStyles(); // 调用父类刷新基础样式
 
-    // 1. 更新滚动区域样式 (对应 m_scrollArea)
-    // 包括边框、背景色和滚动条样式
+    // 1. 更新滚动区域样式 (已在 setupLayout 中设置，这里可以再次确保或仅保留逻辑)
     if (m_scrollArea) {
         m_scrollArea->setStyleSheet(QString(
                                         "QScrollArea {"
-                                        "  border: 2px solid %1;"     // 边框颜色，使用背景色作为边框参考
-                                        "  border-radius: 8px;"       // 圆角
-                                        "  background-color: %2;"     // 背景色，使用 surface 颜色
-                                        "  margin: 20px;"             // 外边距
+                                        "  border: 2px solid %1;"
+                                        "  border-radius: 8px;"
+                                        "  background-color: %2;"
                                         "}"
                                         "QScrollBar:vertical {"
-                                        "  background: %2;"          // 滚动条轨道背景
-                                        "  width: 12px;"              // 滚动条宽度
-                                        "  border-radius: 6px;"       // 圆角
+                                        "  background: %2;"
+                                        "  width: 12px;"
+                                        "  border-radius: 6px;"
                                         "}"
                                         "QScrollBar::handle:vertical {"
-                                        "  background: %3;"           // 滚动条滑块颜色
-                                        "  border-radius: 6px;"       // 圆角
-                                        "  min-height: 20px;"         // 最小高度
+                                        "  background: %3;"
+                                        "  border-radius: 6px;"
+                                        "  min-height: 20px;"
                                         "}"
                                         ).arg(
-                                            getColor("background"),      // %1: 边框颜色
-                                            getColor("surface"),         // %2: 表面背景色 (用于轨道和边框内背景)
-                                            getColor("secondary-light")  // %3: 滑块颜色
+                                            getColor("background"),
+                                            getColor("surface"),
+                                            getColor("secondary-light")
                                             ));
     }
 
-    // 2. 更新内容 Widget 样式 (对应 m_contentWidget)
-    // 确保内容区域背景透明，以显示滚动区域的背景
+    // 2. 更新内容 Widget 样式
     if (m_contentWidget) {
-        m_contentWidget->setStyleSheet("background: transparent;"); // 关键：设为透明
+        m_contentWidget->setStyleSheet("background: transparent;");
     }
 
-    // 3. 更新占位符标签样式 (对应 m_placeholderLabel)
-    // 当没有收藏内容时显示的文字样式
+    // 3. 更新占位符标签样式
     if (m_placeholderLabel) {
         m_placeholderLabel->setStyleSheet(QString(
                                               "QLabel {"
                                               "  font-size: 18px;"
-                                              "  color: %1;"                // 文字颜色，使用次级文本颜色
-                                              "  background: transparent;"  // 背景透明
+                                              "  color: %1;"
+                                              "  background: transparent;"
                                               "}"
                                               ).arg(getColor("text-secondary")));
     }
-
-    // 4. 更新刷新按钮样式
     if (m_refreshButton) {
         m_refreshButton->setStyleSheet(QString(
                                            "QPushButton {"
-                                           "  background-color: %1;"
-                                           "  color: %2;"
-                                           "  border: 1px solid %3;"
-                                           "  border-radius: 6px;"
-                                           "  padding: 0 15px;"
-                                           "  font-size: 14px;"
-                                           "  font-weight: 500;"
+                                           "  background-color: transparent;"  // 平时完全透明
+                                           "  border: none;"
+                                           "  border-radius: 20px;"
+                                           "  color: %1;"                      // 图标颜色使用次要文字色（灰色）
+                                            "  font-size: 28px;"
                                            "}"
                                            "QPushButton:hover {"
-                                           "  background-color: %4;"
+                                           "  background-color: %2;"           // 悬浮时显示浅灰色背景
+                                           "  color: %3;"                      // 图标变为主色
                                            "}"
-                                           "QPushButton:pressed {"
-                                           "  background-color: %5;"
-                                           "}"
-                                           ).arg(
-                                               getColor("primary"),        // 背景颜色
-                                               getColor("text-primary"),   // 文字颜色
-                                               getColor("border"),         // 边框颜色
-                                               getColor("primary-light"),  // 悬停颜色
-                                               getColor("primary-dark")    // 按下颜色
-                                               ));
+                                           ).arg(getColor("text-secondary"))   // %1: 默认图标颜色
+                                           .arg(getColor("surface"))          // %2: 悬浮背景 (利用 surface 颜色，亮色主题下是浅灰)
+                                           .arg(getColor("primary"))          // %3: 悬浮图标颜色
+                                       );
+    }
+
+    // 5. 更新返回按钮样式 (如果需要单独设置)
+    if (m_backButton) {
+        m_backButton->setStyleSheet(m_refreshButton->styleSheet());
+    }
+
+    QString exportBtnStyle = QString(
+                                 "QPushButton {"
+                                 "  background-color: %1;"
+                                 "  color: %2;"
+                                 "  border: none;"
+                                 "  border-radius: 6px;"
+                                 "  padding: 8px 16px;"
+                                 "  font-size: 14px;"
+                                 "}"
+                                 "QPushButton:hover {"
+                                 "  background-color: %3;"
+                                 "}"
+                                 ).arg(getColor("primary"), getColor("text-on-primary"), getColor("primary-dark"));
+
+    if (m_exportExcelButton) {
+        m_exportExcelButton->setStyleSheet(exportBtnStyle);
+    }
+    if (m_exportPdfButton) {
+        m_exportPdfButton->setStyleSheet(exportBtnStyle);
     }
 }
 
@@ -251,5 +286,11 @@ void CollectePage::onCollectListFailed(const QString& errorMessage)
     // m_contentLayout->addWidget(m_placeholderLabel);
     // m_contentLayout->addStretch();
 
-     showMessage("收藏单词已经接收完成: " + errorMessage, true, 2000);
+     showMessage("显示收藏单词内容出错: " + errorMessage, true, 2000);
+}
+
+void CollectePage::onBackButtonClicked()
+{
+    qDebug()<<"CollectePage::onBackButtonClicked()";
+    emit showMainPageRequested();
 }

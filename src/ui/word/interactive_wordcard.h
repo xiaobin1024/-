@@ -60,11 +60,12 @@ private slots:
     void onPronunciationButtonClicked();
     void onAddToVocabularyButtonClicked();
     void onMoreActionsButtonClicked();
-    void onCollectStatusChanged(bool isCollected);
+    void onCollectStatusChanged( QString& word,bool isCollected);
+    void onVocabularyStatusChanged(const QString& word, bool isVocabulary);
 
 
 private:
-    void initInteractiveUI();void onVocabularyStatusChanged(bool isVocabulary);
+    void initInteractiveUI();
     void setupConnections();
     void updateButtonStyles();
     void createMoreActionsMenu();

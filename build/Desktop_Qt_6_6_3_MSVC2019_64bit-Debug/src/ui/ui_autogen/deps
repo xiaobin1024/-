@@ -37,6 +37,7 @@ ui_autogen/timestamp: \
 	C:/Users/86152/Desktop/network_dictionary/src/user_session/session_storage.h \
 	C:/Users/86152/Desktop/network_dictionary/src/user_session/user_data.h \
 	C:/Users/86152/Desktop/network_dictionary/src/user_session/user_session.h \
+	C:/Users/86152/Desktop/network_dictionary/src/word_function/export_manager.h \
 	C:/Users/86152/Desktop/network_dictionary/src/word_function/word_collect.h \
 	C:/Users/86152/Desktop/network_dictionary/src/word_function/word_data.h \
 	C:/Users/86152/Desktop/network_dictionary/src/word_function/word_search.h \

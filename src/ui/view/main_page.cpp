@@ -58,7 +58,7 @@ void MainPage::setupLayout()
     // 设置内容区域
     setupContentArea();
 
-    m_searchContainer->setStyleSheet("#m_searchContainer { background: transparent; border: none; }");
+    //m_searchContainer->setStyleSheet("#m_searchContainer { background: transparent; border: none; }");
 
     m_searchContainer->layout()->setContentsMargins(0, 0, 0, 0);
 

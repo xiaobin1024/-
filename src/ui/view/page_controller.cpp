@@ -47,6 +47,8 @@ void PageController::setupPages()
     m_stackedWidget->addWidget(m_registerPage);
     m_stackedWidget->addWidget(m_mainPage);
     m_stackedWidget->addWidget(m_collectPage);
+
+    ExportManager::instance()->bindToCollectePage(m_collectPage);
 }
 
 void PageController::connectPageSignals()
@@ -82,6 +84,11 @@ void PageController::connectPageSignals()
 
     connect(m_mainPage, &MainPage::showCollectPageRequested,
             this, &PageController::handleNavigateToCollect);
+
+    connect(m_collectPage,&CollectePage::showMainPageRequested,
+            this,&PageController::handleCollectToMain);
+
+
 }
 
 void PageController::setCurrentPage(PageType pageType)
@@ -144,4 +151,10 @@ void PageController::handleNavigateToCollect()
     qDebug()<<"PageController::handleNavigateToCollect()";
     qDebug()<<"准备跳转收藏页面";
     setCurrentPage(Collect);
+}
+
+void PageController::handleCollectToMain()
+{
+    qDebug()<<" PageController::handleCollectToMain()";
+    setCurrentPage(Main);
 }

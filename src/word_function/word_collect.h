@@ -31,6 +31,8 @@ public:
     // 设置用户会话
     void setUserSession(UserSession* session);
 
+    bool isCollected(const QString& word);
+
 signals:
     // 收藏请求信号
     void collectRequested(const QString& username, const QString& wordData);
@@ -50,7 +52,7 @@ signals:
     // 查询收藏列表失败信号
     void collectListFailed(const QString& error);
 
-    void collectStatusChanged(bool isCollected); // 当收藏状态改变时发射
+    void collectStatusChanged(QString& word,bool isCollected); // 当收藏状态改变时发射
 
 public slots:
     // 处理收藏响应

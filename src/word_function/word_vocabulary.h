@@ -30,13 +30,12 @@ signals:
     void vocabularyStatusRequested(const QString& username, const QString& wordData);
 
     // 生词本操作成功信号
-    void vocabularyOperationSuccess(const QString& message);
+    void vocabularyOperationSuccess(const QString& word, const QString& message);
 
     // 生词本操作失败信号
-    void vocabularyOperationFailed(const QString& error);
-
+    void vocabularyOperationFailed(const QString& word, const QString& error);
     // 当生词本状态改变时发射
-    void vocabularyStatusChanged(bool isInVocabulary);
+    void vocabularyStatusChanged(const QString& word, bool isVocabulary);
 
 public slots:
     // 处理生词本操作响应

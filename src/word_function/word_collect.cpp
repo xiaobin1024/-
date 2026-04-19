@@ -104,6 +104,7 @@ void WordCollect::queryCollectList()
         return;
     }
 
+     m_collectList.clear();
     qDebug() << "WordCollect::queryCollectList - 查询收藏列表，用户:" << username;
 
     // 发射查询收藏列表请求信号
@@ -131,35 +132,44 @@ void WordCollect::processCollectResponse(const QString& response)
         return;
     }
 
-    // --- 新的响应码处理 ---
-    if (response == "collect_success") {
-        emit collectStatusChanged(true); // 发射收藏状态改变信号，现在是收藏状态
+    // --- 1. 解析响应：分离状态和单词 ---
+    // 假设格式是 "collect_success|^|hello"
+    QStringList parts = response.split("|^|");
+    if (parts.isEmpty()) return;
+
+    QString status = parts[0]; // 第一部分是状态
+    QString word = "";
+    if (parts.size() > 1) {
+        word = parts[1]; // 第二部分是单词
+    }
+
+    // --- 2. 根据状态发射信号（带上单词参数） ---
+    // 注意：这里 emit 的信号必须是带 (QString, bool) 参数的版本
+    if (status == "collect_success") {
+        emit collectStatusChanged(word, true); // 单词, 状态
         emit collectSuccess("收藏成功");
         return;
     }
 
-    if (response == "collect_error") {
-        // emit collectStatusChanged(false); // 状态未变，不发射
+    if (status == "collect_error") {
         emit collectFailed("收藏失败");
         return;
     }
 
-    if (response == "cancel_success") {
-        emit collectStatusChanged(false); // 发射收藏状态改变信号，现在是未收藏状态
+    if (status == "cancel_success") {
+        emit collectStatusChanged(word, false); // 单词, 状态
         emit collectSuccess("取消收藏成功");
         return;
     }
 
-    if (response == "cancel_error") {
-        // emit collectStatusChanged(true); // 状态未变，不发射
+    if (status == "cancel_error") {
         emit collectFailed("取消收藏失败");
         return;
     }
 
-    if (response == "cancel_not_found") {
-        // 这种情况下，服务器认为该单词未被收藏，客户端也应该同步状态
-        emit collectStatusChanged(false); // 发射收藏状态改变信号，同步为未收藏状态
-        emit collectSuccess("收藏已取消"); // 可以提示用户"已取消收藏"或"收藏不存在"
+    if (status == "cancel_not_found") {
+        emit collectStatusChanged(word, false);
+        emit collectSuccess("收藏已取消");
         return;
     }
 
@@ -186,16 +196,15 @@ void WordCollect::processCollectListResponse(const QString& response)
         return;
     }
 
-    if (response == "empty") {
+    if (response == "**EMPTY**") {
         m_collectList.clear();
         emit collectListSuccess(m_collectList);
         return;
     }
     if(response=="**OVER**"){
-        emit collectListFailed(response);
         return;
     }
-    m_collectList.clear();
+    //m_collectList.clear();
 
     // 后端格式：单词|^|释义|^|音标|^|例句|^|翻译
     QStringList lines = response.split('\n', Qt::SkipEmptyParts);
@@ -203,8 +212,8 @@ void WordCollect::processCollectListResponse(const QString& response)
     for (const QString& line : lines) {
         QStringList parts = line.split("|^|");
 
-        // 检查是否有 5 个字段
-        if (parts.size() >= 5) {
+        // 检查是否有 6 个字段
+        if (parts.size() >= 6) {
             WordData wordData;
 
             // 按顺序赋值
@@ -214,6 +223,10 @@ void WordCollect::processCollectListResponse(const QString& response)
             wordData.example = parts[3];
             wordData.translation = parts[4];
             wordData.isCollected = true;
+
+            // 【新增】解析生词标识
+            QString vocabFlag = parts[5];
+            wordData.isVocabulary = (vocabFlag == "1");
 
             if (wordData.isValid()) {
                 m_collectList.append(wordData);
@@ -228,4 +241,15 @@ void WordCollect::processCollectListResponse(const QString& response)
     } else {
         emit collectListSuccess(m_collectList);
     }
+}
+
+bool WordCollect::isCollected(const QString& word)
+{
+    // 遍历收藏列表，检查每个 WordData 的 word 字段
+    for (const WordData& data : m_collectList) {
+        if (data.word == word) {
+            return true;
+        }
+    }
+    return false;
 }

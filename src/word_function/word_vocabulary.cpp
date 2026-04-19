@@ -54,19 +54,19 @@ void WordVocabulary::setUserSession(UserSession* session)
 void WordVocabulary::updateVocabularyStatus(const WordData& wordData)
 {
     if (!m_userSession) {
-        emit vocabularyOperationFailed("用户会话未设置");
+        emit vocabularyOperationFailed(wordData.word, "用户会话未设置");
         return;
     }
 
     if (!wordData.isValid()) {
-        emit vocabularyOperationFailed("单词数据无效");
+        emit vocabularyOperationFailed(wordData.word,"单词数据无效");
         return;
     }
 
     // 获取当前用户名
     QString username = m_userSession->currentUser().username();
     if (username.isEmpty()) {
-        emit vocabularyOperationFailed("用户未登录");
+        emit vocabularyOperationFailed(wordData.word,"用户未登录");
         return;
     }
 
@@ -95,39 +95,42 @@ void WordVocabulary::processVocabularyResponse(const QString& response)
 {
     qDebug() << "WordVocabulary::processVocabularyResponse - 响应:" << response;
 
-    if (response.startsWith("ERROR:")) {
-        emit vocabularyOperationFailed(response);
+    // 按 |^| 分割，提取状态和单词
+    QStringList parts = response.split("|^|");
+    QString status = parts.value(0);
+    QString word = parts.value(1);  // 第二个字段是单词
+
+    if (status.startsWith("ERROR:")) {
+        emit vocabularyOperationFailed(word, response);
         return;
     }
 
-    // --- 处理后端返回的响应码 ---
-    if (response == "add_success") {
-        emit vocabularyStatusChanged(true); // 发射状态改变信号，现在在生词本中
-        emit vocabularyOperationSuccess("添加生词成功");
+    if (status == "add_success") {
+        emit vocabularyStatusChanged(word, true);
+        emit vocabularyOperationSuccess(word, "添加生词成功");
         return;
     }
 
-    if (response == "add_error") {
-        emit vocabularyOperationFailed("添加生词失败");
+    if (status == "add_error") {
+        emit vocabularyOperationFailed(word, "添加生词失败");
         return;
     }
 
-    if (response == "remove_success") {
-        emit vocabularyStatusChanged(false); // 发射状态改变信号，现在不在生词本中
-        emit vocabularyOperationSuccess("移出生词本成功");
+    if (status == "remove_success") {
+        emit vocabularyStatusChanged(word, false);
+        emit vocabularyOperationSuccess(word, "移出生词本成功");
         return;
     }
 
-    if (response == "remove_error") {
-        emit vocabularyOperationFailed("移出生词本失败");
+    if (status == "remove_error") {
+        emit vocabularyOperationFailed(word, "移出生词本失败");
         return;
     }
 
-    if (response == "format is incorrect") {
-        emit vocabularyOperationFailed("数据格式错误");
+    if (status == "format is incorrect") {
+        emit vocabularyOperationFailed(word, "数据格式错误");
         return;
     }
 
-    // 默认处理
-    emit vocabularyOperationFailed("操作失败，未知响应: " + response);
+    emit vocabularyOperationFailed(word, "操作失败，未知响应: " + response);
 }
