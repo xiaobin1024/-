@@ -37,6 +37,71 @@ ui_autogen/timestamp: \
 	C:/Users/86152/Desktop/network_dictionary/src/user_session/session_storage.h \
 	C:/Users/86152/Desktop/network_dictionary/src/user_session/user_data.h \
 	C:/Users/86152/Desktop/network_dictionary/src/user_session/user_session.h \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/cell/cell.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/cell/cell_reference.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/cell/cell_type.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/cell/comment.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/cell/hyperlink.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/cell/index_types.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/cell/phonetic_run.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/cell/rich_text.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/cell/rich_text_run.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/internal/features.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/packaging/manifest.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/packaging/relationship.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/packaging/uri.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/styles/alignment.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/styles/border.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/styles/color.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/styles/conditional_format.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/styles/fill.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/styles/font.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/styles/format.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/styles/number_format.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/styles/protection.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/styles/style.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/utils/calendar.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/utils/date.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/utils/datetime.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/utils/environment.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/utils/exceptions.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/utils/numeric.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/utils/optional.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/utils/path.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/utils/scoped_enum_hash.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/utils/time.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/utils/timedelta.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/utils/variant.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/utils/xlnt_cmake_export.h \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/workbook/document_security.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/workbook/external_book.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/workbook/metadata_property.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/workbook/named_range.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/workbook/streaming_workbook_reader.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/workbook/streaming_workbook_writer.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/workbook/theme.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/workbook/workbook.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/workbook/worksheet_iterator.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/worksheet/cell_iterator.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/worksheet/cell_vector.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/worksheet/column_properties.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/worksheet/header_footer.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/worksheet/major_order.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/worksheet/page_margins.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/worksheet/page_setup.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/worksheet/pane.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/worksheet/phonetic_pr.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/worksheet/range.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/worksheet/range_iterator.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/worksheet/range_reference.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/worksheet/row_properties.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/worksheet/selection.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/worksheet/sheet_format_properties.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/worksheet/sheet_protection.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/worksheet/sheet_view.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/worksheet/worksheet.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/xlnt.hpp \
+	C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include/xlnt/xlnt_config.hpp \
 	C:/Users/86152/Desktop/network_dictionary/src/word_function/export_manager.h \
 	C:/Users/86152/Desktop/network_dictionary/src/word_function/word_collect.h \
 	C:/Users/86152/Desktop/network_dictionary/src/word_function/word_data.h \
@@ -218,6 +283,8 @@ ui_autogen/timestamp: \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qversiontagging.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtCore/qxptype_traits.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtGui/QMouseEvent \
+	D:/qt/6.6.3/msvc2019_64/include/QtGui/QPageSize \
+	D:/qt/6.6.3/msvc2019_64/include/QtGui/QTextDocument \
 	D:/qt/6.6.3/msvc2019_64/include/QtGui/QTransform \
 	D:/qt/6.6.3/msvc2019_64/include/QtGui/qaction.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtGui/qbitmap.h \
@@ -233,6 +300,10 @@ ui_autogen/timestamp: \
 	D:/qt/6.6.3/msvc2019_64/include/QtGui/qimage.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtGui/qinputdevice.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtGui/qkeysequence.h \
+	D:/qt/6.6.3/msvc2019_64/include/QtGui/qpagedpaintdevice.h \
+	D:/qt/6.6.3/msvc2019_64/include/QtGui/qpagelayout.h \
+	D:/qt/6.6.3/msvc2019_64/include/QtGui/qpageranges.h \
+	D:/qt/6.6.3/msvc2019_64/include/QtGui/qpagesize.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtGui/qpaintdevice.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtGui/qpalette.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtGui/qpen.h \
@@ -265,6 +336,11 @@ ui_autogen/timestamp: \
 	D:/qt/6.6.3/msvc2019_64/include/QtNetwork/qtnetwork-config.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtNetwork/qtnetworkexports.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtNetwork/qtnetworkglobal.h \
+	D:/qt/6.6.3/msvc2019_64/include/QtPrintSupport/QPrinter \
+	D:/qt/6.6.3/msvc2019_64/include/QtPrintSupport/qprinter.h \
+	D:/qt/6.6.3/msvc2019_64/include/QtPrintSupport/qtprintsupport-config.h \
+	D:/qt/6.6.3/msvc2019_64/include/QtPrintSupport/qtprintsupportexports.h \
+	D:/qt/6.6.3/msvc2019_64/include/QtPrintSupport/qtprintsupportglobal.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtTextToSpeech/QTextToSpeech \
 	D:/qt/6.6.3/msvc2019_64/include/QtTextToSpeech/qtexttospeech.h \
 	D:/qt/6.6.3/msvc2019_64/include/QtTextToSpeech/qtexttospeech_global.h \

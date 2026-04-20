@@ -253,11 +253,17 @@ CMAKE_STATIC_LINKER_FLAGS_RELEASE:STRING=
 // during RELWITHDEBINFO builds.
 CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 
+//Vcpkg toolchain file
+CMAKE_TOOLCHAIN_FILE:STRING=C:/Users/86152/Desktop/network_dictionary/src/vcpkg/scripts/buildsystems/vcpkg.cmake
+
 //If this value is on, makefiles will be generated without the
 // .SILENT directive, and all commands will be echoed to the console
 // during the make.  This is useful for debugging only. With Visual
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
+
+//The directory containing a CMake configuration file for FastFloat.
+FastFloat_DIR:PATH=C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/share/FastFloat
 
 //Additional directories where find(Qt6 ...) host Qt components
 // are searched
@@ -298,6 +304,9 @@ Qt6Multimedia_DIR:PATH=D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6Multimedia
 
 //The directory containing a CMake configuration file for Qt6Network.
 Qt6Network_DIR:PATH=D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6Network
+
+//The directory containing a CMake configuration file for Qt6PrintSupport.
+Qt6PrintSupport_DIR:PATH=D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6PrintSupport
 
 //The directory containing a CMake configuration file for Qt6TextToSpeech.
 Qt6TextToSpeech_DIR:PATH=D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6TextToSpeech
@@ -346,6 +355,9 @@ dispatcher_IS_TOP_LEVEL:STATIC=OFF
 
 //Value Computed by CMake
 dispatcher_SOURCE_DIR:STATIC=C:/Users/86152/Desktop/network_dictionary/src/dispatcher
+
+//The directory containing a CMake configuration file for fmt.
+fmt_DIR:PATH=C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/share/fmt
 
 //Value Computed by CMake
 main_app_BINARY_DIR:STATIC=C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/main_app
@@ -401,6 +413,9 @@ user_session_IS_TOP_LEVEL:STATIC=OFF
 //Value Computed by CMake
 user_session_SOURCE_DIR:STATIC=C:/Users/86152/Desktop/network_dictionary/src/user_session
 
+//The directory containing a CMake configuration file for utf8cpp.
+utf8cpp_DIR:PATH=C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/share/utf8cpp
+
 //Value Computed by CMake
 word_function_BINARY_DIR:STATIC=C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/word_function
 
@@ -409,6 +424,9 @@ word_function_IS_TOP_LEVEL:STATIC=OFF
 
 //Value Computed by CMake
 word_function_SOURCE_DIR:STATIC=C:/Users/86152/Desktop/network_dictionary/src/word_function
+
+//The directory containing a CMake configuration file for xlnt.
+xlnt_DIR:PATH=C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/share/xlnt
 
 
 ########################
@@ -685,6 +703,12 @@ QT_FEATURE_cross_compile:INTERNAL=OFF
 QT_FEATURE_cssparser:INTERNAL=ON
 //Qt feature: ctf (from target Qt6::Core)
 QT_FEATURE_ctf:INTERNAL=OFF
+//Qt feature: cups (from target Qt6::PrintSupport)
+QT_FEATURE_cups:INTERNAL=OFF
+//Qt feature: cupsjobwidget (from target Qt6::PrintSupport)
+QT_FEATURE_cupsjobwidget:INTERNAL=OFF
+//Qt feature: cupspassworddialog (from target Qt6::PrintSupport)
+QT_FEATURE_cupspassworddialog:INTERNAL=ON
 //Qt feature: cursor (from target Qt6::Gui)
 QT_FEATURE_cursor:INTERNAL=ON
 //Qt feature: cxx11_future (from target Qt6::Core)
@@ -1081,6 +1105,14 @@ QT_FEATURE_posix_sem:INTERNAL=OFF
 QT_FEATURE_posix_shm:INTERNAL=OFF
 //Qt feature: precompile_header (from target Qt6::Core)
 QT_FEATURE_precompile_header:INTERNAL=ON
+//Qt feature: printdialog (from target Qt6::PrintSupport)
+QT_FEATURE_printdialog:INTERNAL=ON
+//Qt feature: printer (from target Qt6::PrintSupport)
+QT_FEATURE_printer:INTERNAL=ON
+//Qt feature: printpreviewdialog (from target Qt6::PrintSupport)
+QT_FEATURE_printpreviewdialog:INTERNAL=ON
+//Qt feature: printpreviewwidget (from target Qt6::PrintSupport)
+QT_FEATURE_printpreviewwidget:INTERNAL=ON
 //Qt feature: printsupport (from target Qt6::Core)
 QT_FEATURE_printsupport:INTERNAL=ON
 //Qt feature: private_tests (from target Qt6::Core)

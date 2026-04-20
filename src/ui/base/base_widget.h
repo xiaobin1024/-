@@ -64,7 +64,7 @@ public:
     virtual void setPageData(const QVariant& data);
 
     // ============ 消息管理 ============
-    void showMessage(const QString& message, bool isError = false,int duration=0);
+     void showMessage(const QString& message, bool isError = false,int duration=0);
     void clearMessage();
     void showLoading(const QString& message = "加载中...");
     void hideLoading();

@@ -172,6 +172,8 @@ void MainPage::setupContentArea()
     // 设置滚动区域的内容
     m_contentScrollArea->setWidget(m_contentWidget);
 
+     m_contentLayout->addStretch(7);
+
     // 添加欢迎信息（可选）
     auto* welcomeLabel = createLabel("欢迎使用网络词典！", "subtitle", "welcomeLabel");
     welcomeLabel->setAlignment(Qt::AlignCenter);
@@ -185,7 +187,7 @@ void MainPage::setupContentArea()
                                     ).arg(getColor("text-secondary")));
 
     m_contentLayout->addWidget(welcomeLabel);
-    m_contentLayout->addStretch();
+     m_contentLayout->addStretch(3);
 
 }
 

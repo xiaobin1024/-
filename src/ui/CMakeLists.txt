@@ -28,13 +28,22 @@ add_library(ui STATIC
   word/interactive_wordcard.cpp
   search/search_base.h
   search/search_base.cpp
-  search/searchhistory_widget.h search/searchhistory_widget.cpp
-  system/system_sidebar.cpp system/system_sidebar.h system/theme_manager.cpp system/theme_manager.h
-  view/login_page.cpp view/login_page.h
-  view/register_page.h view/register_page.cpp
-  view/page_controller.h view/page_controller.cpp
-  view/main_page.h view/main_page.cpp
-  view/collecte_page.h view/collecte_page.cpp
+  search/searchhistory_widget.h
+  search/searchhistory_widget.cpp
+  system/system_sidebar.cpp
+  system/system_sidebar.h
+  system/theme_manager.cpp
+  system/theme_manager.h
+  view/login_page.cpp
+  view/login_page.h
+  view/register_page.h
+  view/register_page.cpp
+  view/page_controller.h
+  view/page_controller.cpp
+  view/main_page.h
+  view/main_page.cpp
+  view/collecte_page.h
+  view/collecte_page.cpp
 )
 
 # 链接依赖库

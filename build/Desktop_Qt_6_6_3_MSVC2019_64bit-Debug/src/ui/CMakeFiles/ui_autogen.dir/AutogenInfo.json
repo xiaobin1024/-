@@ -234,6 +234,7 @@
 		"QT_GUI_LIB",
 		"QT_MULTIMEDIA_LIB",
 		"QT_NETWORK_LIB",
+		"QT_PRINTSUPPORT_LIB",
 		"QT_TEXTTOSPEECH_LIB",
 		"QT_WIDGETS_LIB",
 		"UNICODE",
@@ -266,7 +267,9 @@
 		"D:/qt/6.6.3/msvc2019_64/include/QtWidgets",
 		"D:/qt/6.6.3/msvc2019_64/include/QtGui",
 		"D:/qt/6.6.3/msvc2019_64/include/QtTextToSpeech",
-		"D:/qt/6.6.3/msvc2019_64/include/QtMultimedia"
+		"D:/qt/6.6.3/msvc2019_64/include/QtMultimedia",
+		"C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/include",
+		"D:/qt/6.6.3/msvc2019_64/include/QtPrintSupport"
 	],
 	"MOC_MACRO_NAMES" : 
 	[

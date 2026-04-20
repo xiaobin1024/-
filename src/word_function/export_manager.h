@@ -3,7 +3,15 @@
 
 #include <QObject>
 #include <QList>
+#include <xlnt/xlnt.hpp>
+#include <QTextDocument>
+#include <QPrinter>
+#include <QPageSize>
+#include <QFileDialog>
+#include <QStandardPaths>
+#include <QDateTime>
 #include "word_data.h"
+
 
 // 前向声明，避免循环包含
 class CollectePage;
@@ -41,6 +49,8 @@ private:
     QString getFilter(ExportFormat format) const;
 
     static ExportManager* s_instance;
+
+    CollectePage* collecte_page{nullptr};
 };
 
 #endif // EXPORT_MANAGER_H

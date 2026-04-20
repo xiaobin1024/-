@@ -100,6 +100,7 @@ void CollectePage::setupLayout()
 
     exportLayout->addStretch();
     exportLayout->addWidget(m_exportExcelButton);
+    exportLayout->addSpacing(600);
     exportLayout->addWidget(m_exportPdfButton);
     exportLayout->addStretch();
 
@@ -164,6 +165,7 @@ void CollectePage::onCollectListSuccess(const QList<WordData>& wordList)
 
 void CollectePage::onExportExcelClicked()
 {
+    qDebug()<<"CollectePage::onExportExcelClicked()";
     if (m_currentWordList.isEmpty()) {
         showMessage("当前没有可导出的收藏单词", false, 2000);
         return;
@@ -173,6 +175,7 @@ void CollectePage::onExportExcelClicked()
 
 void CollectePage::onExportPdfClicked()
 {
+    qDebug()<<"CollectePage::onExportPdfClicked()";
     if (m_currentWordList.isEmpty()) {
         showMessage("当前没有可导出的收藏单词", false, 2000);
         return;
@@ -182,7 +185,17 @@ void CollectePage::onExportPdfClicked()
 
 void CollectePage::updateWidgetStyles()
 {
-    BaseWidget::updateWidgetStyles(); // 调用父类刷新基础样式
+    // 根据主题设置不同的背景色
+    QString bgColor;
+    if (uiTheme() == UITheme::Light) {
+        // 亮色主题：侧边栏使用更明显的灰白色背景
+        bgColor = "#f0f0f0";
+    } else {
+        // 暗色主题：侧边栏使用更明显的深灰色背景
+        bgColor = "#3a3a3a";
+    }
+
+
 
     // 1. 更新滚动区域样式 (已在 setupLayout 中设置，这里可以再次确保或仅保留逻辑)
     if (m_scrollArea) {
@@ -224,6 +237,29 @@ void CollectePage::updateWidgetStyles()
                                               "}"
                                               ).arg(getColor("text-secondary")));
     }
+
+    QString style = QString(
+                        "SystemSidebar {"
+                        "  background-color: %1;"
+                        "  padding: 0;"
+                        "  margin: 0;"
+                        "}"
+                        "#buttonContainer {"
+                        "  background-color: transparent;"
+                        "  border: none;"
+                        "}"
+                        ).arg(bgColor);
+
+
+    if (m_exportExcelButton) {
+        m_exportExcelButton->setStyleSheet(style);
+    }
+    if (m_exportPdfButton) {
+        m_exportPdfButton->setStyleSheet(style);
+    }
+
+    BaseWidget::updateWidgetStyles(); // 调用父类刷新基础样式
+
     if (m_refreshButton) {
         m_refreshButton->setStyleSheet(QString(
                                            "QPushButton {"
@@ -231,7 +267,7 @@ void CollectePage::updateWidgetStyles()
                                            "  border: none;"
                                            "  border-radius: 20px;"
                                            "  color: %1;"                      // 图标颜色使用次要文字色（灰色）
-                                            "  font-size: 28px;"
+                                           "  font-size: 28px;"
                                            "}"
                                            "QPushButton:hover {"
                                            "  background-color: %2;"           // 悬浮时显示浅灰色背景
@@ -247,44 +283,10 @@ void CollectePage::updateWidgetStyles()
     if (m_backButton) {
         m_backButton->setStyleSheet(m_refreshButton->styleSheet());
     }
-
-    QString exportBtnStyle = QString(
-                                 "QPushButton {"
-                                 "  background-color: %1;"
-                                 "  color: %2;"
-                                 "  border: none;"
-                                 "  border-radius: 6px;"
-                                 "  padding: 8px 16px;"
-                                 "  font-size: 14px;"
-                                 "}"
-                                 "QPushButton:hover {"
-                                 "  background-color: %3;"
-                                 "}"
-                                 ).arg(getColor("primary"), getColor("text-on-primary"), getColor("primary-dark"));
-
-    if (m_exportExcelButton) {
-        m_exportExcelButton->setStyleSheet(exportBtnStyle);
-    }
-    if (m_exportPdfButton) {
-        m_exportPdfButton->setStyleSheet(exportBtnStyle);
-    }
 }
 
 void CollectePage::onCollectListFailed(const QString& errorMessage)
 {
-    // 清除旧内容（除了占位符和 Stretch）
-    // QLayoutItem* item;
-    // while ((item = m_contentLayout->takeAt(0)) != nullptr) {
-    //     if (item->widget()) {
-    //         item->widget()->deleteLater();
-    //     }
-    //     delete item;
-    // }
-
-    // // 显示错误信息
-    // m_placeholderLabel->setText(errorMessage);
-    // m_contentLayout->addWidget(m_placeholderLabel);
-    // m_contentLayout->addStretch();
 
      showMessage("显示收藏单词内容出错: " + errorMessage, true, 2000);
 }

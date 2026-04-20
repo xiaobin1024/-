@@ -14,9 +14,34 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
 
+# ========== vcpkg 工具链自动检测 ==========
+set(VCPKG_ROOT "")
+
+if(EXISTS "${CMAKE_SOURCE_DIR}/src/vcpkg/scripts/buildsystems/vcpkg.cmake")
+    set(VCPKG_ROOT "${CMAKE_SOURCE_DIR}/src/vcpkg")
+elseif(DEFINED ENV{VCPKG_ROOT})
+    set(VCPKG_ROOT "$ENV{VCPKG_ROOT}")
+endif()
+
+if(VCPKG_ROOT)
+    set(CMAKE_TOOLCHAIN_FILE "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+        CACHE STRING "Vcpkg toolchain file")
+
+    #显式添加 vcpkg installed 路径，确保 find_package 能找到
+    list(APPEND CMAKE_PREFIX_PATH "${VCPKG_ROOT}/installed/x64-windows/share")
+
+    message(STATUS "Using vcpkg: ${VCPKG_ROOT}")
+else()
+    message(FATAL_ERROR "vcpkg not found. Run: git submodule update --init")
+endif()
+# =========================================
+
+# 查找 xlnt（vcpkg 会自动处理）
+find_package(xlnt CONFIG REQUIRED)
+
 # 如果需要Widgets模块，添加它
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Widgets TextToSpeech)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Widgets TextToSpeech)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Widgets TextToSpeech PrintSupport)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Widgets TextToSpeech PrintSupport)
 
 
 add_library(word_function STATIC
@@ -37,6 +62,8 @@ target_link_libraries(word_function PUBLIC
     Qt${QT_VERSION_MAJOR}::Core
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::TextToSpeech
+    xlnt::xlnt
+    Qt${QT_VERSION_MAJOR}::PrintSupport
 )
 
 # 设置包含目录
