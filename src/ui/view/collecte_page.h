@@ -30,9 +30,11 @@ private slots:
     void onExportExcelClicked();
     void onExportPdfClicked();
 
-private:
     // 添加收藏列表查询函数
     void requestQueryCollectList();
+
+private:
+
 signals:
     void showMainPageRequested();
     void exportRequested(ExportFormat format, const QList<WordData>& wordList);

@@ -155,11 +155,12 @@ CMAKE_MODULE_LINKER_FLAGS_RELEASE:STRING=/INCREMENTAL:NO
 // RELWITHDEBINFO builds.
 CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO:STRING=/debug /INCREMENTAL
 
+CMAKE_MODULE_PATH:STRING=D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6;D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules;D:/qt/6.6.3/msvc2019_64/lib/cmake/Qt6/3rdparty/kwin
+
 //Path to a program.
 CMAKE_MT:FILEPATH=C:/Program Files (x86)/Windows Kits/10/bin/10.0.22621.0/x64/mt.exe
 
-//No help, variable specified on the command line.
-CMAKE_PREFIX_PATH:PATH=D:/qt/6.6.3/msvc2019_64
+CMAKE_PREFIX_PATH:STRING=D:/qt/6.6.3/msvc2019_64;C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/share
 
 //Value Computed by CMake
 CMAKE_PROJECT_DESCRIPTION:STATIC=
@@ -253,8 +254,7 @@ CMAKE_STATIC_LINKER_FLAGS_RELEASE:STRING=
 // during RELWITHDEBINFO builds.
 CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 
-//Vcpkg toolchain file
-CMAKE_TOOLCHAIN_FILE:STRING=C:/Users/86152/Desktop/network_dictionary/src/vcpkg/scripts/buildsystems/vcpkg.cmake
+CMAKE_TOOLCHAIN_FILE:PATH=C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/vcpkg-dependencies/toolchain.cmake
 
 //If this value is on, makefiles will be generated without the
 // .SILENT directive, and all commands will be echoed to the console
@@ -274,6 +274,9 @@ QT_ADDITIONAL_PACKAGES_PREFIX_PATH:STRING=
 
 //Skip Qt Creator's package manager auto-setup
 QT_CREATOR_SKIP_PACKAGE_MANAGER_SETUP:BOOL=OFF
+
+//Skip Qt Creator's vcpkg package manager auto-setup
+QT_CREATOR_SKIP_VCPKG_SETUP:BOOL=OFF
 
 //Qt Creator source groups extensions
 QT_CREATOR_SOURCE_GROUPS:BOOL=ON
@@ -415,6 +418,9 @@ user_session_SOURCE_DIR:STATIC=C:/Users/86152/Desktop/network_dictionary/src/use
 
 //The directory containing a CMake configuration file for utf8cpp.
 utf8cpp_DIR:PATH=C:/Users/86152/Desktop/network_dictionary/src/vcpkg/installed/x64-windows/share/utf8cpp
+
+//Path to a program.
+vcpkg_program:FILEPATH=C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/vcpkg.exe
 
 //Value Computed by CMake
 word_function_BINARY_DIR:STATIC=C:/Users/86152/Desktop/network_dictionary/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/src/word_function

@@ -154,6 +154,7 @@ void SystemSidebar::setupLayout()
     // 8. 将按钮添加到顶部容器
     m_topLayout->addWidget(m_themeButton);
     m_topLayout->addWidget(m_collectButton);
+    m_topLayout->addWidget(m_vocabulary);
     m_topLayout->addWidget(m_logoutButton);
     m_topLayout->addWidget(m_deleteButton);
 
@@ -183,13 +184,16 @@ void SystemSidebar::createButtons()
     if (m_logoutButton) m_logoutButton->deleteLater();
     if (m_deleteButton) m_deleteButton->deleteLater();
     if(m_collectButton) m_collectButton->deleteLater();
+    if(m_vocabulary)    m_vocabulary->deleteLater();
     if (m_toggleButton) m_toggleButton->deleteLater();
+
 
     // 使用 BaseWidget 提供的标准按钮创建方法
     m_themeButton = createSecondaryButton("", "themeButton");
     m_logoutButton = createSecondaryButton("", "logoutButton");
     m_deleteButton = createSecondaryButton("", "deleteButton");
      m_collectButton = createSecondaryButton("", "collectButton"); // 【新增】创建收藏按钮
+    m_vocabulary = createSecondaryButton("","vocabulary");
     m_toggleButton = createSecondaryButton("", "toggleButton");
 
 
@@ -198,6 +202,7 @@ void SystemSidebar::createButtons()
     m_logoutButton->setProperty("sidebarButton", true);
     m_deleteButton->setProperty("sidebarButton", true);
      m_collectButton->setProperty("sidebarButton", true); // 【新增】设置属性
+    m_vocabulary->setProperty("sidebarButton",true);
     m_toggleButton->setProperty("sidebarButton", true);
 
     // 设置按钮光标
@@ -205,6 +210,7 @@ void SystemSidebar::createButtons()
     m_logoutButton->setCursor(Qt::PointingHandCursor);
     m_deleteButton->setCursor(Qt::PointingHandCursor);
     m_collectButton->setCursor(Qt::PointingHandCursor); // 【新增】设置光标
+    m_vocabulary->setCursor(Qt::PointingHandCursor);
     m_toggleButton->setCursor(Qt::PointingHandCursor);
 
     // 连接信号
@@ -216,6 +222,8 @@ void SystemSidebar::createButtons()
             this, &SystemSidebar::handleDeleteAccountButtonClicked);
     connect(m_collectButton, &QPushButton::clicked,
             this, &SystemSidebar::handleCollectButtonClicked);
+    connect(m_vocabulary,&QPushButton::clicked,
+            this,&SystemSidebar::handlerVocabularyButtonClick);
     connect(m_toggleButton, &QPushButton::clicked,
             this, [this]() { toggle(); });
 
@@ -447,6 +455,7 @@ void SystemSidebar::updateSidebarStyle()
         if (m_userSession && m_userSession->isLoggedIn()) {
            m_logoutButton->setText("🚪 退出登录");
             m_collectButton->setText("❤️  查看收藏");
+           m_vocabulary->setText("⭐ 查看生词本");
         } else {
             m_logoutButton->setText("🚪 未登录");
         }
@@ -468,12 +477,14 @@ void SystemSidebar::updateSidebarStyle()
         m_usernameLabel->setVisible(true); // 默认隐藏，等登录后再显示
         m_avatarLabel->setVisible(true);
         m_collectButton->setVisible(true);
+        m_vocabulary->setVisible(true);
     } else {
         // 收起状态：只显示切换按钮
         m_themeButton->setText("");
         m_logoutButton->setText("");
         m_deleteButton->setText("");
         m_collectButton->setText("");
+        m_vocabulary->setText("");
         m_toggleButton->setText("☰"); // 使用菜单图标
 
         // 设置工具提示
@@ -482,6 +493,7 @@ void SystemSidebar::updateSidebarStyle()
         m_deleteButton->setToolTip("注销账号");
         m_toggleButton->setToolTip("展开侧边栏");
         m_collectButton->setToolTip("查看收藏");
+        m_vocabulary->setToolTip("查看生词本");
 
         // 隐藏除切换按钮外的所有按钮
         m_themeButton->setVisible(false);
@@ -491,6 +503,7 @@ void SystemSidebar::updateSidebarStyle()
         m_usernameLabel->setVisible(false); // 默认隐藏，等登录后再显示
         m_avatarLabel->setVisible(false);
         m_collectButton->setVisible(false);
+        m_vocabulary->setVisible(false);
 
     }
 
@@ -678,4 +691,11 @@ void SystemSidebar::handleCollectButtonClicked()
     qDebug() << "查看收藏按钮被点击";
     // 发射信号，通知主窗口切换页面
     emit showCollectPageRequested();
+}
+
+void SystemSidebar::handlerVocabularyButtonClick()
+{
+    qDebug() << "查看生词本按钮被点击";
+    // 发射信号，通知主窗口切换页面
+    emit showVocabularyPageRequested();
 }

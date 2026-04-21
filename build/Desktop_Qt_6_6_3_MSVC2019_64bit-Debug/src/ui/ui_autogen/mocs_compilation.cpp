@@ -9,5 +9,6 @@
 #include "OTUN7GXZT4/moc_main_page.cpp"
 #include "OTUN7GXZT4/moc_page_controller.cpp"
 #include "OTUN7GXZT4/moc_register_page.cpp"
+#include "OTUN7GXZT4/moc_vocabulary_page.cpp"
 #include "REEYQWTHGX/moc_interactive_wordcard.cpp"
 #include "REEYQWTHGX/moc_word_card.cpp"

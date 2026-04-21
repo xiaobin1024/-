@@ -99,6 +99,8 @@ signals:
 
     void showCollectPageRequested(); // 请求显示收藏页面的信号
 
+    void showVocabularyPageRequested();
+
 protected:
     // 重写BaseWidget的初始化方法
     void setupLayout() override;
@@ -138,6 +140,8 @@ private slots:
 
     void handleCollectButtonClicked(); // 处理收藏按钮点击
 
+    void handlerVocabularyButtonClick();
+
 
 private:
     // 初始化UI组件
@@ -167,7 +171,8 @@ private:
     QPushButton* m_logoutButton{nullptr};     // 退出登录按钮
     QPushButton* m_deleteButton{nullptr};     // 注销账号按钮
     QPushButton* m_toggleButton{nullptr};     // 展开/收起按钮
-    QPushButton* m_collectButton{nullptr};    // 收藏单词按钮
+    QPushButton* m_collectButton{nullptr};    // 查看收藏单词按钮
+    QPushButton* m_vocabulary{nullptr};       //查看生词本按钮
 
     // 动画
     QPropertyAnimation* m_widthAnimation{nullptr};  // 宽度动画

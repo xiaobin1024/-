@@ -209,6 +209,8 @@ void MainPage::setupSidebar()
             this, &MainPage::navigateToLogin);
      connect(m_sidebar, &SystemSidebar::showCollectPageRequested,
             this, &MainPage::showCollectPageRequested);
+    connect(m_sidebar,&SystemSidebar::showVocabularyPageRequested,this,&MainPage::showVocabularyRequested);
+
 }
 
 void MainPage::setupConnections()

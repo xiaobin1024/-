@@ -6,6 +6,7 @@
 #include "register_page.h"
 #include "main_page.h"
 #include "collecte_page.h"
+#include"vocabulary_page.h"
 #include "export_manager.h"
 #include <QStackedWidget>
 
@@ -21,7 +22,8 @@ public:
         Login = 0,
         Register = 1,
          Main = 2,
-        Collect=3
+        Collect=3,
+        Vocabulary=4
     };
 
     void setCurrentPage(PageType pageType);
@@ -43,7 +45,9 @@ private slots:
     void handleNavigateToLogin();
     void handleNavigateToMain();
     void handleNavigateToCollect();
+    void handleNavigateToVocabulary();
     void handleCollectToMain();
+    void handleVocabularyToMain();
 
 private:
     void setupPages();
@@ -54,6 +58,8 @@ private:
     RegisterPage* m_registerPage{nullptr};
     MainPage* m_mainPage{nullptr};
     CollectePage* m_collectPage{nullptr};
+    VocabularyPage* m_vocabularyPage{nullptr};
+
 };
 
 #endif // PAGE_CONTROLLER_H

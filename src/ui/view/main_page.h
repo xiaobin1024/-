@@ -45,6 +45,7 @@ signals:
     void navigateToRegister();
 
     void showCollectPageRequested();
+    void showVocabularyRequested();
 
 
 protected:

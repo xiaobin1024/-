@@ -15,7 +15,7 @@
 
 // 前向声明，避免循环包含
 class CollectePage;
-
+class VocabularyPage;
 enum class ExportFormat {
     Excel,
     PDF
@@ -30,6 +30,7 @@ public:
 
     // 绑定到收藏页面，连接信号
     void bindToCollectePage(CollectePage* page);
+    void bindToVocabularyPage(VocabularyPage* page);
 
 public slots:
     void onExportRequested(ExportFormat format, const QList<WordData>& wordList);
@@ -51,6 +52,7 @@ private:
     static ExportManager* s_instance;
 
     CollectePage* collecte_page{nullptr};
+    VocabularyPage* vocabulary_page{nullptr};
 };
 
 #endif // EXPORT_MANAGER_H

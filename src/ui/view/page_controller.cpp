@@ -41,14 +41,17 @@ void PageController::setupPages()
     m_registerPage = new RegisterPage(this);
     m_mainPage = new MainPage(this);
     m_collectPage = new CollectePage(this);
+    m_vocabularyPage = new VocabularyPage(this);
 
     // 添加到堆栈控件
     m_stackedWidget->addWidget(m_loginPage);
     m_stackedWidget->addWidget(m_registerPage);
     m_stackedWidget->addWidget(m_mainPage);
     m_stackedWidget->addWidget(m_collectPage);
+    m_stackedWidget->addWidget(m_vocabularyPage);
 
     ExportManager::instance()->bindToCollectePage(m_collectPage);
+    ExportManager::instance()->bindToVocabularyPage(m_vocabularyPage);
 }
 
 void PageController::connectPageSignals()
@@ -88,7 +91,8 @@ void PageController::connectPageSignals()
     connect(m_collectPage,&CollectePage::showMainPageRequested,
             this,&PageController::handleCollectToMain);
 
-
+    connect(m_mainPage,&MainPage::showVocabularyRequested,this,&PageController::handleNavigateToVocabulary);
+    connect(m_vocabularyPage,&VocabularyPage::showMainPageRequested,this,&PageController::handleVocabularyToMain);
 }
 
 void PageController::setCurrentPage(PageType pageType)
@@ -108,6 +112,9 @@ void PageController::setCurrentPage(PageType pageType)
         break;
     case Collect:
         m_collectPage->showPage();
+        break;
+    case Vocabulary:
+        m_vocabularyPage->showPage();
         break;
     }
 
@@ -156,5 +163,18 @@ void PageController::handleNavigateToCollect()
 void PageController::handleCollectToMain()
 {
     qDebug()<<" PageController::handleCollectToMain()";
+    setCurrentPage(Main);
+}
+
+void PageController::handleNavigateToVocabulary()
+{
+    qDebug()<<"PageController::handleNavigateToVocabulary()";
+    qDebug()<<"准备跳转生词本页面";
+    setCurrentPage(Vocabulary);
+}
+
+void PageController::handleVocabularyToMain()
+{
+    qDebug()<<" PageController::handleVocabularyToMain()";
     setCurrentPage(Main);
 }

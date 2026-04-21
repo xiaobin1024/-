@@ -1,5 +1,6 @@
 #include "export_manager.h"
 #include "view/collecte_page.h"
+#include"view/vocabulary_page.h"
 #include <QFileDialog>
 #include <QStandardPaths>
 #include <QDateTime>
@@ -31,6 +32,13 @@ void ExportManager::bindToCollectePage(CollectePage* page)
     connect(collecte_page, &CollectePage::exportRequested,
             this, &ExportManager::onExportRequested);
 
+}
+
+void ExportManager::bindToVocabularyPage(VocabularyPage* page)
+{
+    vocabulary_page=page;
+    connect(vocabulary_page,&VocabularyPage::exportRequested,
+            this,&ExportManager::onExportRequested);
 }
 
 void ExportManager::onExportRequested(ExportFormat format, const QList<WordData>& wordList)
