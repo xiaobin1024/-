@@ -16,6 +16,9 @@ CollectePage::CollectePage(QWidget *parent)
     // 连接 WordCollect 的信号到槽函数
     connect(m_wordCollect, &WordCollect::collectListSuccess, this, &CollectePage::onCollectListSuccess);
     connect(m_wordCollect, &WordCollect::collectListFailed, this, &CollectePage::onCollectListFailed);
+
+    //连接导出结果信号
+    connect(m_exportManager,&ExportManager::exportFinished,this,&CollectePage::onExportResult);
 }
 
 
@@ -170,7 +173,8 @@ void CollectePage::onExportExcelClicked()
         showMessage("当前没有可导出的收藏单词", false, 2000);
         return;
     }
-    emit exportRequested(ExportFormat::Excel, m_currentWordList);
+    const QString titile = "收藏单词";
+    emit exportRequested(ExportFormat::Excel, m_currentWordList, titile);
 }
 
 void CollectePage::onExportPdfClicked()
@@ -180,7 +184,8 @@ void CollectePage::onExportPdfClicked()
         showMessage("当前没有可导出的收藏单词", false, 2000);
         return;
     }
-    emit exportRequested(ExportFormat::PDF, m_currentWordList);
+    const QString titile = "收藏单词";
+    emit exportRequested(ExportFormat::PDF, m_currentWordList,titile);
 }
 
 void CollectePage::updateWidgetStyles()
@@ -295,4 +300,13 @@ void CollectePage::onBackButtonClicked()
 {
     qDebug()<<"CollectePage::onBackButtonClicked()";
     emit showMainPageRequested();
+}
+
+ void CollectePage::onExportResult(bool success, const QString& message)
+{
+     if(success){
+         showMessage(message,false,2000);
+     }else{
+         showMessage(message,true,2000);
+     }
 }

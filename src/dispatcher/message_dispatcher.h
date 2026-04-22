@@ -40,6 +40,7 @@ signals:
     void CollectResponseListReceived(const QString& responseData);
     void unregisterResponseReceived(const QString& responseData);
     void vocabularyResponseReceived(const QString& responseData);
+    void vocabularyListResponseReceived(const QString& responseData);
 
 
 
@@ -62,6 +63,7 @@ private slots:
     void onCollectRequested(const QString& username, const QString& wordData);  // 新增
     void onCollectListRequested(const QString& username);
     void onVocabularyRequested(const QString& username, const QString& wordData);
+    void onVocabularyListRequested(const QString& username);
 
     // 网络状态处理
     void onNetworkConnected();

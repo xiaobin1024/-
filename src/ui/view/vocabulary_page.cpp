@@ -13,9 +13,12 @@ VocabularyPage::VocabularyPage(QWidget *parent)
     qDebug() << "VocabularyPage 创建";
     initialize();
 
-    // 连接 WordCollect 的信号到槽函数
-    // connect(m_wordCollect, &WordCollect::collectListSuccess, this, &VocabularyPage::onCollectListSuccess);
-    // connect(m_wordCollect, &WordCollect::collectListFailed, this, &VocabularyPage::onCollectListFailed);
+    // 连接 WordVocabulary 的信号到槽函数
+    connect(m_wordVocabulary,&WordVocabulary::vocabularyListSuccess,this,&VocabularyPage::onVocabularyListSuccess);
+    connect(m_wordVocabulary,&WordVocabulary::vocabularyListFailed,this,&VocabularyPage::onVocabularyListFailed);
+
+    //连接导出结果信号
+    connect(m_exportManager,&ExportManager::exportFinished,this,&VocabularyPage::onExportResult);
 }
 
 VocabularyPage::~VocabularyPage()
@@ -127,7 +130,7 @@ void VocabularyPage::requestQueryVocabularyList()
     // 调用 WordCollect 的查询函数
     m_currentWordList.clear();
     qDebug()<<"VocabularyPage::requestQueryVocabularyList()";
-    //m_wordCollect->queryCollectList();
+    m_wordVocabulary->queryVocabularyList();
 }
 
 
@@ -173,7 +176,8 @@ void VocabularyPage::onExportExcelClicked()
         showMessage("当前没有可导出的生词本单词", false, 2000);
         return;
     }
-    emit exportRequested(ExportFormat::Excel, m_currentWordList);
+    QString titile="生词记录";
+    emit exportRequested(ExportFormat::Excel, m_currentWordList,titile);
 }
 
 void VocabularyPage::onExportPdfClicked()
@@ -183,7 +187,8 @@ void VocabularyPage::onExportPdfClicked()
         showMessage("当前没有可导出的生词本单词", false, 2000);
         return;
     }
-    emit exportRequested(ExportFormat::PDF, m_currentWordList);
+    QString titile="生词记录";
+    emit exportRequested(ExportFormat::PDF, m_currentWordList,titile);
 }
 
 void VocabularyPage::updateWidgetStyles()
@@ -291,11 +296,20 @@ void VocabularyPage::updateWidgetStyles()
 void VocabularyPage::onVocabularyListFailed(const QString& errorMessage)
 {
 
-    showMessage("显示收藏单词内容出错: " + errorMessage, true, 2000);
+    showMessage("显示生词本单词内容出错: " + errorMessage, true, 2000);
 }
 
 void VocabularyPage::onBackButtonClicked()
 {
     qDebug()<<"VocabularyPage::onBackButtonClicked()";
     emit showMainPageRequested();
+}
+
+void VocabularyPage::onExportResult(bool success, const QString& message)
+{
+    if(success){
+        showMessage(message,false,2000);
+    }else{
+        showMessage(message,true,2000);
+    }
 }

@@ -124,6 +124,8 @@ void MessageDispatcher::setWordVocabulary(WordVocabulary* wordVocabulary)
     if (m_wordVocabulary) {
         disconnect(m_wordVocabulary, &WordVocabulary::vocabularyStatusRequested,
                    this, &MessageDispatcher::onVocabularyRequested);
+        disconnect(m_wordVocabulary,&WordVocabulary::vocabularyListRequested,
+                   this,&MessageDispatcher::onVocabularyListRequested);
     }
 
     m_wordVocabulary = wordVocabulary;
@@ -132,6 +134,8 @@ void MessageDispatcher::setWordVocabulary(WordVocabulary* wordVocabulary)
     if (m_wordVocabulary) {
         connect(m_wordVocabulary, &WordVocabulary::vocabularyStatusRequested,
                 this, &MessageDispatcher::onVocabularyRequested);
+        connect(m_wordVocabulary,&WordVocabulary::vocabularyListRequested,
+                this,&MessageDispatcher::onVocabularyListRequested);
         qDebug() << "WordVocabulary 已设置到 MessageDispatcher";
     }
 }
@@ -301,10 +305,13 @@ void MessageDispatcher::dispatchMessage(const CoreMessage::Msg& message)
         emit vocabularyResponseReceived(data);
         break;
 
+    case CoreMessage::MsgType::VOCABULARYLIST:
+        emit vocabularyListResponseReceived(data);
+        break;
+
     case CoreMessage::MsgType::HEARTBEAT:
         qDebug() << "收到心跳包，忽略处理";
         break;
-
     default:
         qWarning() << "未知消息类型:" << static_cast<int>(message.type);
         emit errorOccurred(QString("未知消息类型: %1").arg(static_cast<int>(message.type)));
@@ -438,5 +445,14 @@ void MessageDispatcher::onVocabularyRequested(const QString& username, const QSt
 
     if (!sendMessage(CoreMessage::MsgType::VOCABULARY, username, wordData)) {
         emit vocabularyResponseReceived("ERROR:网络未连接或消息发送失败");
+    }
+}
+
+void MessageDispatcher::onVocabularyListRequested(const QString& username)
+{
+    qDebug() << "MessageDispatcher: 处理生词列表请求, 用户:" << username;
+
+    if (!sendMessage(CoreMessage::MsgType::VOCABULARYLIST, username,"")) {
+        emit vocabularyListResponseReceived("ERROR:网络未连接或消息发送失败");
     }
 }

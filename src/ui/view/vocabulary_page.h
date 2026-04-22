@@ -30,11 +30,15 @@ private slots:
 
     // 添加生词列表查询函数
     void requestQueryVocabularyList();
+
+    //导出结果
+    void onExportResult(bool success, const QString& message);
+
 private:
 
 signals:
     void showMainPageRequested();
-    void exportRequested(ExportFormat format, const QList<WordData>& wordList);
+    void exportRequested(ExportFormat format, const QList<WordData>& wordList,QString& titile);
 private:
     QList<WordData> m_currentWordList;  // 当前显示的单词列表
     QScrollArea* m_scrollArea{nullptr};

@@ -16,7 +16,9 @@ enum class MsgType:int{
     COLLECT=7,
     COLLECTList=8,
     UNREGISTER=9,
-    VOCABULARY=10
+    VOCABULARY=10,
+    VOCABULARYLIST=11
+
 };
 //QDebug输出支持
 inline QDebug operator<<(QDebug debug,MsgType type)
@@ -33,6 +35,7 @@ inline QDebug operator<<(QDebug debug,MsgType type)
     case MsgType::COLLECTList: typeStr="COLLECTList"; break;
     case MsgType::UNREGISTER: typeStr="UNREGISTER"; break;
     case MsgType::VOCABULARY: typeStr="VOCABULARY"; break;
+    case MsgType::VOCABULARYLIST: typeStr="VOCABULARYLIST"; break;
     default: typeStr="UNKNOWN"; break;
     }
     debug<<typeStr<<"("<<static_cast<int>(type)<<")";

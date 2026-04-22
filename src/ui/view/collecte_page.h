@@ -33,11 +33,14 @@ private slots:
     // 添加收藏列表查询函数
     void requestQueryCollectList();
 
+    //导出结果
+    void onExportResult(bool success, const QString& message);
+
 private:
 
 signals:
     void showMainPageRequested();
-    void exportRequested(ExportFormat format, const QList<WordData>& wordList);
+    void exportRequested(ExportFormat format, const QList<WordData>& wordList,const QString& titile);
 private:
     QList<WordData> m_currentWordList;  // 当前显示的单词列表
     QScrollArea* m_scrollArea{nullptr};

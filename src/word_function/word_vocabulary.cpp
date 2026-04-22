@@ -33,6 +33,8 @@ void WordVocabulary::setMessageDispatcher(MessageDispatcher* dispatcher)
     if (m_dispatcher) {
         disconnect(m_dispatcher, &MessageDispatcher::vocabularyResponseReceived,
                    this, &WordVocabulary::handleVocabularyResponse);
+        disconnect(m_dispatcher,&MessageDispatcher::vocabularyListResponseReceived,
+                this,&WordVocabulary::handleVocabularyListResponse);
     }
 
     m_dispatcher = dispatcher;
@@ -41,6 +43,8 @@ void WordVocabulary::setMessageDispatcher(MessageDispatcher* dispatcher)
     if (m_dispatcher) {
         connect(m_dispatcher, &MessageDispatcher::vocabularyResponseReceived,
                 this, &WordVocabulary::handleVocabularyResponse);
+        connect(m_dispatcher,&MessageDispatcher::vocabularyListResponseReceived,
+                this,&WordVocabulary::handleVocabularyListResponse);
 
         qDebug() << "MessageDispatcher 已设置到 WordVocabulary";
     }
@@ -133,4 +137,93 @@ void WordVocabulary::processVocabularyResponse(const QString& response)
     }
 
     emit vocabularyOperationFailed(word, "操作失败，未知响应: " + response);
+}
+
+ void WordVocabulary::queryVocabularyList()
+{
+     if (!m_userSession) {
+         emit vocabularyListFailed("用户会话未设置");
+         return;
+     }
+
+     // 获取当前用户名
+     QString username = m_userSession->currentUser().username();
+     if (username.isEmpty()) {
+         emit vocabularyListFailed("用户未登录");
+         return;
+     }
+
+     m_vocabularyList.clear();
+     qDebug() << "WordVocabulary::queryVocabularyList - 查询生词本列表，用户:" << username;
+
+     // 发射查询收藏列表请求信号
+     emit vocabularyListRequested(username);
+}
+
+void WordVocabulary::handleVocabularyListResponse(const QString& responseData)
+{
+    processVocabularyListResponse(responseData);
+}
+
+void WordVocabulary::processVocabularyListResponse(const QString& response)
+{
+    qDebug() << "WordVocabulary::processVocabularyListResponse - 响应:" << response;
+
+    // 1. 错误处理
+    if (response.startsWith("ERROR:")) {
+        emit vocabularyListFailed(response);
+        return;
+    }
+
+    // 2. 空数据处理
+    if (response == "**EMPTY**") {
+        m_vocabularyList.clear();
+        emit vocabularyListSuccess(m_vocabularyList);
+        return;
+    }
+
+    // 3. 结束标志处理
+    if (response == "**OVER**") {
+        return;
+    }
+
+    // 4. 正常数据解析
+    // 后端格式：单词|^|释义|^|音标|^|例句|^|翻译|^|收藏标识(1/0)
+    QStringList lines = response.split('\n', Qt::SkipEmptyParts);
+
+    for (const QString& line : lines) {
+        QStringList parts = line.split("|^|");
+
+        // 检查是否有 6 个字段 (前5个是单词信息，第6个是状态)
+        if (parts.size() >= 6) {
+            WordData wordData;
+
+            // 按顺序赋值基础信息
+            wordData.word = parts[0];
+            wordData.meaning = parts[1];
+            wordData.phonetic = parts[2];
+            wordData.example = parts[3];
+            wordData.translation = parts[4];
+
+            // 因为在生词本列表中，所以 isVocabulary 必定为 true
+            wordData.isVocabulary = true;
+
+            // 解析第6个字段作为收藏状态 (isCollect)
+            QString collectFlag = parts[5];
+            wordData.isCollected = (collectFlag == "1");
+
+            if (wordData.isValid()) {
+                m_vocabularyList.append(wordData);
+            }
+        } else {
+            qDebug() << "生词本数据格式错误，字段不足:" << line;
+        }
+    }
+
+    // 5. 发送最终信号
+    if (m_vocabularyList.isEmpty()) {
+        emit vocabularyListFailed("没有生词记录");
+    } else {
+        emit vocabularyListSuccess(m_vocabularyList);
+    }
 }

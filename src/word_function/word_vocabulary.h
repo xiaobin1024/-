@@ -19,6 +19,12 @@ public:
     // 添加/移出生词本
     void updateVocabularyStatus(const WordData& wordData);
 
+    //获取生词记录列表
+     void queryVocabularyList();
+
+    // 获取当前收藏列表
+    QList<WordData> getVocabularyList() const { return m_vocabularyList; }
+
     // 设置消息分发器
     void setMessageDispatcher(MessageDispatcher* dispatcher);
 
@@ -37,15 +43,30 @@ signals:
     // 当生词本状态改变时发射
     void vocabularyStatusChanged(const QString& word, bool isVocabulary);
 
-public slots:
+    // 查询生词记录列表请求信号
+    void vocabularyListRequested(const QString& username);
+
+    // 查询生词记录列表成功信号
+    void vocabularyListSuccess(const QList<WordData>& collectList);
+
+    // 查询生词记录列表失败信号
+    void vocabularyListFailed(const QString& error);
+
+private slots:
     // 处理生词本操作响应
     void handleVocabularyResponse(const QString& responseData);
+
+    //处理生词本记录操作响应
+    void handleVocabularyListResponse(const QString& responseData);
 
 private:
     explicit WordVocabulary(QObject* parent = nullptr);
 
     // 处理生词本响应
     void processVocabularyResponse(const QString& response);
+
+    //处理生词本记录响应
+     void processVocabularyListResponse(const QString& response);
 
     // 静态实例
     static WordVocabulary* s_instance;
@@ -55,6 +76,11 @@ private:
 
     // 用户会话
     UserSession* m_userSession{nullptr};
+
+    // 收藏列表
+    QList<WordData> m_vocabularyList;
+
+
 };
 
 #endif // WORD_VOCABULARY_H

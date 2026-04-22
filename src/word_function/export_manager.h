@@ -33,20 +33,21 @@ public:
     void bindToVocabularyPage(VocabularyPage* page);
 
 public slots:
-    void onExportRequested(ExportFormat format, const QList<WordData>& wordList);
+    void onExportRequested(ExportFormat format, const QList<WordData>& wordList, const QString &titile);
 
 signals:
     void exportStarted(ExportFormat format);
     void exportFinished(bool success, const QString& message);
 
+
 private:
     explicit ExportManager(QObject* parent = nullptr);
     ~ExportManager();
 
-    bool doExportExcel(const QList<WordData>& list, const QString& filePath);
-    bool doExportPdf(const QList<WordData>& list, const QString& filePath);
+    bool doExportExcel(const QList<WordData>& list, const QString& filePath, const QString &titile);
+    bool doExportPdf(const QList<WordData>& list, const QString& filePath,const QString& titile);
 
-    QString getDefaultFileName(ExportFormat format) const;
+    QString getDefaultFileName(ExportFormat format ,const QString& title) const;
     QString getFilter(ExportFormat format) const;
 
     static ExportManager* s_instance;

@@ -41,12 +41,12 @@ void ExportManager::bindToVocabularyPage(VocabularyPage* page)
             this,&ExportManager::onExportRequested);
 }
 
-void ExportManager::onExportRequested(ExportFormat format, const QList<WordData>& wordList)
+void ExportManager::onExportRequested(ExportFormat format, const QList<WordData>& wordList, const QString &titile)
 {
     qDebug()<<"ExportManager::onExportRequested";
     // 选择保存路径
     QString defaultPath = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)
-                          + "/" + getDefaultFileName(format);
+                          + "/" + getDefaultFileName(format,titile);
 
     QString filter = getFilter(format);
     QString filePath = QFileDialog::getSaveFileName(
@@ -64,15 +64,15 @@ void ExportManager::onExportRequested(ExportFormat format, const QList<WordData>
 
     bool success = false;
     if (format == ExportFormat::Excel) {
-        success = doExportExcel(wordList, filePath);
+        success = doExportExcel(wordList, filePath,titile);
     } else {
-        success = doExportPdf(wordList, filePath);
+        success = doExportPdf(wordList, filePath,titile);
     }
 
     emit exportFinished(success, success ? "导出成功" : "导出失败");
 }
 
-bool ExportManager::doExportExcel(const QList<WordData>& list, const QString& filePath)
+bool ExportManager::doExportExcel(const QList<WordData>& list, const QString& filePath,const QString &titile)
 {
     qDebug() << "导出Excel:" << filePath << "数量:" << list.size();
 
@@ -83,7 +83,7 @@ bool ExportManager::doExportExcel(const QList<WordData>& list, const QString& fi
     try {
         xlnt::workbook wb;
         auto ws = wb.active_sheet();
-        ws.title("收藏单词");
+        ws.title(titile.toStdString());
 
         // === 设置表头 ===
         ws.cell("A1").value("单词");
@@ -136,18 +136,16 @@ bool ExportManager::doExportExcel(const QList<WordData>& list, const QString& fi
 
         // === 保存文件 ===
         wb.save(filePath.toStdString());
-        collecte_page->showMessage("成功导出Excel文件！",false,2000);
 
         return true;
 
     } catch (const std::exception& e) {
         qCritical() << "Excel导出错误:" << e.what();
-        collecte_page->showMessage("导出Excel文件失败！！！",true,2000);
         return false;
     }
 }
 
-bool ExportManager::doExportPdf(const QList<WordData>& list, const QString& filePath)
+bool ExportManager::doExportPdf(const QList<WordData>& list, const QString& filePath, const QString &titile)
 {
     qDebug() << "导出PDF:" << filePath << "数量:" << list.size();
 
@@ -168,7 +166,7 @@ bool ExportManager::doExportPdf(const QList<WordData>& list, const QString& file
         html += "th { background-color: #f2f2f2; }";
         html += "h1 { text-align: center; }";
         html += "</style></head><body>";
-        html += "<h1>收藏单词</h1>";
+        html += QString("<h1>%1</h1>").arg(titile.toHtmlEscaped());
         html += "<table>";
         html += "<tr>"
                 "<th>单词</th>"
@@ -210,21 +208,19 @@ bool ExportManager::doExportPdf(const QList<WordData>& list, const QString& file
 
         // 打印到 PDF
         document.print(&printer);
-        collecte_page->showMessage("成功导出DPF文件！",false,2000);
         return true;
 
     } catch (const std::exception& e) {
         qCritical() << "PDF导出错误:" << e.what();
-        collecte_page->showMessage("导出PDF文件失败！！！",true,2000);
         return false;
     }
 }
-QString ExportManager::getDefaultFileName(ExportFormat format) const
+QString ExportManager::getDefaultFileName(ExportFormat format, const QString &title) const
 {
     QString timestamp = QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss");
     return format == ExportFormat::Excel
-               ? "收藏单词_" + timestamp + ".xlsx"
-               : "收藏单词_" + timestamp + ".pdf";
+               ? title + timestamp + ".xlsx"
+               : title + timestamp + ".pdf";
 }
 
 QString ExportManager::getFilter(ExportFormat format) const
